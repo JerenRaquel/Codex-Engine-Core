@@ -12,7 +12,7 @@ class Engine {
   RenderEngine* renderer_;
 
  public:
-  Engine(const Vector2& windowSize, const std::string& name);
+  Engine(const Vector<int>& windowSize, const std::string& name);
   ~Engine();
 
   void Start();

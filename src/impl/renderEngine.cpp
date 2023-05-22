@@ -1,9 +1,10 @@
 #include "../headers/renderEngine.hpp"
 
-RenderEngine::RenderEngine(const Vector2& size, const std::string& name) {
+RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
   // Initalize GLFW
   if (!glfwInit()) {
-    throw FailedError("ERROR: Couldn't Initialize GLFW...");
+    // throw FailedError("ERROR: Couldn't Initialize GLFW...");
+    throw std::runtime_error("ERROR: Couldn't Initialize GLFW...");
   }
 
   // Create a window and set the context
@@ -14,7 +15,8 @@ RenderEngine::RenderEngine(const Vector2& size, const std::string& name) {
   GLuint errCode = glewInit();
   if (errCode != GLEW_OK) {
     glfwTerminate();
-    throw FailedError("Error: Unable to Initialize GLEW...");
+    // throw FailedError("Error: Unable to Initialize GLEW...");
+    throw std::runtime_error("Error: Unable to Initialize GLEW...");
   }
 
   // Get Versions
@@ -26,9 +28,18 @@ RenderEngine::RenderEngine(const Vector2& size, const std::string& name) {
   // Draw pixels if close to the viewer
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
+
+  this->quads_ = new std::vector<Quad*>();
 }
 
-RenderEngine::~RenderEngine() { glfwTerminate(); }
+RenderEngine::~RenderEngine() {
+  for (unsigned int i = 0; i < this->quads_->size(); i++) {
+    delete this->quads_->at(i);
+  }
+  delete this->quads_;
+
+  glfwTerminate();
+}
 
 void RenderEngine::Start() {
   while (!glfwWindowShouldClose(this->window_)) {
@@ -36,17 +47,14 @@ void RenderEngine::Start() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //* Draw Calls
+    for (unsigned int i = 0; i < this->quads_->size(); i++) {
+      this->quads_->at(i)->Draw();
+    }
+
     // // Update the Shader Data
     // this->mesh_->UpdateShaderValues();
     // // Load Active Shader
     // this->mesh_->UseShader();
-
-    // // Load Active VAO
-    // glBindVertexArray(this->mesh_->GetVertexArrayObjectID());
-    // // Draw Data
-    // glDrawElements(GL_TRIANGLES, this->mesh_->GetPointAmount(),
-    // GL_UNSIGNED_INT,
-    //                0);
 
     // update other events like input handling
     glfwPollEvents();
@@ -54,3 +62,5 @@ void RenderEngine::Start() {
     glfwSwapBuffers(this->window_);
   }
 }
+
+void RenderEngine::AddQuad(Quad* quad) { this->quads_->push_back(quad); }

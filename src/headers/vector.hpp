@@ -1,20 +1,20 @@
 #ifndef VECTOR_HPP_
 #define VECTOR_HPP_
 
-class Vector2 {
- private:
-  // member vars
-
+template <typename T>
+class Vector {
  public:
-  float x, y;
+  T x, y;
 
-  Vector2();
-  Vector2(float x, float y);
-  ~Vector2();
+  Vector<T>();
+  Vector<T>(T x, T y);
+  ~Vector<T>();
 
-  Vector2 operator=(const Vector2& other) {
+  Vector<T> operator=(const Vector<T>& other) {
     this->x = other.x;
     this->y = other.y;
+    return *this;
   }
 };
+
 #endif  // VECTOR_HPP_

@@ -7,17 +7,21 @@
 // Std
 #include <iostream>
 #include <string>
+#include <stdexcept>
+#include <vector>
 // Custom
-#include "errorHandler.hpp"
 #include "vector.hpp"
+#include "quad.hpp"
 
 class RenderEngine {
  private:
   GLFWwindow* window_;
+  std::vector<Quad*>* quads_;
 
  public:
-  RenderEngine(const Vector2& size, const std::string& name);
+  RenderEngine(const Vector<int>& size, const std::string& name);
   ~RenderEngine();
   void Start();
+  void AddQuad(Quad* quad);
 };
 #endif  // RENDERENGINE_HPP_
