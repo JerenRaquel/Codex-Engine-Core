@@ -1,0 +1,6 @@
+#VSCode
+.vscode
+
+#Builds
+run.sh
+builds/*
