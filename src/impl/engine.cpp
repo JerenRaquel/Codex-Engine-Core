@@ -12,9 +12,6 @@ void Engine::Start() {
   this->renderer_->CompileShader("vertex.glsl", "fragment.glsl", "default");
   float color[4] = {0.0f, 1.0f, 0.0f, 1.0f};
   this->renderer_->GetShader("default")->AddUniformDataID("color", color, 4);
-  this->renderer_->GetShader("default")->AddUniformDataID(
-      "projection", this->renderer_->GetCamera()->GetOrthoMatrix(), 16);
-  this->renderer_->GetShader("default")->AddUniformDataID(
-      "view", this->renderer_->GetCamera()->GetViewMatrix(), 16);
+
   this->renderer_->Start();
 }

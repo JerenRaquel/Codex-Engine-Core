@@ -9,6 +9,9 @@
 #include <vector>
 // Custom
 #include "shaderCompiler.hpp"
+// Lib
+#include "../libs/glm/mat4x4.hpp"
+#include "../libs/glm/gtc/type_ptr.hpp"
 
 class Shader {
  private:
@@ -19,7 +22,7 @@ class Shader {
 
   GLuint shaderID_;
   std::map<const char*, Data*>* uniformData_;
-  std::vector<const char*>* shaderIDs_;
+  std::vector<const char*>* uniformDataNames_;
 
  public:
   Shader(ShaderCompiler* compiler, const std::string& vertexFile,
@@ -27,12 +30,12 @@ class Shader {
   ~Shader();
 
   void PassUniformData() noexcept;
+  void PassUniformMatrix(const char* name, glm::mat4x4* data) const noexcept;
   void AddUniformDataID(const char* variableName, float* data,
                         unsigned int amount);
   void UpdateUniformData1f(const char* variableName, float data);
   void UpdateUniformData2f(const char* variableName, float* data);
   void UpdateUniformData3f(const char* variableName, float* data);
-  void UpdateUniformData4vf(const char* variableName, float* data);
 
   void Use() noexcept;
 

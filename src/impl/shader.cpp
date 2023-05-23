@@ -3,26 +3,28 @@
 Shader::Shader(ShaderCompiler* compiler, const std::string& vertexFile,
                const std::string& fragmentFile) {
   this->uniformData_ = new std::map<const char*, Data*>();
-  this->shaderIDs_ = new std::vector<const char*>();
+  this->uniformDataNames_ = new std::vector<const char*>();
   compiler->LoadShaders(vertexFile, fragmentFile);
   compiler->CompileShader(this->shaderID_);
 }
 
 Shader::~Shader() {
-  for (unsigned int i = 0; i < this->shaderIDs_->size(); i++) {
-    Data* d = this->uniformData_->at(this->shaderIDs_->at(i));
+  for (unsigned int i = 0; i < this->uniformDataNames_->size(); i++) {
+    Data* d = this->uniformData_->at(this->uniformDataNames_->at(i));
     delete d->data;
     delete d;
   }
   delete this->uniformData_;
-  delete this->shaderIDs_;
+  delete this->uniformDataNames_;
+
   glDeleteProgram(this->shaderID_);
 }
 
 void Shader::PassUniformData() noexcept {
-  for (unsigned int i = 0; i < this->shaderIDs_->size(); i++) {
-    Data* d = this->uniformData_->at(this->shaderIDs_->at(i));
-    GLuint ID = glGetUniformLocation(this->shaderID_, this->shaderIDs_->at(i));
+  for (unsigned int i = 0; i < this->uniformDataNames_->size(); i++) {
+    Data* d = this->uniformData_->at(this->uniformDataNames_->at(i));
+    GLuint ID =
+        glGetUniformLocation(this->shaderID_, this->uniformDataNames_->at(i));
     switch (d->amount) {
       case 1:
         glUniform1f(ID, d->data[0]);
@@ -36,11 +38,14 @@ void Shader::PassUniformData() noexcept {
       case 4:
         glUniform4f(ID, d->data[0], d->data[1], d->data[2], d->data[3]);
         break;
-      case 16:
-        glUniformMatrix4fv(ID, 1, GL_FALSE, d->data);
-        break;
     }
   }
+}
+
+void Shader::PassUniformMatrix(const char* name,
+                               glm::mat4x4* data) const noexcept {
+  GLuint ID = glGetUniformLocation(this->shaderID_, name);
+  glUniformMatrix4fv(ID, 1, GL_FALSE, &(*data)[0][0]);
 }
 
 void Shader::AddUniformDataID(const char* variableName, float* data,
@@ -48,7 +53,7 @@ void Shader::AddUniformDataID(const char* variableName, float* data,
   if (this->uniformData_->count(variableName)) {
     return;
   } else {
-    this->shaderIDs_->push_back(variableName);
+    this->uniformDataNames_->push_back(variableName);
     this->uniformData_->insert(
         std::pair<const char*, Data*>(variableName, new Data{data, amount}));
   }
@@ -77,15 +82,6 @@ void Shader::UpdateUniformData3f(const char* variableName, float* data) {
     return;
   } else {
     delete this->uniformData_->at(variableName)->data;
-    this->uniformData_->at(variableName)->data = data;
-  }
-}
-
-void Shader::UpdateUniformData4vf(const char* variableName, float* data) {
-  if (!this->uniformData_->count(variableName)) {
-    return;
-  } else {
-    delete[] this->uniformData_->at(variableName)->data;
     this->uniformData_->at(variableName)->data = data;
   }
 }

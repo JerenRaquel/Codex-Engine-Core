@@ -8,6 +8,8 @@
 #include <string>
 // Custom
 #include "vector.hpp"
+// Lib
+#include "../libs/glm/mat4x4.hpp"
 
 class Quad {
  private:
@@ -17,7 +19,7 @@ class Quad {
   GLuint VBO_, EBO_, VAO_;
   GLfloat* vertices_ = nullptr;
   GLuint* indices_ = nullptr;
-  float* modelMatrix_ = nullptr;
+  glm::mat4x4* modelMatrix_;
 
   void CreateBuffer();
 
@@ -32,6 +34,6 @@ class Quad {
   void Unbind() const noexcept;
   void Draw() const noexcept;
   std::string GetShaderName() const noexcept;
-  float* GetModelMatrix() noexcept;
+  glm::mat4x4* GetModelMatrix() noexcept;
 };
 #endif  // QUAD_HPP_

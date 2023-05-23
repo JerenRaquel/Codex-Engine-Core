@@ -3,7 +3,6 @@
 RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
   // Initalize GLFW
   if (!glfwInit()) {
-    // throw FailedError("ERROR: Couldn't Initialize GLFW...");
     throw std::runtime_error("ERROR: Couldn't Initialize GLFW...");
   }
 
@@ -15,7 +14,6 @@ RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
   GLuint errCode = glewInit();
   if (errCode != GLEW_OK) {
     glfwTerminate();
-    // throw FailedError("Error: Unable to Initialize GLEW...");
     throw std::runtime_error("Error: Unable to Initialize GLEW...");
   }
 
@@ -57,10 +55,7 @@ void RenderEngine::Start() {
     //* Clear Drawing Surface
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Update Uniforms
-    for (unsigned int i = 0; i < this->shaderNames_->size(); i++) {
-      this->shaders_->at(this->shaderNames_->at(i))->PassUniformData();
-    }
+    this->camera_->Recalculate();
 
     //* Draw Calls
     for (unsigned int i = 0; i < this->quads_->size(); i++) {
@@ -76,10 +71,12 @@ void RenderEngine::Start() {
       shader->Use();
 
       // Pass matrices to shader
-      shader->UpdateUniformData4vf("ortho", this->camera_->GetOrthoMatrix());
-      shader->UpdateUniformData4vf("view", this->camera_->GetViewMatrix());
-      shader->UpdateUniformData4vf("model",
-                                   this->quads_->at(i)->GetModelMatrix());
+      shader->PassUniformMatrix("ortho", this->camera_->GetOrthoMatrix());
+      shader->PassUniformMatrix("view", this->camera_->GetViewMatrix());
+      shader->PassUniformMatrix("model", this->quads_->at(i)->GetModelMatrix());
+
+      // Update Uniforms
+      shader->PassUniformData();
 
       this->quads_->at(i)->Draw();
     }
