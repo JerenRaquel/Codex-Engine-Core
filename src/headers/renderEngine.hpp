@@ -15,10 +15,12 @@
 #include "quad.hpp"
 #include "shader.hpp"
 #include "shaderCompiler.hpp"
+#include "camera.hpp"
 
 class RenderEngine {
  private:
   GLFWwindow* window_;
+  Camera* camera_;
   std::vector<Quad*>* quads_;
   ShaderCompiler* shaderCompiler_;
   std::map<std::string, Shader*>* shaders_;
@@ -32,5 +34,6 @@ class RenderEngine {
   void CompileShader(const std::string& vertex, const std::string& fragment,
                      const std::string& name);
   Shader* const GetShader(const std::string& name);
+  Camera* const GetCamera() noexcept;
 };
 #endif  // RENDERENGINE_HPP_

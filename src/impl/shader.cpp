@@ -36,6 +36,9 @@ void Shader::PassUniformData() noexcept {
       case 4:
         glUniform4f(ID, d->data[0], d->data[1], d->data[2], d->data[3]);
         break;
+      case 16:
+        glUniformMatrix4fv(ID, 1, GL_FALSE, d->data);
+        break;
     }
   }
 }
@@ -74,6 +77,15 @@ void Shader::UpdateUniformData3f(const char* variableName, float* data) {
     return;
   } else {
     delete this->uniformData_->at(variableName)->data;
+    this->uniformData_->at(variableName)->data = data;
+  }
+}
+
+void Shader::UpdateUniformData4vf(const char* variableName, float* data) {
+  if (!this->uniformData_->count(variableName)) {
+    return;
+  } else {
+    delete[] this->uniformData_->at(variableName)->data;
     this->uniformData_->at(variableName)->data = data;
   }
 }

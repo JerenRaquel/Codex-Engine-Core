@@ -33,6 +33,7 @@ RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
   this->shaders_ = new std::map<std::string, Shader*>();
   this->shaderNames_ = new std::vector<std::string>();
   this->shaderCompiler_ = new ShaderCompiler();
+  this->camera_ = new Camera(size);
 }
 
 RenderEngine::~RenderEngine() {
@@ -46,6 +47,7 @@ RenderEngine::~RenderEngine() {
   delete this->shaders_;
   delete this->shaderNames_;
   delete this->shaderCompiler_;
+  delete this->camera_;
 
   glfwTerminate();
 }
@@ -64,11 +66,20 @@ void RenderEngine::Start() {
     for (unsigned int i = 0; i < this->quads_->size(); i++) {
       // Load Active Shader
       std::string shaderName = this->quads_->at(i)->GetShaderName();
+      Shader* shader;
       if (this->shaders_->count(shaderName) > 0) {
-        this->shaders_->at(shaderName)->Use();
+        shader = this->shaders_->at(shaderName);
       } else {
-        this->shaders_->at("default")->Use();
+        shader = this->shaders_->at("default");
       }
+
+      shader->Use();
+
+      // Pass matrices to shader
+      shader->UpdateUniformData4vf("ortho", this->camera_->GetOrthoMatrix());
+      shader->UpdateUniformData4vf("view", this->camera_->GetViewMatrix());
+      shader->UpdateUniformData4vf("model",
+                                   this->quads_->at(i)->GetModelMatrix());
 
       this->quads_->at(i)->Draw();
     }
@@ -103,3 +114,5 @@ Shader* const RenderEngine::GetShader(const std::string& name) {
                              " doesn't exist!");
   }
 }
+
+Camera* const RenderEngine::GetCamera() noexcept { return this->camera_; }

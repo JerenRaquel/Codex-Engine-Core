@@ -17,6 +17,7 @@ class Quad {
   GLuint VBO_, EBO_, VAO_;
   GLfloat* vertices_ = nullptr;
   GLuint* indices_ = nullptr;
+  float* modelMatrix_ = nullptr;
 
   void CreateBuffer();
 
@@ -31,5 +32,6 @@ class Quad {
   void Unbind() const noexcept;
   void Draw() const noexcept;
   std::string GetShaderName() const noexcept;
+  float* GetModelMatrix() noexcept;
 };
 #endif  // QUAD_HPP_

@@ -1,6 +1,8 @@
 #include "../headers/quad.hpp"
 
 void Quad::CreateBuffer() {
+  this->modelMatrix_ = new float[16];
+
   glGenVertexArrays(1, &this->VAO_);
   glGenBuffers(1, &this->VBO_);
   glGenBuffers(1, &this->EBO_);
@@ -79,3 +81,14 @@ void Quad::Draw() const noexcept {
 }
 
 std::string Quad::GetShaderName() const noexcept { return this->shaderName_; }
+
+float *Quad::GetModelMatrix() noexcept {
+  this->modelMatrix_[0] = this->size_.x;
+  this->modelMatrix_[5] = this->size_.y;
+  this->modelMatrix_[10] = 1.0f;
+  this->modelMatrix_[12] = this->position_.x;
+  this->modelMatrix_[13] = this->position_.y;
+  this->modelMatrix_[15] = 1.0f;
+
+  return this->modelMatrix_;
+}

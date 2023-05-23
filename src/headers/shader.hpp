@@ -32,6 +32,7 @@ class Shader {
   void UpdateUniformData1f(const char* variableName, float data);
   void UpdateUniformData2f(const char* variableName, float* data);
   void UpdateUniformData3f(const char* variableName, float* data);
+  void UpdateUniformData4vf(const char* variableName, float* data);
 
   void Use() noexcept;
 
