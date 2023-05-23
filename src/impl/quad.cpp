@@ -92,6 +92,16 @@ Quad *Quad::SetPosition(const Vector<float> &position) noexcept {
   return this;
 }
 
+Quad *Quad::SetColor(const Vector3<float> &color) noexcept {
+  this->color_ = color;
+  return this;
+}
+
+Quad *Quad::SetColor(const float &r, const float &g, const float &b) noexcept {
+  this->color_ = Vector3<float>(r, g, b);
+  return this;
+}
+
 std::string Quad::GetShaderName() const noexcept { return this->shaderName_; }
 
 glm::mat4x4 *Quad::GetModelMatrix() noexcept {
@@ -104,3 +114,5 @@ glm::mat4x4 *Quad::GetModelMatrix() noexcept {
 
   return this->modelMatrix_;
 }
+
+const Vector3<float> &Quad::GetColor() const noexcept { return this->color_; }

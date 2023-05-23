@@ -38,6 +38,13 @@ class Vector3 {
   ~Vector3<T>();
 
   glm::vec3 ToGLMVec3f() const noexcept { return glm::vec3(x, y, z); }
+  float* ToFloatStream() const noexcept {
+    float* result = new float[3];
+    result[0] = this->x;
+    result[1] = this->y;
+    result[2] = this->z;
+    return result;
+  }
 
   Vector3<T> operator=(const Vector3<T>& other) {
     this->x = other.x;

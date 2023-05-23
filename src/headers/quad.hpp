@@ -22,6 +22,7 @@ class Quad {
   GLfloat* vertices_ = nullptr;
   GLuint* indices_ = nullptr;
   glm::mat4x4* modelMatrix_;
+  Vector3<float> color_ = Vector3<float>(1.0f, 1.0f, 1.0f);
 
   void CreateBuffer();
 
@@ -39,8 +40,11 @@ class Quad {
   Quad* SetShaderName(const std::string& shaderName) noexcept;
   Quad* SetScale(const Vector<float>& scale) noexcept;
   Quad* SetPosition(const Vector<float>& position) noexcept;
+  Quad* SetColor(const Vector3<float>& color) noexcept;
+  Quad* SetColor(const float& r, const float& g, const float& b) noexcept;
   // Getters
   std::string GetShaderName() const noexcept;
   glm::mat4x4* GetModelMatrix() noexcept;
+  const Vector3<float>& GetColor() const noexcept;
 };
 #endif  // QUAD_HPP_

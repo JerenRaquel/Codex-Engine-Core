@@ -71,10 +71,11 @@ void RenderEngine::Start() {
       shader->Use();
 
       // Update Uniforms
-      shader->PassUniformData();
+      // shader->PassUniformData();
       shader->PassUniformMatrix("ortho", this->camera_->GetOrthoMatrix());
       shader->PassUniformMatrix("view", this->camera_->GetViewMatrix());
       shader->PassUniformMatrix("model", this->quads_->at(i)->GetModelMatrix());
+      shader->PassUniform3f("color", this->quads_->at(i)->GetColor());
 
       this->quads_->at(i)->Draw();
     }
