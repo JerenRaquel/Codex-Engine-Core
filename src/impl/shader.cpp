@@ -33,6 +33,9 @@ void Shader::PassUniformData() noexcept {
       case 3:
         glUniform3f(ID, d->data[0], d->data[1], d->data[2]);
         break;
+      case 4:
+        glUniform4f(ID, d->data[0], d->data[1], d->data[2], d->data[3]);
+        break;
     }
   }
 }
@@ -43,7 +46,8 @@ void Shader::AddUniformDataID(const char* variableName, float* data,
     return;
   } else {
     this->shaderIDs_->push_back(variableName);
-    this->uniformData_->at(variableName) = new Data{data, amount};
+    this->uniformData_->insert(
+        std::pair<const char*, Data*>(variableName, new Data{data, amount}));
   }
 }
 

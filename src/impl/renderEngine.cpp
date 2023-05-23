@@ -55,8 +55,10 @@ void RenderEngine::Start() {
     //* Clear Drawing Surface
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // // Update the Shader Data
-    // this->mesh_->UpdateShaderValues();
+    // Update Uniforms
+    for (unsigned int i = 0; i < this->shaderNames_->size(); i++) {
+      this->shaders_->at(this->shaderNames_->at(i))->PassUniformData();
+    }
 
     //* Draw Calls
     for (unsigned int i = 0; i < this->quads_->size(); i++) {
@@ -93,11 +95,11 @@ void RenderEngine::CompileShader(const std::string& vertex,
   this->shaders_->insert(std::pair<std::string, Shader*>(name, shader));
 }
 
-void RenderEngine::GetShader(const std::string& name) {
-  if (this->shaders_->count(name) == 0) {
+Shader* const RenderEngine::GetShader(const std::string& name) {
+  if (this->shaders_->count(name) > 0) {
+    return this->shaders_->at(name);
+  } else {
     throw std::runtime_error("ERROR: Shader with name " + name +
-                             " does not exist!");
+                             " doesn't exist!");
   }
-
-  this->shaders_->at(name)->Use();
 }

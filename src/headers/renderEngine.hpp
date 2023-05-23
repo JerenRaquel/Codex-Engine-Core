@@ -31,6 +31,6 @@ class RenderEngine {
   void AddQuad(Quad* quad);
   void CompileShader(const std::string& vertex, const std::string& fragment,
                      const std::string& name);
-  void GetShader(const std::string& name);
+  Shader* const GetShader(const std::string& name);
 };
 #endif  // RENDERENGINE_HPP_
