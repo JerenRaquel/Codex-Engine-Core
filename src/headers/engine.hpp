@@ -6,11 +6,16 @@
 // Custom
 #include "vector.hpp"
 #include "renderEngine.hpp"
+#include "camera.hpp"
 
 class Engine {
  private:
   Vector<int> windowSize_;
   RenderEngine* renderer_;
+  Camera* camera_;
+  void MoveCamera() noexcept;
+  void OnStart() noexcept;
+  void OnUpdate() noexcept;
 
  public:
   Engine(const Vector<int>& windowSize, const std::string& name);

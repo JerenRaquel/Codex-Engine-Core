@@ -21,9 +21,39 @@ class Vector {
     return *this;
   }
 
+  Vector<T> operator+(const Vector<T>& other) {
+    this->x += other.x;
+    this->y += other.y;
+    return *this;
+  }
+
+  Vector<T> operator-(const Vector<T>& other) {
+    this->x -= other.x;
+    this->y -= other.y;
+    return *this;
+  }
+
   Vector<T> operator/(const T& other) {
     this->x /= other;
     this->y /= other;
+    return *this;
+  }
+
+  Vector<T> operator/(const Vector<T>& other) {
+    this->x /= other.x;
+    this->y /= other.y;
+    return *this;
+  }
+
+  Vector<T> operator*(const T& other) {
+    this->x *= other;
+    this->y *= other;
+    return *this;
+  }
+
+  Vector<T> operator*(const Vector<T>& other) {
+    this->x *= other.x;
+    this->y *= other.y;
     return *this;
   }
 };
@@ -50,6 +80,48 @@ class Vector3 {
     this->x = other.x;
     this->y = other.y;
     this->z = other.z;
+    return *this;
+  }
+
+  Vector3<T> operator+(const Vector3<T>& other) {
+    this->x += other.x;
+    this->y += other.y;
+    this->z += other.z;
+    return *this;
+  }
+
+  Vector3<T> operator-(const Vector3<T>& other) {
+    this->x -= other.x;
+    this->y -= other.y;
+    this->z -= other.z;
+    return *this;
+  }
+
+  Vector3<T> operator/(const T& other) {
+    this->x /= other;
+    this->y /= other;
+    this->z /= other;
+    return *this;
+  }
+
+  Vector3<T> operator/(const Vector3<T>& other) {
+    this->x /= other.x;
+    this->y /= other.y;
+    this->z /= other.z;
+    return *this;
+  }
+
+  Vector3<T> operator*(const T& other) {
+    this->x *= other;
+    this->y *= other;
+    this->z *= other;
+    return *this;
+  }
+
+  Vector3<T> operator*(const Vector3<T>& other) {
+    this->x *= other.x;
+    this->y *= other.y;
+    this->z *= other.z;
     return *this;
   }
 };

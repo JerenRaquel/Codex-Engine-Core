@@ -40,6 +40,13 @@ void Camera::Recalculate() noexcept {
   this->isDirty_ = false;
 }
 
+void Camera::UpdatePosition(const Vector<float>& direction) noexcept {
+  this->position_.x += direction.x * this->cameraSpeed_;
+  this->position_.y += direction.y * this->cameraSpeed_;
+
+  this->isDirty_ = true;
+}
+
 glm::mat4x4* Camera::GetOrthoMatrix() const noexcept {
   return this->orthoMatrix_;
 }

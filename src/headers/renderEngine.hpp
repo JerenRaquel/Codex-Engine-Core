@@ -20,7 +20,6 @@
 class RenderEngine {
  private:
   GLFWwindow* window_;
-  Camera* camera_;
   std::vector<Quad*>* quads_;
   ShaderCompiler* shaderCompiler_;
   std::map<std::string, Shader*>* shaders_;
@@ -29,11 +28,11 @@ class RenderEngine {
  public:
   RenderEngine(const Vector<int>& size, const std::string& name);
   ~RenderEngine();
-  void Start();
+  void Draw(const Camera* camera);
   Quad* AddQuad(Quad* quad);
   void CompileShader(const std::string& vertex, const std::string& fragment,
                      const std::string& name);
   Shader* const GetShader(const std::string& name);
-  Camera* const GetCamera() noexcept;
+  GLFWwindow* const GetWindow() const noexcept;
 };
 #endif  // RENDERENGINE_HPP_

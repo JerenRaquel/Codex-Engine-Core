@@ -31,7 +31,6 @@ RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
   this->shaders_ = new std::map<std::string, Shader*>();
   this->shaderNames_ = new std::vector<std::string>();
   this->shaderCompiler_ = new ShaderCompiler();
-  this->camera_ = new Camera(size, 0.1f, 100.0f);
 }
 
 RenderEngine::~RenderEngine() {
@@ -45,46 +44,39 @@ RenderEngine::~RenderEngine() {
   delete this->shaders_;
   delete this->shaderNames_;
   delete this->shaderCompiler_;
-  delete this->camera_;
 
   glfwTerminate();
 }
 
-void RenderEngine::Start() {
-  while (!glfwWindowShouldClose(this->window_)) {
-    //* Clear Drawing Surface
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void RenderEngine::Draw(const Camera* camera) {
+  //* Clear Drawing Surface
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    this->camera_->Recalculate();
-
-    //* Draw Calls
-    for (unsigned int i = 0; i < this->quads_->size(); i++) {
-      // Load Active Shader
-      std::string shaderName = this->quads_->at(i)->GetShaderName();
-      Shader* shader;
-      if (this->shaders_->count(shaderName) > 0) {
-        shader = this->shaders_->at(shaderName);
-      } else {
-        shader = this->shaders_->at("default");
-      }
-
-      shader->Use();
-
-      // Update Uniforms
-      // shader->PassUniformData();
-      shader->PassUniformMatrix("ortho", this->camera_->GetOrthoMatrix());
-      shader->PassUniformMatrix("view", this->camera_->GetViewMatrix());
-      shader->PassUniformMatrix("model", this->quads_->at(i)->GetModelMatrix());
-      shader->PassUniform3f("color", this->quads_->at(i)->GetColor());
-
-      this->quads_->at(i)->Draw();
+  //* Draw Calls
+  for (unsigned int i = 0; i < this->quads_->size(); i++) {
+    // Load Active Shader
+    std::string shaderName = this->quads_->at(i)->GetShaderName();
+    Shader* shader;
+    if (this->shaders_->count(shaderName) > 0) {
+      shader = this->shaders_->at(shaderName);
+    } else {
+      shader = this->shaders_->at("default");
     }
 
-    // update other events like input handling
-    glfwPollEvents();
-    // put the stuff we've been drawing onto the display
-    glfwSwapBuffers(this->window_);
+    shader->Use();
+
+    // Update Uniforms
+    // shader->PassUniformData();
+    shader->PassUniformMatrix("ortho", camera->GetOrthoMatrix());
+    shader->PassUniformMatrix("view", camera->GetViewMatrix());
+    shader->PassUniformMatrix("model", this->quads_->at(i)->GetModelMatrix());
+    shader->PassUniform3f("color", this->quads_->at(i)->GetColor());
+
+    this->quads_->at(i)->Draw();
   }
+
+  // put the stuff we've been drawing onto the display
+  glfwSwapBuffers(this->window_);
 }
 
 Quad* RenderEngine::AddQuad(Quad* quad) {
@@ -114,4 +106,6 @@ Shader* const RenderEngine::GetShader(const std::string& name) {
   }
 }
 
-Camera* const RenderEngine::GetCamera() noexcept { return this->camera_; }
+GLFWwindow* const RenderEngine::GetWindow() const noexcept {
+  return this->window_;
+}

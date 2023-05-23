@@ -13,6 +13,7 @@ class Camera {
   glm::mat4x4* orthoMatrix_ = nullptr;
   glm::mat4x4* viewMatrix_ = nullptr;
   Vector3<float> position_;
+  float cameraSpeed_ = 5.0f;
   float near_;
   float far_;
   bool isDirty_;
@@ -22,6 +23,7 @@ class Camera {
   ~Camera();
 
   void Recalculate() noexcept;
+  void UpdatePosition(const Vector<float>& direction) noexcept;
   glm::mat4x4* GetOrthoMatrix() const noexcept;
   glm::mat4x4* GetViewMatrix() const noexcept;
 };
