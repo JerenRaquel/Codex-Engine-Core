@@ -30,6 +30,9 @@ RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
   glDepthFunc(GL_LESS);
 
   this->quads_ = new std::vector<Quad*>();
+  this->shaders_ = new std::map<std::string, Shader*>();
+  this->shaderNames_ = new std::vector<std::string>();
+  this->shaderCompiler_ = new ShaderCompiler();
 }
 
 RenderEngine::~RenderEngine() {
@@ -37,6 +40,12 @@ RenderEngine::~RenderEngine() {
     delete this->quads_->at(i);
   }
   delete this->quads_;
+  for (unsigned int i = 0; i < this->shaderNames_->size(); i++) {
+    delete this->shaders_->at(this->shaderNames_->at(i));
+  }
+  delete this->shaders_;
+  delete this->shaderNames_;
+  delete this->shaderCompiler_;
 
   glfwTerminate();
 }
@@ -46,15 +55,21 @@ void RenderEngine::Start() {
     //* Clear Drawing Surface
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //* Draw Calls
-    for (unsigned int i = 0; i < this->quads_->size(); i++) {
-      this->quads_->at(i)->Draw();
-    }
-
     // // Update the Shader Data
     // this->mesh_->UpdateShaderValues();
-    // // Load Active Shader
-    // this->mesh_->UseShader();
+
+    //* Draw Calls
+    for (unsigned int i = 0; i < this->quads_->size(); i++) {
+      // Load Active Shader
+      std::string shaderName = this->quads_->at(i)->GetShaderName();
+      if (this->shaders_->count(shaderName) > 0) {
+        this->shaders_->at(shaderName)->Use();
+      } else {
+        this->shaders_->at("default")->Use();
+      }
+
+      this->quads_->at(i)->Draw();
+    }
 
     // update other events like input handling
     glfwPollEvents();
@@ -64,3 +79,25 @@ void RenderEngine::Start() {
 }
 
 void RenderEngine::AddQuad(Quad* quad) { this->quads_->push_back(quad); }
+
+void RenderEngine::CompileShader(const std::string& vertex,
+                                 const std::string& fragment,
+                                 const std::string& name) {
+  if (this->shaders_->count(name) > 0) {
+    throw std::runtime_error("ERROR: Shader with name " + name +
+                             " already exists!");
+  }
+
+  Shader* shader = new Shader(this->shaderCompiler_, vertex, fragment);
+  this->shaderNames_->push_back(name);
+  this->shaders_->insert(std::pair<std::string, Shader*>(name, shader));
+}
+
+void RenderEngine::GetShader(const std::string& name) {
+  if (this->shaders_->count(name) == 0) {
+    throw std::runtime_error("ERROR: Shader with name " + name +
+                             " does not exist!");
+  }
+
+  this->shaders_->at(name)->Use();
+}

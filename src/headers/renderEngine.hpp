@@ -9,19 +9,28 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <map>
 // Custom
 #include "vector.hpp"
 #include "quad.hpp"
+#include "shader.hpp"
+#include "shaderCompiler.hpp"
 
 class RenderEngine {
  private:
   GLFWwindow* window_;
   std::vector<Quad*>* quads_;
+  ShaderCompiler* shaderCompiler_;
+  std::map<std::string, Shader*>* shaders_;
+  std::vector<std::string>* shaderNames_;
 
  public:
   RenderEngine(const Vector<int>& size, const std::string& name);
   ~RenderEngine();
   void Start();
   void AddQuad(Quad* quad);
+  void CompileShader(const std::string& vertex, const std::string& fragment,
+                     const std::string& name);
+  void GetShader(const std::string& name);
 };
 #endif  // RENDERENGINE_HPP_

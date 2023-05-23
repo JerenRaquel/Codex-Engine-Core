@@ -9,18 +9,10 @@ void Quad::CreateBuffer() {
 
   glBindBuffer(GL_ARRAY_BUFFER, this->VBO_);
   GLfloat verts[] = {
-      this->position_.x,
-      this->position_.y,
-      0.0f,  // top left
-      this->position_.x + this->size_.x,
-      this->position_.y,
-      0.0f,  // top right
-      this->position_.x + this->size_.x,
-      this->position_.y + this->size_.y,
-      0.0f,  // bottom right
-      this->position_.x,
-      this->position_.y + this->size_.y,
-      0.0f  // bottom left
+      0.0f, 0.0f, 0.0f,  // top left
+      1.0f, 0.0f, 0.0f,  // top right
+      1.0f, 1.0f, 0.0f,  // bottom right
+      0.0f, 1.0f, 0.0f   // bottom left
   };
   this->vertices_ = verts;
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 12, this->vertices_,
@@ -68,16 +60,22 @@ Quad::~Quad() {
   this->indices_ = nullptr;
 }
 
-void Quad::Bind() {
+void Quad::SetShaderName(const std::string &shaderName) noexcept {
+  this->shaderName_ = shaderName;
+}
+
+void Quad::Bind() const noexcept {
   glBindVertexArray(this->VAO_);
   glBindBuffer(GL_ARRAY_BUFFER, this->VBO_);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO_);
 }
 
-void Quad::Unbind() { glBindVertexArray(0); }
+void Quad::Unbind() const noexcept { glBindVertexArray(0); }
 
-void Quad::Draw() {
+void Quad::Draw() const noexcept {
   Bind();
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   Unbind();
 }
+
+std::string Quad::GetShaderName() const noexcept { return this->shaderName_; }

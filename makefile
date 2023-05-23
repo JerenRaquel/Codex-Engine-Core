@@ -5,7 +5,7 @@ SOURCE_DIR := $(SRC_DIR)/impl
 BUILD_DIR := builds
 
 # Commands
-GXX := g++ -g -Wall -Werror -pthread -std=c++2a
+GXX := g++ -g -Wall -Werror -pthread -std=c++2a -O3
 
 LINKER_LIBS := -lglfw3 -lopengl32 -lgdi32 -lglew32
 
