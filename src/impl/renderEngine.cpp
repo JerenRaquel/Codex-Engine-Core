@@ -31,7 +31,7 @@ RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
   this->shaders_ = new std::map<std::string, Shader*>();
   this->shaderNames_ = new std::vector<std::string>();
   this->shaderCompiler_ = new ShaderCompiler();
-  this->camera_ = new Camera(size);
+  this->camera_ = new Camera(size, 0.1f, 100.0f);
 }
 
 RenderEngine::~RenderEngine() {
@@ -70,13 +70,11 @@ void RenderEngine::Start() {
 
       shader->Use();
 
-      // Pass matrices to shader
+      // Update Uniforms
+      shader->PassUniformData();
       shader->PassUniformMatrix("ortho", this->camera_->GetOrthoMatrix());
       shader->PassUniformMatrix("view", this->camera_->GetViewMatrix());
       shader->PassUniformMatrix("model", this->quads_->at(i)->GetModelMatrix());
-
-      // Update Uniforms
-      shader->PassUniformData();
 
       this->quads_->at(i)->Draw();
     }

@@ -13,12 +13,12 @@ class Camera {
   glm::mat4x4* orthoMatrix_ = nullptr;
   glm::mat4x4* viewMatrix_ = nullptr;
   Vector3<float> position_;
-  Vector3<float> target_;
-  Vector3<float> up_;
+  float near_;
+  float far_;
   bool isDirty_;
 
  public:
-  Camera(Vector<int> windowSize);
+  Camera(Vector<int> windowSize, float near, float far);
   ~Camera();
 
   void Recalculate() noexcept;
