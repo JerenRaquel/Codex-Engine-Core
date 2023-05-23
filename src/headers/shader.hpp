@@ -16,11 +16,6 @@
 
 class Shader {
  private:
-  struct Data {
-    float* data;
-    unsigned int amount;
-  };
-
   GLuint shaderID_;
 
  public:

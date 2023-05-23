@@ -52,6 +52,14 @@ void RenderEngine::Draw(const Camera* camera) {
   //* Clear Drawing Surface
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  // Pass the Ortho and View Matrix to each shaders
+  for (unsigned int i = 0; i < this->shaderNames_->size(); i++) {
+    Shader* shader = this->shaders_->at(this->shaderNames_->at(i));
+    shader->Use();
+    shader->PassUniformMatrix("ortho", camera->GetOrthoMatrix());
+    shader->PassUniformMatrix("view", camera->GetViewMatrix());
+  }
+
   //* Draw Calls
   for (unsigned int i = 0; i < this->quads_->size(); i++) {
     // Load Active Shader
@@ -66,9 +74,6 @@ void RenderEngine::Draw(const Camera* camera) {
     shader->Use();
 
     // Update Uniforms
-    // shader->PassUniformData();
-    shader->PassUniformMatrix("ortho", camera->GetOrthoMatrix());
-    shader->PassUniformMatrix("view", camera->GetViewMatrix());
     shader->PassUniformMatrix("model", this->quads_->at(i)->GetModelMatrix());
     shader->PassUniform3f("color", this->quads_->at(i)->GetColor());
 
