@@ -30,7 +30,7 @@ class RenderEngine {
   RenderEngine(const Vector<int>& size, const std::string& name);
   ~RenderEngine();
   void Start();
-  void AddQuad(Quad* quad);
+  Quad* AddQuad(Quad* quad);
   void CompileShader(const std::string& vertex, const std::string& fragment,
                      const std::string& name);
   Shader* const GetShader(const std::string& name);

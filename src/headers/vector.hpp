@@ -13,9 +13,17 @@ class Vector {
   Vector<T>(T x, T y);
   ~Vector<T>();
 
+  glm::vec3 ToGLMVec3f() const noexcept { return glm::vec3(x, y, 0); }
+
   Vector<T> operator=(const Vector<T>& other) {
     this->x = other.x;
     this->y = other.y;
+    return *this;
+  }
+
+  Vector<T> operator/(const T& other) {
+    this->x /= other;
+    this->y /= other;
     return *this;
   }
 };
@@ -29,7 +37,7 @@ class Vector3 {
   Vector3<T>(T x, T y, T z);
   ~Vector3<T>();
 
-  glm::vec3 ToGLM() const noexcept { return glm::vec3(x, y, z); }
+  glm::vec3 ToGLMVec3f() const noexcept { return glm::vec3(x, y, z); }
 
   Vector3<T> operator=(const Vector3<T>& other) {
     this->x = other.x;

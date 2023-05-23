@@ -10,12 +10,14 @@
 #include "vector.hpp"
 // Lib
 #include "../libs/glm/mat4x4.hpp"
+#include "../libs/glm/gtc/matrix_transform.hpp"
 
 class Quad {
  private:
   std::string shaderName_ = "default";
   Vector<float> position_;
   Vector<float> size_;
+  Vector<float> scale_ = Vector<float>(1.0f, 1.0f);
   GLuint VBO_, EBO_, VAO_;
   GLfloat* vertices_ = nullptr;
   GLuint* indices_ = nullptr;
@@ -29,10 +31,15 @@ class Quad {
   Quad(const Vector<float>& size, const Vector<float>& position);
   ~Quad();
 
-  void SetShaderName(const std::string& shaderName) noexcept;
+  // Utility
   void Bind() const noexcept;
   void Unbind() const noexcept;
   void Draw() const noexcept;
+  // Setters
+  Quad* SetShaderName(const std::string& shaderName) noexcept;
+  Quad* SetScale(const Vector<float>& scale) noexcept;
+  Quad* SetPosition(const Vector<float>& position) noexcept;
+  // Getters
   std::string GetShaderName() const noexcept;
   glm::mat4x4* GetModelMatrix() noexcept;
 };

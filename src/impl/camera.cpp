@@ -21,7 +21,7 @@ void Camera::Recalculate() noexcept {
   if (!this->isDirty_) return;
 
   glm::mat4x4 viewTemp =
-      glm::translate(glm::mat4x4(1.0f), this->position_.ToGLM());
+      glm::translate(glm::mat4x4(1.0f), this->position_.ToGLMVec3f());
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
       (*(this->viewMatrix_))[i][j] = viewTemp[i][j];

@@ -10,11 +10,12 @@ void Quad::CreateBuffer() {
   glBindVertexArray(this->VAO_);
 
   glBindBuffer(GL_ARRAY_BUFFER, this->VBO_);
+  const Vector<float> offset = this->size_ / 2.0f;
   GLfloat verts[] = {
-      0.0f, 0.0f, 0.0f,  // top left
-      1.0f, 0.0f, 0.0f,  // top right
-      1.0f, 1.0f, 0.0f,  // bottom right
-      0.0f, 1.0f, 0.0f   // bottom left
+      -offset.x, -offset.y, 0.0f,  // top left
+      offset.x,  -offset.y, 0.0f,  // top right
+      offset.x,  offset.y,  0.0f,  // bottom right
+      -offset.x, offset.y,  0.0f   // bottom left
   };
   this->vertices_ = verts;
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 12, this->vertices_,
@@ -62,10 +63,6 @@ Quad::~Quad() {
   this->indices_ = nullptr;
 }
 
-void Quad::SetShaderName(const std::string &shaderName) noexcept {
-  this->shaderName_ = shaderName;
-}
-
 void Quad::Bind() const noexcept {
   glBindVertexArray(this->VAO_);
   glBindBuffer(GL_ARRAY_BUFFER, this->VBO_);
@@ -80,16 +77,30 @@ void Quad::Draw() const noexcept {
   Unbind();
 }
 
+Quad *Quad::SetShaderName(const std::string &shaderName) noexcept {
+  this->shaderName_ = shaderName;
+  return this;
+}
+
+Quad *Quad::SetScale(const Vector<float> &scale) noexcept {
+  this->scale_ = scale;
+  return this;
+}
+
+Quad *Quad::SetPosition(const Vector<float> &position) noexcept {
+  this->position_ = position;
+  return this;
+}
+
 std::string Quad::GetShaderName() const noexcept { return this->shaderName_; }
 
 glm::mat4x4 *Quad::GetModelMatrix() noexcept {
   delete this->modelMatrix_;
-  this->modelMatrix_ = new glm::mat4x4(1.0f);  // TEMP
-  // this->modelMatrix_[0] = this->size_.x;
-  // this->modelMatrix_[5] = this->size_.y;
-  // this->modelMatrix_[10] = 1.0f;
-  // this->modelMatrix_[12] = this->position_.x;
-  // this->modelMatrix_[13] = this->position_.y;
+  this->modelMatrix_ = new glm::mat4x4(1.0f);
+  *(this->modelMatrix_) =
+      glm::translate(*this->modelMatrix_, this->position_.ToGLMVec3f());
+  *(this->modelMatrix_) =
+      glm::scale(*this->modelMatrix_, this->scale_.ToGLMVec3f());
 
   return this->modelMatrix_;
 }

@@ -86,7 +86,10 @@ void RenderEngine::Start() {
   }
 }
 
-void RenderEngine::AddQuad(Quad* quad) { this->quads_->push_back(quad); }
+Quad* RenderEngine::AddQuad(Quad* quad) {
+  this->quads_->push_back(quad);
+  return quad;
+}
 
 void RenderEngine::CompileShader(const std::string& vertex,
                                  const std::string& fragment,

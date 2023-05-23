@@ -9,6 +9,7 @@
 
 class Engine {
  private:
+  Vector<int> windowSize_;
   RenderEngine* renderer_;
 
  public:
