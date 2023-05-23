@@ -29,7 +29,6 @@ class Quad {
  public:
   Quad();
   Quad(const Vector<float>& size);
-  Quad(const Vector<float>& size, const Vector<float>& position);
   ~Quad();
 
   // Utility

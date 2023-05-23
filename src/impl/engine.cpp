@@ -10,8 +10,7 @@ Engine::~Engine() {}
 void Engine::Start() {
   this->renderer_->CompileShader("vertex.glsl", "fragment.glsl", "default");
 
-  this->renderer_
-      ->AddQuad(new Quad(Vector<float>(5, 5), Vector<float>(2.5, 2.5)))
+  this->renderer_->AddQuad(new Quad(Vector<float>(5, 5)))
       ->SetScale(Vector<float>(10.0f, 10.0f))
       ->SetPosition(
           Vector<float>(this->windowSize_.x / 2.0f, this->windowSize_.y / 2.0f))

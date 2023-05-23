@@ -47,12 +47,6 @@ Quad::Quad(const Vector<float> &size) {
   this->CreateBuffer();
 }
 
-Quad::Quad(const Vector<float> &size, const Vector<float> &position) {
-  this->size_ = size;
-  this->position_ = position;
-  this->CreateBuffer();
-}
-
 Quad::~Quad() {
   delete[] this->vertices_;
   delete[] this->indices_;
