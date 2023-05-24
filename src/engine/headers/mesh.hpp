@@ -25,6 +25,7 @@ class Mesh {
   glm::mat4x4* modelMatrix_;
   bool isModelMatrixDirty = true;
   Vector<float> position_;
+  float rotation_ = 0.0f;
   Vector<float> scale_ = Vector<float>(1.0f, 1.0f);
 
   // Material
@@ -42,12 +43,14 @@ class Mesh {
 
   // Utility
   void Draw() const noexcept;
+  Mesh* Rotate(const float& angle) noexcept;
   // Setters
   Mesh* SetShaderName(const std::string& shaderName) noexcept;
   Mesh* SetColor(const Vector3<float>& color) noexcept;
   Mesh* SetColor(const float& r, const float& g, const float& b) noexcept;
   Mesh* SetScale(const Vector<float>& scale) noexcept;
   Mesh* SetPosition(const Vector<float>& position) noexcept;
+  Mesh* SetRotation(const float& angle) noexcept;
   // Getters
   std::string GetShaderName() const noexcept;
   glm::mat4x4* GetModelMatrix() noexcept;

@@ -54,6 +54,12 @@ void Mesh::Draw() const noexcept {
   Unbind();
 }
 
+Mesh* Mesh::Rotate(const float& angle) noexcept {
+  this->rotation_ += angle;
+  this->isModelMatrixDirty = true;
+  return this;
+}
+
 Mesh* Mesh::SetShaderName(const std::string& shaderName) noexcept {
   this->shaderName_ = shaderName;
   return this;
@@ -81,6 +87,18 @@ Mesh* Mesh::SetPosition(const Vector<float>& position) noexcept {
   return this;
 }
 
+Mesh* Mesh::SetRotation(const float& rotation) noexcept {
+  this->rotation_ = rotation;
+  while (rotation > 360.0f) {
+    this->rotation_ -= 360.0f;
+  }
+  while (rotation < 0.0f) {
+    this->rotation_ += 360.0f;
+  }
+  this->isModelMatrixDirty = true;
+  return this;
+}
+
 std::string Mesh::GetShaderName() const noexcept { return this->shaderName_; }
 
 glm::mat4x4* Mesh::GetModelMatrix() noexcept {
@@ -89,6 +107,9 @@ glm::mat4x4* Mesh::GetModelMatrix() noexcept {
     this->modelMatrix_ = new glm::mat4x4(1.0f);
     *(this->modelMatrix_) =
         glm::translate(*this->modelMatrix_, this->position_.ToGLMVec3f());
+    *(this->modelMatrix_) =
+        glm::rotate(*this->modelMatrix_, glm::radians(this->rotation_),
+                    glm::vec3(0, 0, -1));
     *(this->modelMatrix_) =
         glm::scale(*this->modelMatrix_, this->scale_.ToGLMVec3f());
 
