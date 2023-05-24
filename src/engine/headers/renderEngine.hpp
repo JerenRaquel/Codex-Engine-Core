@@ -12,7 +12,7 @@
 #include <map>
 // Custom
 #include "vector.hpp"
-#include "quad.hpp"
+#include "mesh.hpp"
 #include "shader.hpp"
 #include "shaderCompiler.hpp"
 #include "camera.hpp"
@@ -20,7 +20,7 @@
 class RenderEngine {
  private:
   GLFWwindow* window_;
-  std::vector<Quad*>* quads_;
+  std::vector<Mesh*>* meshes_;
   ShaderCompiler* shaderCompiler_;
   std::map<std::string, Shader*>* shaders_;
   std::vector<std::string>* shaderNames_;
@@ -29,7 +29,7 @@ class RenderEngine {
   RenderEngine(const Vector<int>& size, const std::string& name);
   ~RenderEngine();
   void Draw(const Camera* camera);
-  Quad* AddQuad(Quad* quad);
+  Mesh* AddMesh(Mesh* mesh);
   void CompileShader(const std::string& vertex, const std::string& fragment,
                      const std::string& name);
   Shader* const GetShader(const std::string& name);

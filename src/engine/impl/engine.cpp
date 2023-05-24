@@ -26,7 +26,6 @@ void Engine::MoveCamera() noexcept {
 
 void Engine::OnStart() noexcept {
   this->renderer_->CompileShader("vertex.glsl", "fragment.glsl", "default");
-
   for (unsigned int i = 0; i < this->startFunctions_->size(); i++) {
     this->startFunctions_->at(i)(this);
   }

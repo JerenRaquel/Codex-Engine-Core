@@ -27,17 +27,17 @@ RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 
-  this->quads_ = new std::vector<Quad*>();
+  this->meshes_ = new std::vector<Mesh*>();
   this->shaders_ = new std::map<std::string, Shader*>();
   this->shaderNames_ = new std::vector<std::string>();
   this->shaderCompiler_ = new ShaderCompiler();
 }
 
 RenderEngine::~RenderEngine() {
-  for (unsigned int i = 0; i < this->quads_->size(); i++) {
-    delete this->quads_->at(i);
+  for (unsigned int i = 0; i < this->meshes_->size(); i++) {
+    delete this->meshes_->at(i);
   }
-  delete this->quads_;
+  delete this->meshes_;
   for (unsigned int i = 0; i < this->shaderNames_->size(); i++) {
     delete this->shaders_->at(this->shaderNames_->at(i));
   }
@@ -61,9 +61,9 @@ void RenderEngine::Draw(const Camera* camera) {
   }
 
   //* Draw Calls
-  for (unsigned int i = 0; i < this->quads_->size(); i++) {
+  for (unsigned int i = 0; i < this->meshes_->size(); i++) {
     // Load Active Shader
-    std::string shaderName = this->quads_->at(i)->GetShaderName();
+    std::string shaderName = this->meshes_->at(i)->GetShaderName();
     Shader* shader;
     if (this->shaders_->count(shaderName) > 0) {
       shader = this->shaders_->at(shaderName);
@@ -74,19 +74,19 @@ void RenderEngine::Draw(const Camera* camera) {
     shader->Use();
 
     // Update Uniforms
-    shader->PassUniformMatrix("model", this->quads_->at(i)->GetModelMatrix());
-    shader->PassUniform3f("color", this->quads_->at(i)->GetColor());
+    shader->PassUniformMatrix("model", this->meshes_->at(i)->GetModelMatrix());
+    shader->PassUniform3f("color", this->meshes_->at(i)->GetColor());
 
-    this->quads_->at(i)->Draw();
+    this->meshes_->at(i)->Draw();
   }
 
   // put the stuff we've been drawing onto the display
   glfwSwapBuffers(this->window_);
 }
 
-Quad* RenderEngine::AddQuad(Quad* quad) {
-  this->quads_->push_back(quad);
-  return quad;
+Mesh* RenderEngine::AddMesh(Mesh* mesh) {
+  this->meshes_->push_back(mesh);
+  return mesh;
 }
 
 void RenderEngine::CompileShader(const std::string& vertex,
