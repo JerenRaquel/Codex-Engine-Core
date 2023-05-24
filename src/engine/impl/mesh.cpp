@@ -60,6 +60,13 @@ Mesh* Mesh::Rotate(const float& angle) noexcept {
   return this;
 }
 
+Mesh* Mesh::Translate(const Vector<float>& direction,
+                      const float& magnitude) noexcept {
+  this->position_ += direction * magnitude;
+  this->isModelMatrixDirty = true;
+  return this;
+}
+
 Mesh* Mesh::SetShaderName(const std::string& shaderName) noexcept {
   this->shaderName_ = shaderName;
   return this;
@@ -89,11 +96,11 @@ Mesh* Mesh::SetPosition(const Vector<float>& position) noexcept {
 
 Mesh* Mesh::SetRotation(const float& rotation) noexcept {
   this->rotation_ = rotation;
-  while (rotation > 360.0f) {
-    this->rotation_ -= 360.0f;
-  }
-  while (rotation < 0.0f) {
+  // this->rotation_ = fmod(this->rotation_, 360.0f);
+  if (this->rotation_ <= -360.0f) {
     this->rotation_ += 360.0f;
+  } else if (this->rotation_ >= 360.0f) {
+    this->rotation_ -= 360.0f;
   }
   this->isModelMatrixDirty = true;
   return this;
@@ -119,3 +126,14 @@ glm::mat4x4* Mesh::GetModelMatrix() noexcept {
 }
 
 const Vector3<float>& Mesh::GetColor() const noexcept { return this->color_; }
+
+Vector<float> Mesh::GetDirectionVector() const noexcept {
+  return Vector<float>(glm::cos(glm::radians(-this->rotation_ + 90.0f)),
+                       glm::sin(glm::radians(-this->rotation_ + 90.0f)));
+}
+
+const Vector<float>& Mesh::GetPosition() const noexcept {
+  return this->position_;
+}
+
+const float Mesh::GetRotation() const noexcept { return this->rotation_; }

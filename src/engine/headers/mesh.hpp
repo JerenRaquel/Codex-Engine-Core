@@ -44,6 +44,8 @@ class Mesh {
   // Utility
   void Draw() const noexcept;
   Mesh* Rotate(const float& angle) noexcept;
+  Mesh* Translate(const Vector<float>& direction,
+                  const float& magnitude) noexcept;
   // Setters
   Mesh* SetShaderName(const std::string& shaderName) noexcept;
   Mesh* SetColor(const Vector3<float>& color) noexcept;
@@ -55,5 +57,8 @@ class Mesh {
   std::string GetShaderName() const noexcept;
   glm::mat4x4* GetModelMatrix() noexcept;
   const Vector3<float>& GetColor() const noexcept;
+  Vector<float> GetDirectionVector() const noexcept;
+  const Vector<float>& GetPosition() const noexcept;
+  const float GetRotation() const noexcept;
 };
 #endif  // MESH_HPP_
