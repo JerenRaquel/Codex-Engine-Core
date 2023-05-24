@@ -1,17 +1,17 @@
 /*	Jeren Raquel
- *	==Project Name==
+ *	==Drone Simulation==
  *	Description
  */
-//* Custom
 #include "engine/headers/engine.hpp"
 
 int main(int argc, char** argv) {
-  Vector<int> size(900, 640);
+  Vector<int> size(1600, 900);
 
-  Engine* engine = new Engine(size, "Hello World");
+  Engine* engine = new Engine(size, "Drone Simulation");
   engine->AddStartFunction([](Engine* const engine) {
+    Vector<int> center = engine->GetWindowSize() / 2;
     engine
-        ->AddDrone(new Drone(Vector<float>(450.0f, 320.0f),
+        ->AddDrone(new Drone(Vector<float>(center.x, center.y),
                              Vector<float>(10.0f, 10.0f),
                              Vector3<float>(1.0f, 0.0f, 0.0f)))
         ->GetMesh()
