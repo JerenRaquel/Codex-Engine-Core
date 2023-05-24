@@ -50,15 +50,27 @@ std::vector<Drone*>* const DroneManager::GetAllDrones() const noexcept {
   return this->allDrones_;
 }
 
+unsigned int DroneManager::GetAllDroneCount() const noexcept {
+  return this->allDrones_->size();
+}
+
 std::vector<Drone*>* const DroneManager::GetDronesByTag(
-    std::string tag) const noexcept {
+    const std::string& tag) const noexcept {
   if (this->droneMap_->count(tag) == 0) {
     return nullptr;
   }
   return this->droneMap_->at(tag);
 }
 
-Drone* const DroneManager::GetDroneByTagId(std::string tag,
+unsigned int DroneManager::GetDroneCountByTag(
+    const std::string& tag) const noexcept {
+  if (this->droneMap_->count(tag) == 0) {
+    return 0;
+  }
+  return this->droneMap_->at(tag)->size();
+}
+
+Drone* const DroneManager::GetDroneByTagId(const std::string& tag,
                                            unsigned int id) const noexcept {
   if (this->droneMap_->count(tag) == 0) {
     return nullptr;

@@ -27,12 +27,12 @@ class Drone {
                const unsigned int id) const noexcept;
   void OnUpdate(DroneManager* const droneManager, const std::string& tag,
                 const unsigned int id) const noexcept;
-  Drone* const AssignStartFunction(
-      void (*func)(DroneManager* const droneManager, Drone* const self,
-                   const std::string& tag, const unsigned int id)) noexcept;
-  Drone* const AssignUpdateFunction(
-      void (*func)(DroneManager* const droneManager, Drone* const self,
-                   const std::string& tag, const unsigned int id)) noexcept;
+  Drone* const OnStart(void (*func)(DroneManager* const droneManager,
+                                    Drone* const self, const std::string& tag,
+                                    const unsigned int id)) noexcept;
+  Drone* const OnUpdate(void (*func)(DroneManager* const droneManager,
+                                     Drone* const self, const std::string& tag,
+                                     const unsigned int id)) noexcept;
   // Getters
   Mesh* const GetMesh() const noexcept;
 };

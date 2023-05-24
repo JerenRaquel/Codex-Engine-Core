@@ -23,7 +23,11 @@ class DroneManager {
   DroneManager* const AddDrone(Drone* drone, const std::string& tag) noexcept;
   // Getters
   std::vector<Drone*>* const GetAllDrones() const noexcept;
-  std::vector<Drone*>* const GetDronesByTag(std::string tag) const noexcept;
-  Drone* const GetDroneByTagId(std::string tag, unsigned int id) const noexcept;
+  unsigned int GetAllDroneCount() const noexcept;
+  std::vector<Drone*>* const GetDronesByTag(
+      const std::string& tag) const noexcept;
+  unsigned int GetDroneCountByTag(const std::string& tag) const noexcept;
+  Drone* const GetDroneByTagId(const std::string& tag,
+                               unsigned int id) const noexcept;
 };
 #endif  // DRONEMANAGER_HPP_

@@ -34,16 +34,18 @@ void Drone::OnUpdate(DroneManager* const droneManager, const std::string& tag,
   }
 }
 
-Drone* const Drone::AssignStartFunction(
-    void (*func)(DroneManager* const droneManager, Drone* const self,
-                 const std::string& tag, const unsigned int id)) noexcept {
+Drone* const Drone::OnStart(void (*func)(DroneManager* const droneManager,
+                                         Drone* const self,
+                                         const std::string& tag,
+                                         const unsigned int id)) noexcept {
   this->startFunc_ = func;
   return this;
 }
 
-Drone* const Drone::AssignUpdateFunction(
-    void (*func)(DroneManager* const droneManager, Drone* const self,
-                 const std::string& tag, const unsigned int id)) noexcept {
+Drone* const Drone::OnUpdate(void (*func)(DroneManager* const droneManager,
+                                          Drone* const self,
+                                          const std::string& tag,
+                                          const unsigned int id)) noexcept {
   this->updateFunc_ = func;
   return this;
 }
