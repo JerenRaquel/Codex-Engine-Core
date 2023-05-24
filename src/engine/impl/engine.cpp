@@ -24,46 +24,30 @@ void Engine::MoveCamera() noexcept {
   this->camera_->UpdatePosition(direction);
 }
 
-void Engine::OnStart() noexcept {
-  this->renderer_->CompileShader("vertex.glsl", "fragment.glsl", "default");
-  for (unsigned int i = 0; i < this->startFunctions_->size(); i++) {
-    this->startFunctions_->at(i)(this);
-  }
-}
-
-void Engine::OnUpdate() noexcept {
-  this->MoveCamera();
-  for (unsigned int i = 0; i < this->updateFunctions_->size(); i++) {
-    this->updateFunctions_->at(i)(this);
-  }
-}
-
 Engine::Engine(const Vector<int>& windowSize, const std::string& name) {
   this->windowSize_ = windowSize;
   this->renderer_ = new RenderEngine(windowSize, name);
   this->camera_ = new Camera(windowSize, 0.1f, 100.0f);
-  this->startFunctions_ = new std::vector<void (*)(Engine* const engine)>();
-  this->updateFunctions_ = new std::vector<void (*)(Engine* const engine)>();
-  this->drones_ = new std::vector<Drone*>();
+  this->droneManager_ = new DroneManager();
 }
 
 Engine::~Engine() {
-  for (unsigned int i = 0; i < this->drones_->size(); i++) {
-    delete this->drones_->at(i);
-  }
-  delete this->drones_;
-
+  delete this->droneManager_;
   delete this->renderer_;
   delete this->camera_;
-  delete this->startFunctions_;
-  delete this->updateFunctions_;
 }
 
 void Engine::Start() {
-  this->OnStart();
+  // Initilize simulation stuff
+  this->renderer_->CompileShader("vertex.glsl", "fragment.glsl", "default");
+  this->droneManager_->OnStart(this);
+
+  // Main loop
   while (!glfwWindowShouldClose(this->renderer_->GetWindow())) {
-    this->OnUpdate();
+    this->MoveCamera();
     this->camera_->Recalculate();
+
+    this->droneManager_->OnUpdate(this);
 
     this->renderer_->Draw(this->camera_);
 
@@ -72,16 +56,12 @@ void Engine::Start() {
   }
 }
 
-void Engine::AddStartFunction(void (*func)(Engine* const engine)) noexcept {
-  this->startFunctions_->push_back(func);
+Drone* Engine::AddDrone(Drone* drone) const noexcept {
+  return this->AddDrone(drone, "generic");
 }
 
-void Engine::AddUpdateFunction(void (*func)(Engine* const engine)) noexcept {
-  this->updateFunctions_->push_back(func);
-}
-
-Drone* Engine::AddDrone(Drone* drone) noexcept {
-  this->drones_->push_back(drone);
+Drone* Engine::AddDrone(Drone* drone, const std::string& tag) const noexcept {
+  this->droneManager_->AddDrone(drone, tag);
   this->renderer_->AddMesh(drone->GetMesh());
   return drone;
 }
@@ -93,6 +73,6 @@ RenderEngine* const Engine::GetRenderer() const noexcept {
 
 Vector<int> Engine::GetWindowSize() const noexcept { return this->windowSize_; }
 
-std::vector<Drone*>* const Engine::GetDrones() const noexcept {
-  return this->drones_;
+DroneManager* const Engine::GetDroneManager() const noexcept {
+  return this->droneManager_;
 }

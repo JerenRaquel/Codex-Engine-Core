@@ -11,34 +11,30 @@
 
 // Simulation
 #include "../../simulation/headers/drone.hpp"
+#include "../../simulation/headers/droneManager.hpp"
 
 class Engine {
  private:
   Vector<int> windowSize_;
   RenderEngine* renderer_;
   Camera* camera_;
-  std::vector<void (*)(Engine* const engine)>* startFunctions_;
-  std::vector<void (*)(Engine* const engine)>* updateFunctions_;
 
   void MoveCamera() noexcept;
-  void OnStart() noexcept;
-  void OnUpdate() noexcept;
 
   // Simulation stuff
-  std::vector<Drone*>* drones_;
+  DroneManager* droneManager_;
 
  public:
   Engine(const Vector<int>& windowSize, const std::string& name);
   ~Engine();
 
   void Start();
-  void AddStartFunction(void (*func)(Engine* const engine)) noexcept;
-  void AddUpdateFunction(void (*func)(Engine* const engine)) noexcept;
-  Drone* AddDrone(Drone* drone) noexcept;
+  Drone* AddDrone(Drone* drone) const noexcept;
+  Drone* AddDrone(Drone* drone, const std::string& tag) const noexcept;
 
   // Getters
   RenderEngine* const GetRenderer() const noexcept;
   Vector<int> GetWindowSize() const noexcept;
-  std::vector<Drone*>* const GetDrones() const noexcept;
+  DroneManager* const GetDroneManager() const noexcept;
 };
 #endif  // ENGINE_HPP_
