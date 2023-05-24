@@ -20,29 +20,29 @@ Drone::Drone(Vector<float> position, Vector<float> scale,
 
 Drone::~Drone() {}
 
-void Drone::OnStart(Engine* const engine, const std::string& tag,
+void Drone::OnStart(DroneManager* const droneManager, const std::string& tag,
                     const unsigned int id) const noexcept {
   if (this->startFunc_ != nullptr) {
-    this->startFunc_(engine, const_cast<Drone* const>(this), tag, id);
+    this->startFunc_(droneManager, const_cast<Drone* const>(this), tag, id);
   }
 }
 
-void Drone::OnUpdate(Engine* const engine, const std::string& tag,
+void Drone::OnUpdate(DroneManager* const droneManager, const std::string& tag,
                      const unsigned int id) const noexcept {
   if (this->updateFunc_ != nullptr) {
-    this->updateFunc_(engine, const_cast<Drone* const>(this), tag, id);
+    this->updateFunc_(droneManager, const_cast<Drone* const>(this), tag, id);
   }
 }
 
 Drone* const Drone::AssignStartFunction(
-    void (*func)(Engine* const engine, Drone* const self,
+    void (*func)(DroneManager* const droneManager, Drone* const self,
                  const std::string& tag, const unsigned int id)) noexcept {
   this->startFunc_ = func;
   return this;
 }
 
 Drone* const Drone::AssignUpdateFunction(
-    void (*func)(Engine* const engine, Drone* const self,
+    void (*func)(DroneManager* const droneManager, Drone* const self,
                  const std::string& tag, const unsigned int id)) noexcept {
   this->updateFunc_ = func;
   return this;

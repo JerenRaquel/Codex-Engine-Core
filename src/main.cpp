@@ -20,8 +20,8 @@ int main(int argc, char** argv) {
         ->AddDrone(new Drone(position, Vector<float>(10.0f, 10.0f),
                              Vector3<float>(1.0f, 0.0f, 0.0f)),
                    i < 5 ? "red" : "blue")
-        ->AssignStartFunction([](Engine* const engine, Drone* const self,
-                                 const std::string& tag,
+        ->AssignStartFunction([](DroneManager* const droneManager,
+                                 Drone* const self, const std::string& tag,
                                  const unsigned int id) {
           if (tag == "red") {
             self->GetMesh()->SetColor(Vector3<float>(1.0f, 0.0f, 0.0f));
@@ -30,7 +30,8 @@ int main(int argc, char** argv) {
           }
         })
         ->AssignUpdateFunction(
-            [](Engine* const engine, Drone* const self, const std::string& tag,
+            [](DroneManager* const droneManager, Drone* const self,
+               const std::string& tag,
                const unsigned int id) { self->GetMesh()->Rotate(1.0f); })
         ->GetMesh()
         ->SetRotation(std::rand() % 360);

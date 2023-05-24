@@ -40,14 +40,14 @@ Engine::~Engine() {
 void Engine::Start() {
   // Initilize simulation stuff
   this->renderer_->CompileShader("vertex.glsl", "fragment.glsl", "default");
-  this->droneManager_->OnStart(this);
+  this->droneManager_->OnStart(this->droneManager_);
 
   // Main loop
   while (!glfwWindowShouldClose(this->renderer_->GetWindow())) {
     this->MoveCamera();
     this->camera_->Recalculate();
 
-    this->droneManager_->OnUpdate(this);
+    this->droneManager_->OnUpdate(this->droneManager_);
 
     this->renderer_->Draw(this->camera_);
 
