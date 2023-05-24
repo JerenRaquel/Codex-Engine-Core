@@ -27,22 +27,32 @@ void Engine::MoveCamera() noexcept {
 void Engine::OnStart() noexcept {
   this->renderer_->CompileShader("vertex.glsl", "fragment.glsl", "default");
 
-  this->renderer_->AddQuad(new Quad(Vector<float>(5, 5)))
-      ->SetScale(Vector<float>(10.0f, 10.0f))
-      ->SetPosition(
-          Vector<float>(this->windowSize_.x / 2.0f, this->windowSize_.y / 2.0f))
-      ->SetColor(1.0f, 0.0f, 0.0f);
+  for (unsigned int i = 0; i < this->startFunctions_->size(); i++) {
+    this->startFunctions_->at(i)(this);
+  }
 }
 
-void Engine::OnUpdate() noexcept { this->MoveCamera(); }
+void Engine::OnUpdate() noexcept {
+  this->MoveCamera();
+  for (unsigned int i = 0; i < this->updateFunctions_->size(); i++) {
+    this->updateFunctions_->at(i)(this);
+  }
+}
 
 Engine::Engine(const Vector<int>& windowSize, const std::string& name) {
   this->windowSize_ = windowSize;
   this->renderer_ = new RenderEngine(windowSize, name);
   this->camera_ = new Camera(windowSize, 0.1f, 100.0f);
+  this->startFunctions_ = new std::vector<void (*)(Engine* const engine)>();
+  this->updateFunctions_ = new std::vector<void (*)(Engine* const engine)>();
 }
 
-Engine::~Engine() {}
+Engine::~Engine() {
+  delete this->renderer_;
+  delete this->camera_;
+  delete this->startFunctions_;
+  delete this->updateFunctions_;
+}
 
 void Engine::Start() {
   this->OnStart();
@@ -56,3 +66,18 @@ void Engine::Start() {
     glfwPollEvents();
   }
 }
+
+void Engine::AddStartFunction(void (*func)(Engine* const engine)) noexcept {
+  this->startFunctions_->push_back(func);
+}
+
+void Engine::AddUpdateFunction(void (*func)(Engine* const engine)) noexcept {
+  this->updateFunctions_->push_back(func);
+}
+
+// Getters
+RenderEngine* const Engine::GetRenderer() const noexcept {
+  return this->renderer_;
+}
+
+Vector<int> Engine::GetWindowSize() const noexcept { return this->windowSize_; }
