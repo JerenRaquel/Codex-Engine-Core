@@ -2,7 +2,7 @@
 #define VECTOR_HPP_
 
 // Lib
-#include "../libs/glm/vec3.hpp"
+#include "../../libs/glm/vec3.hpp"
 
 template <typename T>
 class Vector {
