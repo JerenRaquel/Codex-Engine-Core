@@ -50,6 +50,7 @@ class Vector3 : public Vector<T> {
 
   glm::vec3 ToGLMVec3f() const noexcept;
   Vector3<T> Lerp(const Vector3<T>& other, float rate) const noexcept;
+  float DifferenceBias(const Vector3<T>& other) const noexcept;
 
   bool operator==(const Vector3<T>& other) const noexcept;
   bool operator!=(const Vector3<T>& other) const noexcept;

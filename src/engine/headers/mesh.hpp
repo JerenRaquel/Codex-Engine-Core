@@ -44,6 +44,9 @@ class Mesh {
   // Utility
   void Draw() const noexcept;
   Mesh* Rotate(const float& angle) noexcept;
+  Mesh* RotateTowards(const Vector<float>& direction) noexcept;
+  Mesh* RotateTowards(const Vector<float>& direction,
+                      const float& bais) noexcept;
   Mesh* Translate(const Vector<float>& direction,
                   const float& magnitude) noexcept;
   // Setters

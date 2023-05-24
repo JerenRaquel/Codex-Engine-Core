@@ -27,8 +27,13 @@ float Vector<T>::ToDegreeAngle() const noexcept {
 
 template <typename T>
 float Vector<T>::Distance(const Vector<T>& other) const noexcept {
-  float x = other.x - this->x;
-  float y = other.y - this->y;
+  if (*this == other) {
+    return 0.0f;
+  }
+
+  Vector<T> difference = other - *this;
+  float x = difference.x;
+  float y = difference.y;
   return sqrt(x * x + y * y);
 }
 
@@ -108,6 +113,13 @@ Vector3<T> Vector3<T>::Lerp(const Vector3<T>& other,
   return Vector3<T>(this->x + (other.x - this->x) * rate,
                     this->y + (other.y - this->y) * rate,
                     this->z + (other.z - this->z) * rate);
+}
+
+template <typename T>
+float Vector3<T>::DifferenceBias(const Vector3<T>& other) const noexcept {
+  Vector3<T> difference = other - *this;
+  float sum = difference.x + difference.y + difference.z;
+  return sum / 3.0f;
 }
 
 template <typename T>

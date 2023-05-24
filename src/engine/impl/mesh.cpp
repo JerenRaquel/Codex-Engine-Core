@@ -60,6 +60,23 @@ Mesh* Mesh::Rotate(const float& angle) noexcept {
   return this;
 }
 
+Mesh* Mesh::RotateTowards(const Vector<float>& direction) noexcept {
+  return this->RotateTowards(direction, 1.0f);
+}
+
+Mesh* Mesh::RotateTowards(const Vector<float>& direction,
+                          const float& bais) noexcept {
+  float turningAngle = direction.ToDegreeAngle() - this->rotation_;
+  if (turningAngle > 180.0f) {
+    turningAngle -= 360.0f;
+  } else if (turningAngle < -180.0f) {
+    turningAngle += 360.0f;
+  }
+
+  this->Rotate(turningAngle * bais);
+  return this;
+}
+
 Mesh* Mesh::Translate(const Vector<float>& direction,
                       const float& magnitude) noexcept {
   this->position_ += direction * magnitude;

@@ -31,45 +31,31 @@ int main(int argc, char** argv) {
         })
         ->OnUpdate([](DroneManager* const droneManager, Drone* const self,
                       const std::string& tag, const unsigned int id) {
-          Vector<float> dronePosition = self->GetMesh()->GetPosition();
+          std::vector<Drone*>* const drones = droneManager->GetAllDrones();
+          Vector<float> selfPosition = self->GetMesh()->GetPosition();
+          float selfRotation = self->GetMesh()->GetRotation();
 
           // Fly towards center
-          if (dronePosition.x < 700.0f || dronePosition.x > 800.0f ||
-              dronePosition.y < 400.0f || dronePosition.y > 500.0f) {
+          if (selfPosition.x < 700.0f || selfPosition.x > 800.0f ||
+              selfPosition.y < 400.0f || selfPosition.y > 500.0f) {
             Vector<float> towardsCenter =
-                Vector<float>(800.0f, 450.0f) - self->GetMesh()->GetPosition();
-            float towardsCenterAngle = towardsCenter.ToDegreeAngle();
-            float turningAngle =
-                towardsCenterAngle - self->GetMesh()->GetRotation();
-
-            if (turningAngle > 180.0f) {
-              turningAngle -= 360.0f;
-            } else if (turningAngle < -180.0f) {
-              turningAngle += 360.0f;
-            }
-
-            self->GetMesh()->Rotate(turningAngle * 0.05f);
+                Vector<float>(800.0f, 450.0f) - selfPosition;
+            self->GetMesh()->RotateTowards(towardsCenter, 0.05f);
           }
-
-          std::vector<Drone*>* const drones = droneManager->GetAllDrones();
 
           // Fly with other drones
           float sum = 0.0f;
           unsigned int amount = 0;
           for (auto* drone : *drones) {
-            Vector<float> position = drone->GetMesh()->GetPosition();
-            Vector<float> selfPosition = self->GetMesh()->GetPosition();
-            if (position == selfPosition) {
+            float distance =
+                selfPosition.Distance(drone->GetMesh()->GetPosition());
+            if (distance == 0.0f) {
               continue;
             }
 
-            float distance = selfPosition.Distance(position);
-
-            if (distance < 20.0f) {
-              Vector3<float> color =
-                  drone->GetMesh()->GetColor() - self->GetMesh()->GetColor();
-              float bias = color.x + color.y + color.z;
-              bias /= 3.0f;
+            if (distance <= 20.0f) {
+              float bias = self->GetMesh()->GetColor().DifferenceBias(
+                  drone->GetMesh()->GetColor());
 
               sum += drone->GetMesh()->GetRotation() * (1.0f - bias);
               amount++;
@@ -77,36 +63,25 @@ int main(int argc, char** argv) {
           }
           if (amount > 0) {
             float average = sum / amount;
-            float newRotation = average + self->GetMesh()->GetRotation();
+            float newRotation = average + selfRotation;
             newRotation /= 2.0f + 90.0f + (std::rand() % 30 - 15.0f);
-            newRotation -= self->GetMesh()->GetRotation();
+            newRotation -= selfRotation;
             newRotation *= 0.05f;
             self->GetMesh()->Rotate(newRotation);
           }
 
           // Avoid other drones
           for (auto* drone : *drones) {
-            Vector<float> position = drone->GetMesh()->GetPosition();
-            Vector<float> selfPosition = self->GetMesh()->GetPosition();
-            if (position == selfPosition) {
+            float distance =
+                selfPosition.Distance(drone->GetMesh()->GetPosition());
+            if (distance == 0.0f) {
               continue;
             }
 
-            float distance = selfPosition.Distance(position);
-
             if (distance <= 20.0f) {
-              Vector<float> awayFromDrone = selfPosition - position;
-              float awayFromDroneAngle = awayFromDrone.ToDegreeAngle();
-              float turningAngle =
-                  awayFromDroneAngle - self->GetMesh()->GetRotation();
-
-              if (turningAngle > 180.0f) {
-                turningAngle -= 360.0f;
-              } else if (turningAngle < -180.0f) {
-                turningAngle += 360.0f;
-              }
-
-              self->GetMesh()->Rotate(turningAngle * 0.05f);
+              Vector<float> awayFromDrone =
+                  selfPosition - drone->GetMesh()->GetPosition();
+              self->GetMesh()->RotateTowards(awayFromDrone, 0.05f);
             }
           }
 
@@ -115,20 +90,19 @@ int main(int argc, char** argv) {
                                      5.0f);
 
           // Bounds
-          Vector<float> position = self->GetMesh()->GetPosition();
-          if (position.x > 1600) {
-            self->GetMesh()->SetPosition(Vector<float>(0, position.y));
+          if (selfPosition.x > 1600) {
+            self->GetMesh()->SetPosition(Vector<float>(0, selfPosition.y));
             self->GetMesh()->SetRotation(90.0f);
-          } else if (position.x < 0) {
-            self->GetMesh()->SetPosition(Vector<float>(1600, position.y));
+          } else if (selfPosition.x < 0) {
+            self->GetMesh()->SetPosition(Vector<float>(1600, selfPosition.y));
             self->GetMesh()->SetRotation(270.0f);
           }
 
-          if (position.y > 900) {
-            self->GetMesh()->SetPosition(Vector<float>(position.x, 0));
+          if (selfPosition.y > 900) {
+            self->GetMesh()->SetPosition(Vector<float>(selfPosition.x, 0));
             self->GetMesh()->SetRotation(0.0f);
-          } else if (position.y < 0) {
-            self->GetMesh()->SetPosition(Vector<float>(position.x, 900));
+          } else if (selfPosition.y < 0) {
+            self->GetMesh()->SetPosition(Vector<float>(selfPosition.x, 900));
             self->GetMesh()->SetRotation(180.0f);
           }
 
@@ -136,14 +110,12 @@ int main(int argc, char** argv) {
           Vector3<float> colorSum;
           float colorAmount = 0.0f;
           for (auto* drone : *drones) {
-            Vector<float> position = drone->GetMesh()->GetPosition();
-            Vector<float> selfPosition = self->GetMesh()->GetPosition();
-            if (position == selfPosition) {
+            float distance =
+                selfPosition.Distance(drone->GetMesh()->GetPosition());
+            if (distance == 0.0f) {
               continue;
             }
 
-            float distance = selfPosition.Distance(position);
-            float selfRotation = self->GetMesh()->GetRotation();
             float droneRotation = drone->GetMesh()->GetRotation();
 
             if (distance < 100.0f && selfRotation < droneRotation + 5.0f &&
