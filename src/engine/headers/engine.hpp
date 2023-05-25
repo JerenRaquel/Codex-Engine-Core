@@ -1,6 +1,12 @@
 #ifndef ENGINE_HPP_
 #define ENGINE_HPP_
 
+class Drone;
+class DroneManager;
+class RenderEngine;
+class Camera;
+class Engine;
+
 // Std
 #include <string>
 #include <vector>
@@ -13,7 +19,6 @@
 #include "../../libs/glm/mat4x4.hpp"
 
 // Simulation
-#include "../../simulation/headers/drone.hpp"
 #include "../../simulation/headers/droneManager.hpp"
 
 class Engine {

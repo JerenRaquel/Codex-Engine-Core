@@ -21,33 +21,13 @@ Drone::Drone(Vector<float> position, Vector<float> scale,
 Drone::~Drone() {}
 
 void Drone::OnStart(Engine* const engine, const std::string& tag,
-                    const unsigned int id) const noexcept {
-  if (this->startFunc_ != nullptr) {
-    this->startFunc_(engine, const_cast<Drone* const>(this), tag, id);
-  }
+                    const unsigned int id) noexcept {
+  this->InternalStart(engine, tag, id);
 }
 
 void Drone::OnUpdate(Engine* const engine, const std::string& tag,
-                     const unsigned int id) const noexcept {
-  if (this->updateFunc_ != nullptr) {
-    this->updateFunc_(engine, const_cast<Drone* const>(this), tag, id);
-  }
-}
-
-Drone* const Drone::OnStart(void (*func)(Engine* const engine,
-                                         Drone* const self,
-                                         const std::string& tag,
-                                         const unsigned int id)) noexcept {
-  this->startFunc_ = func;
-  return this;
-}
-
-Drone* const Drone::OnUpdate(void (*func)(Engine* const engine,
-                                          Drone* const self,
-                                          const std::string& tag,
-                                          const unsigned int id)) noexcept {
-  this->updateFunc_ = func;
-  return this;
+                     const unsigned int id) noexcept {
+  this->InternalUpdate(engine, tag, id);
 }
 
 Mesh* const Drone::GetMesh() const noexcept { return this->mesh_; }

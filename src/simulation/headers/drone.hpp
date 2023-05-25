@@ -6,33 +6,27 @@
 // Custom
 #include "../../engine/headers/mesh.hpp"
 #include "../../engine/headers/vector.hpp"
+#include "../../engine/headers/engine.hpp"
 
-class Engine;
-
+// Based Class
 class Drone {
- private:
+ protected:
   Mesh* mesh_;
-  void (*startFunc_)(Engine* const engine, Drone* const drone,
-                     const std::string& tag, const unsigned int id) = nullptr;
-  void (*updateFunc_)(Engine* const engine, Drone* const drone,
-                      const std::string& tag, const unsigned int id) = nullptr;
+  virtual void InternalStart(Engine* const engine, const std::string& tag,
+                             const unsigned int id) = 0;
+  virtual void InternalUpdate(Engine* const engine, const std::string& tag,
+                              const unsigned int id) = 0;
 
  public:
   Drone(Vector<float> position, Vector<float> scale);
   Drone(Vector<float> position, Vector<float> scale, Vector3<float> color);
-  ~Drone();
+  virtual ~Drone();
 
   // Utility
   void OnStart(Engine* const engine, const std::string& tag,
-               const unsigned int id) const noexcept;
+               const unsigned int id) noexcept;
   void OnUpdate(Engine* const engine, const std::string& tag,
-                const unsigned int id) const noexcept;
-  Drone* const OnStart(void (*func)(Engine* const engine, Drone* const self,
-                                    const std::string& tag,
-                                    const unsigned int id)) noexcept;
-  Drone* const OnUpdate(void (*func)(Engine* const engine, Drone* const self,
-                                     const std::string& tag,
-                                     const unsigned int id)) noexcept;
+                const unsigned int id) noexcept;
   // Getters
   Mesh* const GetMesh() const noexcept;
 };
