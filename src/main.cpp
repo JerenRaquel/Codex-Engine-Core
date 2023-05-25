@@ -11,7 +11,7 @@
 int main(int argc, char** argv) {
   Vector<int> size(1600, 900);
   Vector<float> scale(2.5f, 2.5f);
-  unsigned int droneCount = 1000;
+  unsigned int droneCount = 5000;
 
   Engine* engine = new Engine(size, "Drone Simulation");
 
@@ -34,9 +34,13 @@ int main(int argc, char** argv) {
         })
         ->OnUpdate([](Engine* const engine, Drone* const self,
                       const std::string& tag, const unsigned int id) {
-          std::vector<Drone*>* const drones =
-              engine->GetDroneManager()->GetAllDrones();
           Vector<float> selfPosition = self->GetMesh()->GetPosition();
+          std::vector<Drone*>* const drones100 =
+              engine->GetDroneManager()->GetAllDronesWithinRange(selfPosition,
+                                                                 100.0f);
+          std::vector<Drone*>* const drones20 =
+              engine->GetDroneManager()->GetAllDronesWithinRange(
+                  drones100, selfPosition, 20.0f);
           float selfRotation = self->GetMesh()->GetRotation();
           Vector<float> center(800.0f, 450.0f);
           float targetBias = 0.05f;
@@ -50,14 +54,14 @@ int main(int argc, char** argv) {
           }
 
           // Fly with other drones
-          float sum = 0.0f;
-          unsigned int amount = 0;
-          for (auto* drone : *drones) {
-            Vector<float> dronePosition = drone->GetMesh()->GetPosition();
-            if (selfPosition.IsWithinDistance(dronePosition, 20.0f)) {
+          if (drones20->size() > 0) {
+            float sum = 0.0f;
+            unsigned int amount = 0;
+            for (auto* drone : *drones20) {
               // Avoid other drones
-              self->GetMesh()->RotateTowards(selfPosition - dronePosition,
-                                             separationBias);
+              self->GetMesh()->RotateTowards(
+                  selfPosition - drone->GetMesh()->GetPosition(),
+                  separationBias);
 
               // Begin aggregation for cohesion
               float bias = self->GetMesh()->GetColor().DifferenceBias(
@@ -65,14 +69,14 @@ int main(int argc, char** argv) {
               sum += drone->GetMesh()->GetRotation() * (1.0f - bias);
               amount++;
             }
-          }
-          if (amount > 0) {
-            float average = sum / amount;
-            float newRotation = average + selfRotation;
-            newRotation /= 77.0f + (std::rand() % 30);
-            newRotation -= selfRotation;
-            newRotation *= cohesionBias;
-            self->GetMesh()->Rotate(newRotation);
+            if (amount > 0) {
+              float average = sum / amount;
+              float newRotation = average + selfRotation;
+              newRotation /= 77.0f + (std::rand() % 30);
+              newRotation -= selfRotation;
+              newRotation *= cohesionBias;
+              self->GetMesh()->Rotate(newRotation);
+            }
           }
 
           // Fly forwards
@@ -84,27 +88,27 @@ int main(int argc, char** argv) {
           if (selfPosition.x > 1600) {
             selfPosition.x = 0.0f;
             selfPosition.y = std::rand() % 900;
+            self->GetMesh()->SetPosition(selfPosition);
           } else if (selfPosition.x < 0) {
             selfPosition.x = 1600.0f;
             selfPosition.y = std::rand() % 900;
+            self->GetMesh()->SetPosition(selfPosition);
           }
           if (selfPosition.y > 900) {
             selfPosition.y = 0.0f;
             selfPosition.x = std::rand() % 1600;
+            self->GetMesh()->SetPosition(selfPosition);
           } else if (selfPosition.y < 0) {
             selfPosition.y = 900.0f;
             selfPosition.x = std::rand() % 1600;
+            self->GetMesh()->SetPosition(selfPosition);
           }
-          self->GetMesh()->SetPosition(selfPosition);
 
           // Drones that flock together have similar colors
-          selfPosition = self->GetMesh()->GetPosition();
-          if (id < 10) return;
-          Vector3<float> colorSum;
-          float colorAmount = 0.0f;
-          for (auto* drone : *drones) {
-            if (selfPosition.IsWithinDistance(drone->GetMesh()->GetPosition(),
-                                              100.0f)) {
+          if (id >= 10 && drones100->size() > 0) {
+            Vector3<float> colorSum;
+            float colorAmount = 0.0f;
+            for (auto* drone : *drones100) {
               float droneRotation = drone->GetMesh()->GetRotation();
               if (selfRotation < droneRotation + 5.0f &&
                   selfRotation > droneRotation - 5.0f) {
@@ -112,12 +116,15 @@ int main(int argc, char** argv) {
                 colorAmount++;
               }
             }
+            if (colorAmount > 0) {
+              Vector3<float> newColor = colorSum / colorAmount;
+              self->GetMesh()->SetColor(
+                  self->GetMesh()->GetColor().Lerp(newColor, 0.5f));
+            }
           }
-          if (colorAmount > 0) {
-            Vector3<float> newColor = colorSum / colorAmount;
-            self->GetMesh()->SetColor(
-                self->GetMesh()->GetColor().Lerp(newColor, 0.5f));
-          }
+
+          delete drones100;
+          delete drones20;
         });
   }
 

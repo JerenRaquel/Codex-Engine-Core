@@ -24,6 +24,11 @@ class DroneManager {
   // Getters
   std::vector<Drone*>* const GetAllDrones() const noexcept;
   unsigned int GetAllDroneCount() const noexcept;
+  std::vector<Drone*>* const GetAllDronesWithinRange(
+      const Vector<float>& position, const float& range) const noexcept;
+  std::vector<Drone*>* const GetAllDronesWithinRange(
+      std::vector<Drone*>* const drones, const Vector<float>& position,
+      const float& range) const noexcept;
   std::vector<Drone*>* const GetDronesByTag(
       const std::string& tag) const noexcept;
   unsigned int GetDroneCountByTag(const std::string& tag) const noexcept;

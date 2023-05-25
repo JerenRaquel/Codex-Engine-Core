@@ -115,6 +115,13 @@ Mesh* Mesh::SetPosition(const Vector<float>& position) noexcept {
   return this;
 }
 
+Mesh* Mesh::SetPosition(const float& x, const float& y) noexcept {
+  this->position_.x = x;
+  this->position_.y = y;
+  this->isModelMatrixDirty = true;
+  return this;
+}
+
 Mesh* Mesh::SetRotation(const float& rotation) noexcept {
   this->rotation_ = rotation;
   // this->rotation_ = fmod(this->rotation_, 360.0f);

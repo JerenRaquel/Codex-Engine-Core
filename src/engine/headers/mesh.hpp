@@ -55,6 +55,7 @@ class Mesh {
   Mesh* SetColor(const float& r, const float& g, const float& b) noexcept;
   Mesh* SetScale(const Vector<float>& scale) noexcept;
   Mesh* SetPosition(const Vector<float>& position) noexcept;
+  Mesh* SetPosition(const float& x, const float& y) noexcept;
   Mesh* SetRotation(const float& angle) noexcept;
   // Getters
   std::string GetShaderName() const noexcept;

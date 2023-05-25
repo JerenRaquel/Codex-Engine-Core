@@ -57,6 +57,33 @@ unsigned int DroneManager::GetAllDroneCount() const noexcept {
   return this->allDrones_->size();
 }
 
+std::vector<Drone*>* const DroneManager::GetAllDronesWithinRange(
+    const Vector<float>& position, const float& range) const noexcept {
+  std::vector<Drone*>* drones = new std::vector<Drone*>();
+  const float sqrRange = range * range;
+  for (auto drone : *this->allDrones_) {
+    float sqrDistance = position.SqrDistance(drone->GetMesh()->GetPosition());
+    if (sqrDistance <= sqrRange) {
+      drones->push_back(drone);
+    }
+  }
+  return drones;
+}
+
+std::vector<Drone*>* const DroneManager::GetAllDronesWithinRange(
+    std::vector<Drone*>* const drones, const Vector<float>& position,
+    const float& range) const noexcept {
+  std::vector<Drone*>* resultingDrones = new std::vector<Drone*>();
+  const float sqrRange = range * range;
+  for (auto drone : *drones) {
+    float sqrDistance = position.SqrDistance(drone->GetMesh()->GetPosition());
+    if (sqrDistance <= sqrRange) {
+      resultingDrones->push_back(drone);
+    }
+  }
+  return resultingDrones;
+}
+
 std::vector<Drone*>* const DroneManager::GetDronesByTag(
     const std::string& tag) const noexcept {
   if (this->droneMap_->count(tag) == 0) {
