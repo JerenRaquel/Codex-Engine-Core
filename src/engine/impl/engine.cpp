@@ -1,5 +1,7 @@
 #include "../headers/engine.hpp"
 
+#include "../../../tools/tracy/tracy/Tracy.hpp"
+
 void Engine::MoveCamera() noexcept {
   Vector<float> direction;
 
@@ -54,6 +56,7 @@ void Engine::Start() {
 
   // Main loop
   while (!glfwWindowShouldClose(this->renderer_->GetWindow())) {
+    FrameMark;
     this->MoveCamera();
     this->camera_->Recalculate();
     this->CalculateMousePosition();

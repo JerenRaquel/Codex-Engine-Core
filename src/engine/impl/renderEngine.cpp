@@ -1,5 +1,7 @@
 #include "../headers/renderEngine.hpp"
 
+#include "../../../tools/tracy/tracy/Tracy.hpp"
+
 RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
   // Initalize GLFW
   if (!glfwInit()) {
@@ -49,16 +51,9 @@ RenderEngine::~RenderEngine() {
 }
 
 void RenderEngine::Draw(const Camera* camera) {
+  ZoneScopedN("RenderEngine::Draw");
   //* Clear Drawing Surface
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  // Pass the Ortho and View Matrix to each shaders
-  for (unsigned int i = 0; i < this->shaderNames_->size(); i++) {
-    Shader* shader = this->shaders_->at(this->shaderNames_->at(i));
-    shader->Use();
-    shader->PassUniformMatrix("ortho", camera->GetOrthoMatrix());
-    shader->PassUniformMatrix("view", camera->GetViewMatrix());
-  }
 
   //* Draw Calls
   for (unsigned int i = 0; i < this->meshes_->size(); i++) {
@@ -74,7 +69,10 @@ void RenderEngine::Draw(const Camera* camera) {
     shader->Use();
 
     // Update Uniforms
-    shader->PassUniformMatrix("model", this->meshes_->at(i)->GetModelMatrix());
+    ZoneScopedN("RenderEngine::Draw::UpdateMVP");
+    glm::mat4x4 mvp = *(camera->GetOrthoMatrix()) * *(camera->GetViewMatrix()) *
+                      *(this->meshes_->at(i)->GetModelMatrix());
+    shader->PassUniformMatrix("mvp", &mvp);
     shader->PassUniform3f("color", this->meshes_->at(i)->GetColor());
 
     this->meshes_->at(i)->Draw();

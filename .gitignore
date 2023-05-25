@@ -4,3 +4,6 @@
 #Builds
 run.sh
 builds/*
+
+#Tools
+tools/

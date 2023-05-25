@@ -1,5 +1,7 @@
 #include "../headers/droneManager.hpp"
 
+#include "../../../tools/tracy/tracy/Tracy.hpp"
+
 DroneManager::DroneManager() {
   this->allDrones_ = new std::vector<Drone*>();
   this->droneMap_ = new std::map<std::string, std::vector<Drone*>*>();
@@ -27,6 +29,7 @@ void DroneManager::OnStart(Engine* const engine) const noexcept {
 }
 
 void DroneManager::OnUpdate(Engine* const engine) const noexcept {
+  ZoneScopedN("Engine::DroneUpdates");
   for (auto pair : *this->droneMap_) {
     for (unsigned int i = 0; i < pair.second->size(); i++) {
       pair.second->at(i)->OnUpdate(engine, pair.first, i);

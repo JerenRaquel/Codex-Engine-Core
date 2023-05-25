@@ -21,6 +21,7 @@ class Vector {
   glm::vec3 ToGLMVec3f() const noexcept;
   float ToDegreeAngle() const noexcept;
   float Distance(const Vector<T>& other) const noexcept;
+  float SqrDistance(const Vector<T>& other) const noexcept;
   bool IsWithinDistance(const Vector<T>& other, float padding) const noexcept;
   bool IsWithinDistance(const Vector<T>& other, float padding,
                         float& distance) const noexcept;

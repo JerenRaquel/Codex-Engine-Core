@@ -1,5 +1,7 @@
 #include "../headers/vector.hpp"
 
+#include "../../../tools/tracy/tracy/Tracy.hpp"
+
 //
 // Vector
 //
@@ -27,12 +29,17 @@ float Vector<T>::ToDegreeAngle() const noexcept {
 
 template <typename T>
 float Vector<T>::Distance(const Vector<T>& other) const noexcept {
+  return sqrt(this->SqrDistance(other));
+}
+
+template <typename T>
+float Vector<T>::SqrDistance(const Vector<T>& other) const noexcept {
   if (*this == other) return 0.0f;
 
   Vector<T> difference = other - *this;
   float x = difference.x;
   float y = difference.y;
-  return sqrt(x * x + y * y);
+  return x * x + y * y;
 }
 
 template <typename T>
@@ -42,7 +49,10 @@ bool Vector<T>::IsWithinDistance(const Vector<T>& other,
       this->y < (other.y - padding) || this->y > (other.y + padding)) {
     return false;
   }
-  return this->Distance(other) <= padding;
+  T dx = abs(this->x - other.x);
+  T dy = abs(this->y - other.y);
+  T sqrd = dx * dx + dy * dy;
+  return sqrd <= padding * padding;
 }
 
 template <typename T>
@@ -65,6 +75,7 @@ bool Vector<T>::IsWithinBoxDistance(const Vector<T>& other,
 template <typename T>
 bool Vector<T>::IsWithinRectDistance(const Vector<T>& other, float xPadding,
                                      float yPadding) const noexcept {
+  ZoneScopedN("Vector<T>::IsWithinRectDistance");
   if (this->x < (other.x - xPadding) || this->x > (other.x + xPadding) ||
       this->y < (other.y - yPadding) || this->y > (other.y + yPadding)) {
     return false;
@@ -150,6 +161,7 @@ glm::vec3 Vector3<T>::ToGLMVec3f() const noexcept {
 template <typename T>
 Vector3<T> Vector3<T>::Lerp(const Vector3<T>& other,
                             float rate) const noexcept {
+  ZoneScopedN("Vector3<T>::Lerp");
   return Vector3<T>(this->x + (other.x - this->x) * rate,
                     this->y + (other.y - this->y) * rate,
                     this->z + (other.z - this->z) * rate);
@@ -157,6 +169,7 @@ Vector3<T> Vector3<T>::Lerp(const Vector3<T>& other,
 
 template <typename T>
 float Vector3<T>::DifferenceBias(const Vector3<T>& other) const noexcept {
+  ZoneScopedN("Vector3<T>::DifferenceBias");
   Vector3<T> difference = other - *this;
   float sum = difference.x + difference.y + difference.z;
   return sum / 3.0f;
