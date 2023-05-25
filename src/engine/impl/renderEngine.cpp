@@ -8,6 +8,9 @@ RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
     throw std::runtime_error("ERROR: Couldn't Initialize GLFW...");
   }
 
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
   // Create a window and set the context
   this->window_ = glfwCreateWindow(size.x, size.y, name.c_str(), NULL, NULL);
   glfwMakeContextCurrent(this->window_);
