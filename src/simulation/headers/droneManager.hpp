@@ -18,8 +18,8 @@ class DroneManager {
   ~DroneManager();
 
   // Utility
-  void OnStart(DroneManager* const droneManager) const noexcept;
-  void OnUpdate(DroneManager* const droneManager) const noexcept;
+  void OnStart(Engine* const engine) const noexcept;
+  void OnUpdate(Engine* const engine) const noexcept;
   DroneManager* const AddDrone(Drone* drone, const std::string& tag) noexcept;
   // Getters
   std::vector<Drone*>* const GetAllDrones() const noexcept;

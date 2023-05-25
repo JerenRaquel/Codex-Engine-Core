@@ -18,18 +18,18 @@ DroneManager::~DroneManager() {
 }
 
 // Utility
-void DroneManager::OnStart(DroneManager* const droneManager) const noexcept {
+void DroneManager::OnStart(Engine* const engine) const noexcept {
   for (auto pair : *this->droneMap_) {
     for (unsigned int i = 0; i < pair.second->size(); i++) {
-      pair.second->at(i)->OnStart(droneManager, pair.first, i);
+      pair.second->at(i)->OnStart(engine, pair.first, i);
     }
   }
 }
 
-void DroneManager::OnUpdate(DroneManager* const droneManager) const noexcept {
+void DroneManager::OnUpdate(Engine* const engine) const noexcept {
   for (auto pair : *this->droneMap_) {
     for (unsigned int i = 0; i < pair.second->size(); i++) {
-      pair.second->at(i)->OnUpdate(droneManager, pair.first, i);
+      pair.second->at(i)->OnUpdate(engine, pair.first, i);
     }
   }
 }

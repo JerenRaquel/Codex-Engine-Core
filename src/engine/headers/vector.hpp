@@ -21,6 +21,13 @@ class Vector {
   glm::vec3 ToGLMVec3f() const noexcept;
   float ToDegreeAngle() const noexcept;
   float Distance(const Vector<T>& other) const noexcept;
+  bool IsWithinDistance(const Vector<T>& other, float padding) const noexcept;
+  bool IsWithinDistance(const Vector<T>& other, float padding,
+                        float& distance) const noexcept;
+  bool IsWithinBoxDistance(const Vector<T>& other,
+                           float distance) const noexcept;
+  bool IsWithinRectDistance(const Vector<T>& other, float xPadding,
+                            float yPadding) const noexcept;
 
   bool operator==(const Vector<T>& other) const noexcept;
   bool operator!=(const Vector<T>& other) const noexcept;
@@ -28,6 +35,7 @@ class Vector {
   Vector<T> operator+(const Vector<T>& other) const noexcept;
   Vector<T> operator+=(const Vector<T>& other) noexcept;
   Vector<T> operator-(const Vector<T>& other) const noexcept;
+  Vector<T> operator-(const T& other) const noexcept;
   Vector<T> operator/(const T& other) const;
   Vector<T> operator/=(const T& other);
   Vector<T> operator*(const T& other) const noexcept;

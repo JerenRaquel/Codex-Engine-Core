@@ -24,6 +24,16 @@ void Engine::MoveCamera() noexcept {
   this->camera_->UpdatePosition(direction);
 }
 
+void Engine::CalculateMousePosition() noexcept {
+  double xpos, ypos;
+  glfwGetCursorPos(this->renderer_->GetWindow(), &xpos, &ypos);
+
+  int windowX, windowY;
+  glfwGetWindowPos(this->renderer_->GetWindow(), &windowX, &windowY);
+
+  this->mousePosition_ = Vector<int>(xpos - windowX, ypos - windowY);
+}
+
 Engine::Engine(const Vector<int>& windowSize, const std::string& name) {
   this->windowSize_ = windowSize;
   this->renderer_ = new RenderEngine(windowSize, name);
@@ -40,14 +50,15 @@ Engine::~Engine() {
 void Engine::Start() {
   // Initilize simulation stuff
   this->renderer_->CompileShader("vertex.glsl", "fragment.glsl", "default");
-  this->droneManager_->OnStart(this->droneManager_);
+  this->droneManager_->OnStart(this);
 
   // Main loop
   while (!glfwWindowShouldClose(this->renderer_->GetWindow())) {
     this->MoveCamera();
     this->camera_->Recalculate();
+    this->CalculateMousePosition();
 
-    this->droneManager_->OnUpdate(this->droneManager_);
+    this->droneManager_->OnUpdate(this);
 
     this->renderer_->Draw(this->camera_);
 
@@ -75,4 +86,8 @@ Vector<int> Engine::GetWindowSize() const noexcept { return this->windowSize_; }
 
 DroneManager* const Engine::GetDroneManager() const noexcept {
   return this->droneManager_;
+}
+
+Vector<int> Engine::GetMousePosition() const noexcept {
+  return this->mousePosition_;
 }

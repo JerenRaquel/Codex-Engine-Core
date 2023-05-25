@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 // Custom
+#include "helpers.hpp"
 #include "vector.hpp"
 #include "renderEngine.hpp"
 #include "camera.hpp"
@@ -18,8 +19,10 @@ class Engine {
   Vector<int> windowSize_;
   RenderEngine* renderer_;
   Camera* camera_;
+  Vector<int> mousePosition_;
 
   void MoveCamera() noexcept;
+  void CalculateMousePosition() noexcept;
 
   // Simulation stuff
   DroneManager* droneManager_;
@@ -36,5 +39,6 @@ class Engine {
   RenderEngine* const GetRenderer() const noexcept;
   Vector<int> GetWindowSize() const noexcept;
   DroneManager* const GetDroneManager() const noexcept;
+  Vector<int> GetMousePosition() const noexcept;
 };
 #endif  // ENGINE_HPP_

@@ -7,14 +7,14 @@
 #include "../../engine/headers/mesh.hpp"
 #include "../../engine/headers/vector.hpp"
 
-class DroneManager;
+class Engine;
 
 class Drone {
  private:
   Mesh* mesh_;
-  void (*startFunc_)(DroneManager* const droneManager, Drone* const drone,
+  void (*startFunc_)(Engine* const engine, Drone* const drone,
                      const std::string& tag, const unsigned int id) = nullptr;
-  void (*updateFunc_)(DroneManager* const droneManager, Drone* const drone,
+  void (*updateFunc_)(Engine* const engine, Drone* const drone,
                       const std::string& tag, const unsigned int id) = nullptr;
 
  public:
@@ -23,15 +23,15 @@ class Drone {
   ~Drone();
 
   // Utility
-  void OnStart(DroneManager* const droneManager, const std::string& tag,
+  void OnStart(Engine* const engine, const std::string& tag,
                const unsigned int id) const noexcept;
-  void OnUpdate(DroneManager* const droneManager, const std::string& tag,
+  void OnUpdate(Engine* const engine, const std::string& tag,
                 const unsigned int id) const noexcept;
-  Drone* const OnStart(void (*func)(DroneManager* const droneManager,
-                                    Drone* const self, const std::string& tag,
+  Drone* const OnStart(void (*func)(Engine* const engine, Drone* const self,
+                                    const std::string& tag,
                                     const unsigned int id)) noexcept;
-  Drone* const OnUpdate(void (*func)(DroneManager* const droneManager,
-                                     Drone* const self, const std::string& tag,
+  Drone* const OnUpdate(void (*func)(Engine* const engine, Drone* const self,
+                                     const std::string& tag,
                                      const unsigned int id)) noexcept;
   // Getters
   Mesh* const GetMesh() const noexcept;

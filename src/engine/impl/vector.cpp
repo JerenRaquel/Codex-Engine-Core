@@ -27,14 +27,49 @@ float Vector<T>::ToDegreeAngle() const noexcept {
 
 template <typename T>
 float Vector<T>::Distance(const Vector<T>& other) const noexcept {
-  if (*this == other) {
-    return 0.0f;
-  }
+  if (*this == other) return 0.0f;
 
   Vector<T> difference = other - *this;
   float x = difference.x;
   float y = difference.y;
   return sqrt(x * x + y * y);
+}
+
+template <typename T>
+bool Vector<T>::IsWithinDistance(const Vector<T>& other,
+                                 float padding) const noexcept {
+  if (this->x < (other.x - padding) || this->x > (other.x + padding) ||
+      this->y < (other.y - padding) || this->y > (other.y + padding)) {
+    return false;
+  }
+  return this->Distance(other) <= padding;
+}
+
+template <typename T>
+bool Vector<T>::IsWithinDistance(const Vector<T>& other, float padding,
+                                 float& distance) const noexcept {
+  if (this->x < (other.x - padding) || this->x > (other.x + padding) ||
+      this->y < (other.y - padding) || this->y > (other.y + padding)) {
+    return false;
+  }
+  distance = this->Distance(other);
+  return distance <= padding;
+}
+
+template <typename T>
+bool Vector<T>::IsWithinBoxDistance(const Vector<T>& other,
+                                    float distance) const noexcept {
+  return this->IsWithinRectDistance(other, distance, distance);
+}
+
+template <typename T>
+bool Vector<T>::IsWithinRectDistance(const Vector<T>& other, float xPadding,
+                                     float yPadding) const noexcept {
+  if (this->x < (other.x - xPadding) || this->x > (other.x + xPadding) ||
+      this->y < (other.y - yPadding) || this->y > (other.y + yPadding)) {
+    return false;
+  }
+  return true;
 }
 
 template <typename T>
@@ -68,6 +103,11 @@ Vector<T> Vector<T>::operator+=(const Vector<T>& other) noexcept {
 template <typename T>
 Vector<T> Vector<T>::operator-(const Vector<T>& other) const noexcept {
   return Vector<T>(this->x - other.x, this->y - other.y);
+}
+
+template <typename T>
+Vector<T> Vector<T>::operator-(const T& other) const noexcept {
+  return Vector<T>(this->x - other, this->y - other);
 }
 
 template <typename T>
