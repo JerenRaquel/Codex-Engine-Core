@@ -43,16 +43,16 @@ float Vector<T>::SqrDistance(const Vector<T>& other) const noexcept {
 }
 
 template <typename T>
-bool Vector<T>::IsWithinDistance(const Vector<T>& other,
-                                 float padding) const noexcept {
-  if (this->x < (other.x - padding) || this->x > (other.x + padding) ||
-      this->y < (other.y - padding) || this->y > (other.y + padding)) {
+bool Vector<T>::IsWithinSqrDistance(const Vector<T>& other,
+                                    float range) const noexcept {
+  if (this->x < (other.x - range) || this->x > (other.x + range) ||
+      this->y < (other.y - range) || this->y > (other.y + range)) {
     return false;
   }
   T dx = abs(this->x - other.x);
   T dy = abs(this->y - other.y);
   T sqrd = dx * dx + dy * dy;
-  return sqrd <= padding * padding;
+  return sqrd <= range * range;
 }
 
 template <typename T>

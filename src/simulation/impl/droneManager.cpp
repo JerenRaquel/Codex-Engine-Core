@@ -48,6 +48,18 @@ DroneManager* const DroneManager::AddDrone(Drone* drone,
   return this;
 }
 
+std::vector<Drone*>* const DroneManager::FilterBasedOnRange(
+    std::vector<Drone*>* drones, const Vector<float>& position,
+    const float& range) const noexcept {
+  std::vector<Drone*>* resultingDrones = new std::vector<Drone*>();
+  for (auto drone : *drones) {
+    if (drone->GetMesh()->GetPosition().IsWithinSqrDistance(position, range)) {
+      resultingDrones->push_back(drone);
+    }
+  }
+  return resultingDrones;
+}
+
 // Getters
 std::vector<Drone*>* const DroneManager::GetAllDrones() const noexcept {
   return this->allDrones_;
@@ -55,33 +67,6 @@ std::vector<Drone*>* const DroneManager::GetAllDrones() const noexcept {
 
 unsigned int DroneManager::GetAllDroneCount() const noexcept {
   return this->allDrones_->size();
-}
-
-std::vector<Drone*>* const DroneManager::GetAllDronesWithinRange(
-    const Vector<float>& position, const float& range) const noexcept {
-  std::vector<Drone*>* drones = new std::vector<Drone*>();
-  const float sqrRange = range * range;
-  for (auto drone : *this->allDrones_) {
-    float sqrDistance = position.SqrDistance(drone->GetMesh()->GetPosition());
-    if (sqrDistance <= sqrRange) {
-      drones->push_back(drone);
-    }
-  }
-  return drones;
-}
-
-std::vector<Drone*>* const DroneManager::GetAllDronesWithinRange(
-    std::vector<Drone*>* const drones, const Vector<float>& position,
-    const float& range) const noexcept {
-  std::vector<Drone*>* resultingDrones = new std::vector<Drone*>();
-  const float sqrRange = range * range;
-  for (auto drone : *drones) {
-    float sqrDistance = position.SqrDistance(drone->GetMesh()->GetPosition());
-    if (sqrDistance <= sqrRange) {
-      resultingDrones->push_back(drone);
-    }
-  }
-  return resultingDrones;
 }
 
 std::vector<Drone*>* const DroneManager::GetDronesByTag(

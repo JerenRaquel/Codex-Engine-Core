@@ -9,9 +9,14 @@
 #include "engine/headers/engine.hpp"
 
 int main(int argc, char** argv) {
+  if (argc < 2) {
+    std::cout << "Usage: " << argv[0] << " <drone count>" << std::endl;
+    return 1;
+  }
+
   Vector<int> size(1600, 900);
   Vector<float> scale(2.5f, 2.5f);
-  unsigned int droneCount = 5000;
+  unsigned int droneCount = std::atoi(argv[1]);
 
   Engine* engine = new Engine(size, "Drone Simulation");
 
@@ -35,23 +40,24 @@ int main(int argc, char** argv) {
         ->OnUpdate([](Engine* const engine, Drone* const self,
                       const std::string& tag, const unsigned int id) {
           Vector<float> selfPosition = self->GetMesh()->GetPosition();
-          std::vector<Drone*>* const drones100 =
-              engine->GetDroneManager()->GetAllDronesWithinRange(selfPosition,
-                                                                 100.0f);
-          std::vector<Drone*>* const drones20 =
-              engine->GetDroneManager()->GetAllDronesWithinRange(
-                  drones100, selfPosition, 20.0f);
           float selfRotation = self->GetMesh()->GetRotation();
           Vector<float> center(800.0f, 450.0f);
           float targetBias = 0.05f;
           float cohesionBias = 0.02f;
           float separationBias = 0.01f;
 
+          std::vector<Drone*>* const allDrones =
+              engine->GetDroneManager()->GetAllDrones();
+          std::vector<Drone*>* const drones100 =
+              engine->GetDroneManager()->FilterBasedOnRange(
+                  allDrones, selfPosition, 100.0f);
+          std::vector<Drone*>* const drones20 =
+              engine->GetDroneManager()->FilterBasedOnRange(
+                  drones100, selfPosition, 20.0f);
+
           // Fly towards center
-          if (!selfPosition.IsWithinBoxDistance(center, 100.0f)) {
-            Vector<float> towardsCenter = center - selfPosition;
-            self->GetMesh()->RotateTowards(towardsCenter, targetBias);
-          }
+          Vector<float> towardsCenter = center - selfPosition;
+          self->GetMesh()->RotateTowards(towardsCenter, targetBias);
 
           // Fly with other drones
           if (drones20->size() > 0) {
