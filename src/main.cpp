@@ -56,7 +56,6 @@ int main(int argc, char** argv) {
           // Fly with other drones
           if (drones20->size() > 0) {
             float sum = 0.0f;
-            unsigned int amount = 0;
             for (auto* drone : *drones20) {
               // Avoid other drones
               self->GetMesh()->RotateTowards(
@@ -67,16 +66,13 @@ int main(int argc, char** argv) {
               float bias = self->GetMesh()->GetColor().DifferenceBias(
                   drone->GetMesh()->GetColor());
               sum += drone->GetMesh()->GetRotation() * (1.0f - bias);
-              amount++;
             }
-            if (amount > 0) {
-              float average = sum / amount;
-              float newRotation = average + selfRotation;
-              newRotation /= 77.0f + (std::rand() % 30);
-              newRotation -= selfRotation;
-              newRotation *= cohesionBias;
-              self->GetMesh()->Rotate(newRotation);
-            }
+            float average = sum / drones20->size();
+            float newRotation = average + selfRotation;
+            newRotation /= 77.0f + (std::rand() % 30);
+            newRotation -= selfRotation;
+            newRotation *= cohesionBias;
+            self->GetMesh()->Rotate(newRotation);
           }
 
           // Fly forwards

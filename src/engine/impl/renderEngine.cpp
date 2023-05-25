@@ -50,28 +50,31 @@ RenderEngine::~RenderEngine() {
   glfwTerminate();
 }
 
-void RenderEngine::Draw(const Camera* camera) {
+void RenderEngine::Draw(const glm::mat4x4* const orthoViewMatrix) {
   ZoneScopedN("RenderEngine::Draw");
   //* Clear Drawing Surface
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   //* Draw Calls
+  std::string shaderName = "default";
+  Shader* shader = this->shaders_->at("default");
+  shader->Use();
   for (unsigned int i = 0; i < this->meshes_->size(); i++) {
     // Load Active Shader
-    std::string shaderName = this->meshes_->at(i)->GetShaderName();
-    Shader* shader;
-    if (this->shaders_->count(shaderName) > 0) {
-      shader = this->shaders_->at(shaderName);
-    } else {
-      shader = this->shaders_->at("default");
+    if (shaderName != this->meshes_->at(i)->GetShaderName()) {
+      shaderName = this->meshes_->at(i)->GetShaderName();
+      if (this->shaders_->count(shaderName) > 0) {
+        shader = this->shaders_->at(shaderName);
+      } else {
+        shader = this->shaders_->at("default");
+      }
+      shader->Use();
     }
-
-    shader->Use();
 
     // Update Uniforms
     ZoneScopedN("RenderEngine::Draw::UpdateMVP");
-    glm::mat4x4 mvp = *(camera->GetOrthoMatrix()) * *(camera->GetViewMatrix()) *
-                      *(this->meshes_->at(i)->GetModelMatrix());
+    glm::mat4x4 mvp =
+        *(orthoViewMatrix) * *(this->meshes_->at(i)->GetModelMatrix());
     shader->PassUniformMatrix("mvp", &mvp);
     shader->PassUniform3f("color", this->meshes_->at(i)->GetColor());
 

@@ -64,6 +64,7 @@ class Vector3 : public Vector<T> {
   bool operator==(const Vector3<T>& other) const noexcept;
   bool operator!=(const Vector3<T>& other) const noexcept;
   Vector3<T> operator=(const Vector3<T>& other) noexcept;
+  Vector3<T> operator=(const Vector<T>& other) noexcept;
   Vector3<T> operator+(const Vector3<T>& other) const noexcept;
   Vector3<T> operator+=(const Vector3<T>& other) noexcept;
   Vector3<T> operator-(const Vector3<T>& other) const noexcept;

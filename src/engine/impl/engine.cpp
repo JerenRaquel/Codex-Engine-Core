@@ -3,8 +3,12 @@
 #include "../../../tools/tracy/tracy/Tracy.hpp"
 
 void Engine::MoveCamera() noexcept {
-  Vector<float> direction;
+  if (glfwGetKey(this->renderer_->GetWindow(), GLFW_KEY_R) == GLFW_PRESS) {
+    this->camera_->ResetPosition();
+    return;
+  }
 
+  Vector<float> direction;
   if (glfwGetKey(this->renderer_->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
     direction.y = -1.0f;
   } else if (glfwGetKey(this->renderer_->GetWindow(), GLFW_KEY_S) ==
@@ -22,7 +26,6 @@ void Engine::MoveCamera() noexcept {
     direction.x *= 0.70710678118f;  // sqrt(2)/2
     direction.y *= 0.70710678118f;
   }
-
   this->camera_->UpdatePosition(direction);
 }
 
@@ -58,12 +61,12 @@ void Engine::Start() {
   while (!glfwWindowShouldClose(this->renderer_->GetWindow())) {
     FrameMark;
     this->MoveCamera();
-    this->camera_->Recalculate();
+    glm::mat4x4* orthoViewMatrixCached = this->camera_->GetViewOrthoMatrix();
     this->CalculateMousePosition();
 
     this->droneManager_->OnUpdate(this);
 
-    this->renderer_->Draw(this->camera_);
+    this->renderer_->Draw(orthoViewMatrixCached);
 
     // update other events like input handling
     glfwPollEvents();

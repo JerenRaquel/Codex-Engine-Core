@@ -28,7 +28,7 @@ class RenderEngine {
  public:
   RenderEngine(const Vector<int>& size, const std::string& name);
   ~RenderEngine();
-  void Draw(const Camera* camera);
+  void Draw(const glm::mat4x4* const orthoViewMatrix);
   Mesh* AddMesh(Mesh* mesh);
   void CompileShader(const std::string& vertex, const std::string& fragment,
                      const std::string& name);

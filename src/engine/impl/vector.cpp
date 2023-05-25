@@ -194,6 +194,13 @@ Vector3<T> Vector3<T>::operator=(const Vector3<T>& other) noexcept {
 }
 
 template <typename T>
+Vector3<T> Vector3<T>::operator=(const Vector<T>& other) noexcept {
+  this->x = other.x;
+  this->y = other.y;
+  return *this;
+}
+
+template <typename T>
 Vector3<T> Vector3<T>::operator+(const Vector3<T>& other) const noexcept {
   return Vector3<T>(this->x + other.x, this->y + other.y, this->z + other.z);
 }

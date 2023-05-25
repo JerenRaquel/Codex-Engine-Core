@@ -12,19 +12,27 @@ class Camera {
   Vector<int> windowSize_;
   glm::mat4x4* orthoMatrix_ = nullptr;
   glm::mat4x4* viewMatrix_ = nullptr;
+  glm::mat4x4* orthoViewMatrix_ = nullptr;
   Vector3<float> position_;
   float cameraSpeed_ = 5.0f;
   float near_;
   float far_;
-  bool isDirty_;
+  bool isOrthoDirty_ = true;
+  bool isViewDirty_ = true;
+  bool isOrthoViewDirty_ = true;
 
  public:
   Camera(Vector<int> windowSize, float near, float far);
   ~Camera();
 
-  void Recalculate() noexcept;
+  // Utility
   void UpdatePosition(const Vector<float>& direction) noexcept;
-  glm::mat4x4* GetOrthoMatrix() const noexcept;
-  glm::mat4x4* GetViewMatrix() const noexcept;
+  void ResetPosition() noexcept;
+  // Setters
+  void SetPosition(const Vector<float>& position) noexcept;
+  // Getters
+  glm::mat4x4* GetOrthoMatrix() noexcept;
+  glm::mat4x4* GetViewMatrix() noexcept;
+  glm::mat4x4* GetViewOrthoMatrix() noexcept;
 };
 #endif  // CAMERA_HPP_
