@@ -20,11 +20,11 @@ class Boids : public Drone {
   float cohesionBias = 0.02f;
   float separationBias = 0.01f;
   float flySpeed = 5.0f;
-  void CenterHeading(const Vector<float>& center) const noexcept;
+  void FlyTowardsCenter(const Vector<float>& center) const noexcept;
   void CohesionAndAvoidance(
-      const std::vector<Drone*>* const drones) const noexcept;
+      const std::vector<DroneData*>* const drones) const noexcept;
   void Move() const noexcept;
-  void BlendColors(const std::vector<Drone*>* const drones,
+  void BlendColors(const std::vector<DroneData*>* const drones,
                    unsigned int selfID) const noexcept;
 
  public:

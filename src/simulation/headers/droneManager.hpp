@@ -8,10 +8,16 @@
 // Custom
 #include "drone.hpp"
 
+struct DroneData {
+  std::string tag;
+  unsigned int id;
+  Drone* drone;
+};
+
 class DroneManager {
  private:
-  std::vector<Drone*>* allDrones_;
-  std::map<std::string, std::vector<Drone*>*>* droneMap_;
+  std::vector<DroneData*>* allDrones_;
+  std::map<std::string, std::vector<DroneData*>*>* droneMap_;
 
  public:
   DroneManager();
@@ -21,13 +27,14 @@ class DroneManager {
   void OnStart(Engine* const engine) const noexcept;
   void OnUpdate(Engine* const engine) const noexcept;
   DroneManager* const AddDrone(Drone* drone, const std::string& tag) noexcept;
-  std::vector<Drone*>* const FilterBasedOnRange(
-      std::vector<Drone*>* drones, const Vector<float>& position,
+  std::vector<DroneData*>* const FilterBasedOnRange(
+      std::vector<DroneData*>* drones, const Vector<float>& position,
       const float& range) const noexcept;
+  void CleanDroneData(std::vector<DroneData*>* const droneData) const noexcept;
   // Getters
-  std::vector<Drone*>* const GetAllDrones() const noexcept;
+  std::vector<DroneData*>* const GetAllDrones() const noexcept;
   unsigned int GetAllDroneCount() const noexcept;
-  std::vector<Drone*>* const GetDronesByTag(
+  std::vector<DroneData*>* const GetDronesByTag(
       const std::string& tag) const noexcept;
   unsigned int GetDroneCountByTag(const std::string& tag) const noexcept;
   Drone* const GetDroneByTagId(const std::string& tag,

@@ -19,17 +19,18 @@ void Boids::InternalUpdate(Engine* const engine, const std::string& tag,
   Vector<float> selfPosition = this->mesh_->GetPosition();
   Vector<float> center(800.0f, 450.0f);
 
-  std::vector<Drone*>* const allDrones =
+  ZoneScopedN("Boids::DroneFetching");
+  std::vector<DroneData*>* const allDrones =
       engine->GetDroneManager()->GetAllDrones();
-  std::vector<Drone*>* const drones100 =
+  std::vector<DroneData*>* const drones100 =
       engine->GetDroneManager()->FilterBasedOnRange(allDrones, selfPosition,
                                                     100.0f);
-  std::vector<Drone*>* const drones20 =
+  std::vector<DroneData*>* const drones20 =
       engine->GetDroneManager()->FilterBasedOnRange(drones100, selfPosition,
                                                     20.0f);
 
   // Fly towards center
-  CenterHeading(center);
+  FlyTowardsCenter(center);
 
   // Fly with other drones
   CohesionAndAvoidance(drones20);
@@ -44,27 +45,29 @@ void Boids::InternalUpdate(Engine* const engine, const std::string& tag,
   delete drones20;
 }
 
-void Boids::CenterHeading(const Vector<float>& center) const noexcept {
+void Boids::FlyTowardsCenter(const Vector<float>& center) const noexcept {
   ZoneScopedN("Boids::FlyTowardsCenter");
   Vector<float> towardsCenter = center - this->mesh_->GetPosition();
   this->mesh_->RotateTowards(towardsCenter, this->targetBias);
 }
 
 void Boids::CohesionAndAvoidance(
-    const std::vector<Drone*>* const drones) const noexcept {
-  ZoneScopedN("Boids::Cohesion");
+    const std::vector<DroneData*>* const drones) const noexcept {
+  ZoneScopedN("Boids::CohesionAndAvoidance");
   if (drones->size() > 0) {
     float sum = 0.0f;
-    for (auto* drone : *drones) {
+    for (DroneData* droneData : *drones) {
+      Mesh* droneMesh = droneData->drone->GetMesh();
+
       // Avoid other drones
       this->mesh_->RotateTowards(
-          this->mesh_->GetPosition() - drone->GetMesh()->GetPosition(),
+          this->mesh_->GetPosition() - droneMesh->GetPosition(),
           this->separationBias);
 
       // Begin aggregation for cohesion
       float bias =
-          this->mesh_->GetColor().DifferenceBias(drone->GetMesh()->GetColor());
-      sum += drone->GetMesh()->GetRotation() * (1.0f - bias);
+          this->mesh_->GetColor().DifferenceBias(droneMesh->GetColor());
+      sum += droneMesh->GetRotation() * (1.0f - bias);
     }
     float average = sum / drones->size();
     float newRotation = average + this->mesh_->GetRotation();
@@ -76,11 +79,10 @@ void Boids::CohesionAndAvoidance(
 }
 
 void Boids::Move() const noexcept {
-  ZoneScopedN("Boids::FlyForwards");
+  ZoneScopedN("Boids::Move");
   this->mesh_->Translate(this->mesh_->GetDirectionVector(), this->flySpeed);
 
   // Bounds
-  ZoneScopedN("Boids::BoundsChecking");
   Vector<float> selfPosition = this->mesh_->GetPosition();
   if (selfPosition.x > 1600) {
     selfPosition.x = 0.0f;
@@ -102,17 +104,20 @@ void Boids::Move() const noexcept {
   }
 }
 
-void Boids::BlendColors(const std::vector<Drone*>* const drones,
+void Boids::BlendColors(const std::vector<DroneData*>* const drones,
                         unsigned int selfID) const noexcept {
   ZoneScopedN("Boids::BlendColors");
   if (selfID >= 10 && drones->size() > 0) {
     Vector3<float> colorSum;
     float colorAmount = 0.0f;
-    for (auto* drone : *drones) {
-      float droneRotation = drone->GetMesh()->GetRotation();
-      if (this->mesh_->GetRotation() < droneRotation + 5.0f &&
-          this->mesh_->GetRotation() > droneRotation - 5.0f) {
-        colorSum += drone->GetMesh()->GetColor();
+    for (DroneData* droneData : *drones) {
+      Mesh* droneMesh = droneData->drone->GetMesh();
+      float selfRotation = this->mesh_->GetRotation();
+      float droneRotation = droneMesh->GetRotation();
+
+      if (selfRotation < droneRotation + 5.0f &&
+          selfRotation > droneRotation - 5.0f) {
+        colorSum += droneMesh->GetColor();
         colorAmount++;
       }
     }

@@ -45,6 +45,7 @@ float Vector<T>::SqrDistance(const Vector<T>& other) const noexcept {
 template <typename T>
 bool Vector<T>::IsWithinSqrDistance(const Vector<T>& other,
                                     float range) const noexcept {
+  ZoneScopedN("Vector<T>::IsWithinSqrDistance");
   if (this->x < (other.x - range) || this->x > (other.x + range) ||
       this->y < (other.y - range) || this->y > (other.y + range)) {
     return false;
