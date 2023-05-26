@@ -9,6 +9,7 @@
 #include "engine/headers/engine.hpp"
 // Simulation
 #include "simulation/headers/boids.hpp"
+#include "simulation/headers/alpha.hpp"
 
 int main(int argc, char** argv) {
   if (argc < 2) {
@@ -25,7 +26,13 @@ int main(int argc, char** argv) {
   for (unsigned int i = 0; i < droneCount; i++) {
     Vector<float> position(std::rand() % engine->GetWindowSize().x,
                            std::rand() % engine->GetWindowSize().y);
-    engine->AddDrone(new Boids(position, scale));
+    engine->AddDrone(new Boids(position, scale), "Boids");
+  }
+
+  for (unsigned int i = 0; i < 10; i++) {
+    Vector<float> position(std::rand() % engine->GetWindowSize().x,
+                           std::rand() % engine->GetWindowSize().y);
+    engine->AddDrone(new Alpha(position, Vector<float>(10.0f, 10.0f)), "Alpha");
   }
 
   engine->Start();

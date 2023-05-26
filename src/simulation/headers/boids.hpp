@@ -16,16 +16,15 @@ class Boids : public Drone {
                       const unsigned int id) override;
 
   // Member Data
-  float targetBias = 0.05f;
+  float targetBias = 0.03f;
   float cohesionBias = 0.02f;
   float separationBias = 0.01f;
   float flySpeed = 5.0f;
-  void FlyTowardsCenter(const Vector<float>& center) const noexcept;
   void CohesionAndAvoidance(
       const std::vector<DroneData*>* const drones) const noexcept;
   void Move() const noexcept;
   void BlendColors(const std::vector<DroneData*>* const drones,
-                   unsigned int selfID) const noexcept;
+                   unsigned int selfID, const float& ratio) const noexcept;
 
  public:
   Boids(Vector<float> position, Vector<float> scale);

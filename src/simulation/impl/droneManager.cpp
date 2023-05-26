@@ -88,6 +88,22 @@ std::vector<DroneData*>* const DroneManager::FilterBasedOnRange(
   return resultingDrones;
 }
 
+DroneData* const DroneManager::GetClosestDrone(
+    std::vector<DroneData*>* drones,
+    const Vector<float>& position) const noexcept {
+  float minDistance = std::numeric_limits<float>::max();
+  DroneData* closestDrone = nullptr;
+  for (DroneData* droneData : *drones) {
+    float distance =
+        position.SqrDistance(droneData->drone->GetMesh()->GetPosition());
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestDrone = droneData;
+    }
+  }
+  return closestDrone;
+}
+
 // Getters
 std::vector<DroneData*>* const DroneManager::GetAllDrones() const noexcept {
   return this->allDrones_;

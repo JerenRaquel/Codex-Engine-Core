@@ -33,6 +33,9 @@ class DroneManager {
   std::vector<DroneData*>* const FilterBasedOnRange(
       std::vector<DroneData*>* drones, const Vector<float>& position,
       const float& range, const unsigned int& successLimit) const noexcept;
+  DroneData* const GetClosestDrone(
+      std::vector<DroneData*>* drones,
+      const Vector<float>& position) const noexcept;
   // Getters
   std::vector<DroneData*>* const GetAllDrones() const noexcept;
   unsigned int GetAllDroneCount() const noexcept;

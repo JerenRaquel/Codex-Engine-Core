@@ -202,6 +202,14 @@ Vector3<T> Vector3<T>::operator=(const Vector3<T>& other) noexcept {
 }
 
 template <typename T>
+Vector3<T> Vector3<T>::operator=(const glm::vec3& other) noexcept {
+  this->x = other.x;
+  this->y = other.y;
+  this->z = other.z;
+  return *this;
+}
+
+template <typename T>
 Vector3<T> Vector3<T>::operator=(const Vector<T>& other) noexcept {
   this->x = other.x;
   this->y = other.y;
