@@ -1,7 +1,5 @@
 #include "../headers/mesh.hpp"
 
-#include "../../../tools/tracy/tracy/Tracy.hpp"
-
 void Mesh::CreateBuffer() {
   glGenVertexArrays(1, &this->VAO_);
   glGenBuffers(1, &this->VBO_);
@@ -68,7 +66,6 @@ Mesh* Mesh::RotateTowards(const Vector<float>& direction) noexcept {
 
 Mesh* Mesh::RotateTowards(const Vector<float>& direction,
                           const float& bais) noexcept {
-  ZoneScopedN("Mesh::RotateTowards");
   float turningAngle = direction.ToDegreeAngle() - this->rotation_;
   if (turningAngle > 180.0f) {
     turningAngle -= 360.0f;
@@ -82,7 +79,6 @@ Mesh* Mesh::RotateTowards(const Vector<float>& direction,
 
 Mesh* Mesh::Translate(const Vector<float>& direction,
                       const float& magnitude) noexcept {
-  ZoneScopedN("Mesh::Translate");
   this->position_ += direction * magnitude;
   this->isModelMatrixDirty = true;
   return this;
@@ -137,7 +133,6 @@ Mesh* Mesh::SetRotation(const float& rotation) noexcept {
 std::string Mesh::GetShaderName() const noexcept { return this->shaderName_; }
 
 glm::mat4x4* Mesh::GetModelMatrix() noexcept {
-  ZoneScopedN("Mesh::GetModelMatrix");
   if (this->isModelMatrixDirty) {
     delete this->modelMatrix_;
     this->modelMatrix_ = new glm::mat4x4(1.0f);
@@ -157,7 +152,6 @@ glm::mat4x4* Mesh::GetModelMatrix() noexcept {
 const Vector3<float>& Mesh::GetColor() const noexcept { return this->color_; }
 
 Vector<float> Mesh::GetDirectionVector() const noexcept {
-  ZoneScopedN("Mesh::GetDirectionVector");
   return Vector<float>(glm::cos(glm::radians(-this->rotation_ + 90.0f)),
                        glm::sin(glm::radians(-this->rotation_ + 90.0f)));
 }

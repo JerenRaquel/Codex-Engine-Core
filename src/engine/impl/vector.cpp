@@ -1,7 +1,5 @@
 #include "../headers/vector.hpp"
 
-#include "../../../tools/tracy/tracy/Tracy.hpp"
-
 //
 // Vector
 //
@@ -44,8 +42,7 @@ float Vector<T>::SqrDistance(const Vector<T>& other) const noexcept {
 
 template <typename T>
 bool Vector<T>::IsWithinSqrDistance(const Vector<T>& other,
-                                    float range) const noexcept {
-  ZoneScopedN("Vector<T>::IsWithinSqrDistance");
+                                    T range) const noexcept {
   if (this->x < (other.x - range) || this->x > (other.x + range) ||
       this->y < (other.y - range) || this->y > (other.y + range)) {
     return false;
@@ -54,6 +51,19 @@ bool Vector<T>::IsWithinSqrDistance(const Vector<T>& other,
   T dy = abs(this->y - other.y);
   T sqrd = dx * dx + dy * dy;
   return sqrd <= range * range;
+}
+
+template <typename T>
+bool Vector<T>::IsWithinSqrDistance(const Vector<T>& other, T range,
+                                    T& sqrDistance) const noexcept {
+  if (this->x < (other.x - range) || this->x > (other.x + range) ||
+      this->y < (other.y - range) || this->y > (other.y + range)) {
+    return false;
+  }
+  T dx = abs(this->x - other.x);
+  T dy = abs(this->y - other.y);
+  sqrDistance = dx * dx + dy * dy;
+  return sqrDistance <= range * range;
 }
 
 template <typename T>
@@ -76,7 +86,6 @@ bool Vector<T>::IsWithinBoxDistance(const Vector<T>& other,
 template <typename T>
 bool Vector<T>::IsWithinRectDistance(const Vector<T>& other, float xPadding,
                                      float yPadding) const noexcept {
-  ZoneScopedN("Vector<T>::IsWithinRectDistance");
   if (this->x < (other.x - xPadding) || this->x > (other.x + xPadding) ||
       this->y < (other.y - yPadding) || this->y > (other.y + yPadding)) {
     return false;
@@ -162,7 +171,6 @@ glm::vec3 Vector3<T>::ToGLMVec3f() const noexcept {
 template <typename T>
 Vector3<T> Vector3<T>::Lerp(const Vector3<T>& other,
                             float rate) const noexcept {
-  ZoneScopedN("Vector3<T>::Lerp");
   return Vector3<T>(this->x + (other.x - this->x) * rate,
                     this->y + (other.y - this->y) * rate,
                     this->z + (other.z - this->z) * rate);
@@ -170,7 +178,6 @@ Vector3<T> Vector3<T>::Lerp(const Vector3<T>& other,
 
 template <typename T>
 float Vector3<T>::DifferenceBias(const Vector3<T>& other) const noexcept {
-  ZoneScopedN("Vector3<T>::DifferenceBias");
   Vector3<T> difference = other - *this;
   float sum = difference.x + difference.y + difference.z;
   return sum / 3.0f;

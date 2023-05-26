@@ -62,24 +62,30 @@ std::vector<DroneData*>* const DroneManager::FilterBasedOnRange(
     const float& range) const noexcept {
   ZoneScopedN("DroneManager::FilterBasedOnRange");
   std::vector<DroneData*>* resultingDrones = new std::vector<DroneData*>();
-
   for (DroneData* droneData : *drones) {
     if (droneData->drone->GetMesh()->GetPosition().IsWithinSqrDistance(position,
                                                                        range)) {
       resultingDrones->push_back(droneData);
     }
   }
-
   return resultingDrones;
 }
 
-void DroneManager::CleanDroneData(
-    std::vector<DroneData*>* const droneData) const noexcept {
-  ZoneScopedN("DroneManager::CleanDroneData");
-  for (DroneData* droneDat : *droneData) {
-    delete droneDat;
+std::vector<DroneData*>* const DroneManager::FilterBasedOnRange(
+    std::vector<DroneData*>* drones, const Vector<float>& position,
+    const float& range, const unsigned int& successLimit) const noexcept {
+  ZoneScopedN("DroneManager::FilterBasedOnRange");
+  std::vector<DroneData*>* resultingDrones = new std::vector<DroneData*>();
+  unsigned int count = 0;
+  for (DroneData* droneData : *drones) {
+    if (count >= successLimit) break;
+    if (droneData->drone->GetMesh()->GetPosition().IsWithinSqrDistance(position,
+                                                                       range)) {
+      resultingDrones->push_back(droneData);
+      count++;
+    }
   }
-  delete droneData;
+  return resultingDrones;
 }
 
 // Getters

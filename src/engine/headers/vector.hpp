@@ -22,7 +22,9 @@ class Vector {
   float ToDegreeAngle() const noexcept;
   float Distance(const Vector<T>& other) const noexcept;
   float SqrDistance(const Vector<T>& other) const noexcept;
-  bool IsWithinSqrDistance(const Vector<T>& other, float range) const noexcept;
+  bool IsWithinSqrDistance(const Vector<T>& other, T range) const noexcept;
+  bool IsWithinSqrDistance(const Vector<T>& other, T range,
+                           T& sqrDistance) const noexcept;
   bool IsWithinDistance(const Vector<T>& other, float padding,
                         float& distance) const noexcept;
   bool IsWithinBoxDistance(const Vector<T>& other,
