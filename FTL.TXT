@@ -48,11 +48,11 @@ Introduction
   encourage you to use the following text:
 
    """
-    Portions of this software are copyright © <year> The FreeType
+    Portions of this software are copyright © 2023 The FreeType
     Project (www.freetype.org).  All rights reserved.
    """
 
-  Please replace <year> with the value from the FreeType version you
+  Please replace 2023 with the value from the FreeType version you
   actually use.
 
 
