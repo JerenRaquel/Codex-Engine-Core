@@ -41,15 +41,20 @@ float Vector<T>::SqrDistance(const Vector<T>& other) const noexcept {
 }
 
 template <typename T>
+float Vector<T>::Dot(const Vector<T>& other) const noexcept {
+  return this->x * other.x + this->y * other.y;
+}
+
+template <typename T>
 bool Vector<T>::IsWithinSqrDistance(const Vector<T>& other,
                                     T range) const noexcept {
   if (this->x < (other.x - range) || this->x > (other.x + range) ||
       this->y < (other.y - range) || this->y > (other.y + range)) {
     return false;
   }
-  T dx = abs(this->x - other.x);
-  T dy = abs(this->y - other.y);
-  T sqrd = dx * dx + dy * dy;
+  // Vector<T> difference = other - *this;
+  // T sqrd = difference.Dot(difference);
+  T sqrd = this->SqrDistance(other);
   return sqrd <= range * range;
 }
 
@@ -60,9 +65,8 @@ bool Vector<T>::IsWithinSqrDistance(const Vector<T>& other, T range,
       this->y < (other.y - range) || this->y > (other.y + range)) {
     return false;
   }
-  T dx = abs(this->x - other.x);
-  T dy = abs(this->y - other.y);
-  sqrDistance = dx * dx + dy * dy;
+  Vector<T> difference = other - *this;
+  sqrDistance = difference.Dot(difference);
   return sqrDistance <= range * range;
 }
 
@@ -129,6 +133,12 @@ Vector<T> Vector<T>::operator-(const Vector<T>& other) const noexcept {
 template <typename T>
 Vector<T> Vector<T>::operator-(const T& other) const noexcept {
   return Vector<T>(this->x - other, this->y - other);
+}
+
+template <typename T>
+Vector<T> Vector<T>::operator-=(const Vector<T>& other) noexcept {
+  *this = *this - other;
+  return *this;
 }
 
 template <typename T>

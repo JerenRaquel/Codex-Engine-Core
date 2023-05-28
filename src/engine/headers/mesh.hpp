@@ -24,7 +24,7 @@ class Mesh {
   // Transform
   glm::mat4x4* modelMatrix_;
   bool isModelMatrixDirty = true;
-  Vector<float> position_;
+  Vector<float>* position_;
   float rotation_ = 0.0f;
   Vector<float> scale_ = Vector<float>(1.0f, 1.0f);
 
@@ -38,7 +38,7 @@ class Mesh {
 
  public:
   Mesh(GLfloat* vertices, unsigned int verticesSize, GLuint* indices,
-       unsigned int indicesSize);
+       unsigned int indicesSize, Vector<float>* position);
   ~Mesh();
 
   // Utility
@@ -62,7 +62,6 @@ class Mesh {
   glm::mat4x4* GetModelMatrix() noexcept;
   const Vector3<float>& GetColor() const noexcept;
   Vector<float> GetDirectionVector() const noexcept;
-  const Vector<float>& GetPosition() const noexcept;
   const float GetRotation() const noexcept;
 };
 #endif  // MESH_HPP_

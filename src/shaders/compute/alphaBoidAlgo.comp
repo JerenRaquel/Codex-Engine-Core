@@ -1,0 +1,36 @@
+#version 450 core
+
+struct DistanceData {
+  vec2 position;
+};
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout(binding = 0) coherent buffer ssbo {
+    DistanceData data[];
+} outData;
+
+uniform vec2 position;
+
+shared float turningAngle;
+
+float ToDegreeAngle(vec2 vector) {
+  return atan(vector.y, vector.x) * 180.0 / 3.1415926535897932384626433832795;
+}
+
+void main() {
+  uint index = gl_GlobalInvocationID.x;
+  
+  if (index == 0) {
+    atomicExchange(turningAngle, 0.0);
+  }
+
+  vec2 pos = outData.data[index].position;
+  float dist = distance(pos, position);
+
+  if(dist <= 20.0) {
+    vec2 direction = position - data[index].position;
+    float angle = ToDegreeAngle(direction);
+    atomicAdd(turningAngle, angle);
+  } 
+}

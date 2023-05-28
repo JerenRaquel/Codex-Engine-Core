@@ -9,7 +9,7 @@ RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name) {
   }
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 
   // Create a window and set the context
   this->window_ = glfwCreateWindow(size.x, size.y, name.c_str(), NULL, NULL);

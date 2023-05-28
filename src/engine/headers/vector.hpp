@@ -22,6 +22,7 @@ class Vector {
   float ToDegreeAngle() const noexcept;
   float Distance(const Vector<T>& other) const noexcept;
   float SqrDistance(const Vector<T>& other) const noexcept;
+  float Dot(const Vector<T>& other) const noexcept;
   bool IsWithinSqrDistance(const Vector<T>& other, T range) const noexcept;
   bool IsWithinSqrDistance(const Vector<T>& other, T range,
                            T& sqrDistance) const noexcept;
@@ -39,6 +40,7 @@ class Vector {
   Vector<T> operator+=(const Vector<T>& other) noexcept;
   Vector<T> operator-(const Vector<T>& other) const noexcept;
   Vector<T> operator-(const T& other) const noexcept;
+  Vector<T> operator-=(const Vector<T>& other) noexcept;
   Vector<T> operator/(const T& other) const;
   Vector<T> operator/=(const T& other);
   Vector<T> operator*(const T& other) const noexcept;

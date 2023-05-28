@@ -20,15 +20,13 @@ class Boids : public Drone {
   float cohesionBias = 0.02f;
   float separationBias = 0.01f;
   float flySpeed = 5.0f;
-  void CohesionAndAvoidance(
-      const std::vector<DroneData*>* const drones) const noexcept;
+  void Avoidance(std::vector<Vector<float>*>* positions) const noexcept;
+  void Cohesion(std::vector<Vector<float>*>* positions) const noexcept;
   void Move() const noexcept;
-  void BlendColors(const std::vector<DroneData*>* const drones,
-                   unsigned int selfID, const float& ratio) const noexcept;
 
  public:
-  Boids(Vector<float> position, Vector<float> scale);
-  Boids(Vector<float> position, Vector<float> scale, Vector3<float> color);
+  Boids(Vector<float>* position, Vector<float> scale);
+  Boids(Vector<float>* position, Vector<float> scale, Vector3<float> color);
   ~Boids();
 };
 #endif  // BOIDS_HPP_

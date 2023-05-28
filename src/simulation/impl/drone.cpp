@@ -1,9 +1,9 @@
 #include "../headers/drone.hpp"
 
-Drone::Drone(Vector<float> position, Vector<float> scale)
+Drone::Drone(Vector<float>* position, Vector<float> scale)
     : Drone(position, scale, Vector3<float>(1.0f, 1.0f, 1.0f)) {}
 
-Drone::Drone(Vector<float> position, Vector<float> scale,
+Drone::Drone(Vector<float>* position, Vector<float> scale,
              Vector3<float> color) {
   float vertices[] = {
       0.0f,  2.5f,  0.0f,  // top center
@@ -14,8 +14,9 @@ Drone::Drone(Vector<float> position, Vector<float> scale,
       0, 1, 2,  // first triangle
   };
 
-  this->mesh_ = new Mesh(vertices, 9, indices, 3);
-  this->mesh_->SetPosition(position)->SetScale(scale)->SetColor(color);
+  this->position_ = position;
+  this->mesh_ = new Mesh(vertices, 9, indices, 3, position);
+  this->mesh_->SetScale(scale)->SetColor(color);
 }
 
 Drone::~Drone() {}
@@ -31,3 +32,7 @@ void Drone::OnUpdate(Engine* const engine, const std::string& tag,
 }
 
 Mesh* const Drone::GetMesh() const noexcept { return this->mesh_; }
+
+Vector<float>* const Drone::GetPosition() const noexcept {
+  return this->position_;
+}

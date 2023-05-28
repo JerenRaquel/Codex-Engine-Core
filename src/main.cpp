@@ -22,16 +22,22 @@ int main(int argc, char** argv) {
   unsigned int droneCount = std::atoi(argv[1]);
 
   Engine* engine = new Engine(size, "Drone Simulation");
+  engine->CompileComputeShader("CalulateDistances.comp", "CalulateDistances");
 
   for (unsigned int i = 0; i < droneCount; i++) {
-    Vector<float> position(std::rand() % engine->GetWindowSize().x,
-                           std::rand() % engine->GetWindowSize().y);
+    Vector<float>* position =
+        new Vector<float>(std::rand() % engine->GetWindowSize().x,
+                          std::rand() % engine->GetWindowSize().y);
     engine->AddDrone(new Boids(position, scale), "Boids");
   }
 
   for (unsigned int i = 0; i < 10; i++) {
-    Vector<float> position(std::rand() % engine->GetWindowSize().x,
-                           std::rand() % engine->GetWindowSize().y);
+    // for (unsigned int i = 0; i < droneCount; i++) {
+    Vector<float>* position =
+        new Vector<float>(std::rand() % engine->GetWindowSize().x,
+                          std::rand() % engine->GetWindowSize().y);
+    // engine->AddDrone(new Alpha(position, Vector<float>(2.5f, 2.5f)),
+    // "Alpha");
     engine->AddDrone(new Alpha(position, Vector<float>(10.0f, 10.0f)), "Alpha");
   }
 
