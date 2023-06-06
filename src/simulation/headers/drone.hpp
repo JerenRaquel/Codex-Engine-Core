@@ -4,9 +4,9 @@
 // Std
 #include <string>
 // Custom
-#include "../../engine/headers/mesh.hpp"
-#include "../../engine/headers/vector.hpp"
-#include "../../engine/headers/engine.hpp"
+#include "mesh.hpp"
+#include "vector.hpp"
+#include "engine.hpp"
 
 // Based Class
 class Drone {

@@ -8,9 +8,9 @@
 #include <algorithm>
 // Custom
 #include "drone.hpp"
-#include "../../engine/headers/computeShader.hpp"
-#include "../../engine/headers/computeShaderBuffer.hpp"
-#include "../../engine/headers/dataStream.hpp"
+#include "computeShader.hpp"
+#include "computeShaderBuffer.hpp"
+#include "dataStream.hpp"
 
 struct DroneData {
   std::string tag;

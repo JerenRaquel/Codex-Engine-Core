@@ -20,11 +20,9 @@ class Engine;
 #include "computeShader.hpp"
 #include "computeShaderBuffer.hpp"
 #include "mesh.hpp"
+#include "droneManager.hpp"
 // Libs
 #include "mat4x4.hpp"
-
-// Simulation
-#include "../../simulation/headers/droneManager.hpp"
 
 class Engine {
  private:

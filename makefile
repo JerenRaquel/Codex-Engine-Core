@@ -18,7 +18,7 @@ SIMULATION_SOURCE_DIR := $(SIMULATION_DIR)/impl
 TRACY_DIR := $(TOOLS_DIR)/tracy
 
 # Libraries
-INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM)
+INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(ENGINE_HEADER_DIR) -I$(SIMULATION_HEADER_DIR)
 LINKER_LIBS := -lglfw3 -lopengl32 -lgdi32 -lglew32 $(INCLUDE_PATHS) $(FREE_TYPE)/libfreetype.a
 TRACY_LIBS := -L$(TRACY_DIR)/tracy -lws2_32 -lwinmm -ldbghelp
 
