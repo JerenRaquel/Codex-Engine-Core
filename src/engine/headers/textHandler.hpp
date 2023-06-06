@@ -1,15 +1,44 @@
 #ifndef TEXTHANDLER_HPP_
 #define TEXTHANDLER_HPP_
 
+// OpenGL
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+// Std
+#include <string>
+#include <stdexcept>
+#include <map>
 // Libs
-#include "../../libs/freetype/ft2build.h"
+#include "ft2build.h"
+#include FT_FREETYPE_H
+#include "../../libs/glm/mat4x4.hpp"
+#include "../../libs/glm/gtc/matrix_transform.hpp"
+// Custom
+#include "vector.hpp"
 
 class TextHandler {
  private:
-  /*Member vars*/;
+  const std::string fontPath_ = "assets/fonts/";
+
+  // Mesh Data
+  GLuint VBO_, VAO_;
+  glm::mat4x4* orthoMatrix_;
+
+  // Character Data
+  struct Character {
+    GLuint textureID;
+    Vector<int> size;
+    Vector<int> bearing;
+    long int advance;
+  };
+  std::map<GLchar, Character>* charactersAtlas_;
 
  public:
-  TextHandler();
+  TextHandler(const std::string& fontFile, const Vector<int>& windowSize);
   ~TextHandler();
+
+  void DrawText(const std::string& text, const Vector<int>& position,
+                const int& scale) noexcept;
+  const glm::mat4x4* const GetOrthoMatrix() const noexcept;
 };
 #endif  // TEXTHANDLER_HPP_

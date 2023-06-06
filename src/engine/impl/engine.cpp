@@ -41,10 +41,12 @@ void Engine::CalculateMousePosition() noexcept {
 
 Engine::Engine(const Vector<int>& windowSize, const std::string& name) {
   this->windowSize_ = windowSize;
-  this->renderer_ = new RenderEngine(windowSize, name);
+  this->renderer_ =
+      new RenderEngine(windowSize, name, "BasicCrayon-Regular.ttf", "Crayon");
   this->computeShaderCompiler_ = new ComputeShaderCompiler();
   this->camera_ = new Camera(windowSize, 0.1f, 100.0f);
   this->droneManager_ = new DroneManager(this);
+  this->meshes_ = new std::vector<Mesh*>();
   this->computeShaders_ = new std::map<std::string, ComputeShader*>();
   this->computeShaderBuffers_ =
       new std::map<std::string, ComputeShaderBuffer*>();
@@ -55,6 +57,12 @@ Engine::~Engine() {
   delete this->renderer_;
   delete this->computeShaderCompiler_;
   delete this->camera_;
+
+  for (unsigned int i = 0; i < this->meshes_->size(); i++) {
+    delete this->meshes_->at(i);
+  }
+  delete this->meshes_;
+
   delete this->computeShaders_;
   for (auto& computeShaderBuffer : *this->computeShaderBuffers_) {
     delete computeShaderBuffer.second;
@@ -64,8 +72,12 @@ Engine::~Engine() {
 
 // Utility
 void Engine::Start() {
-  // Initilize simulation stuff
+  // Initilize renderer stuff
   this->renderer_->CompileShader("vertex.vs", "fragment.fs", "default");
+  this->renderer_->CompileShader("text.vs", "text.fs", "Crayon");
+
+  // Initilize simulation stuff
+  this->renderer_->SetMeshPointer(this->meshes_);  // TEMP
   this->droneManager_->OnStart();
 
   // Main loop
@@ -77,7 +89,10 @@ void Engine::Start() {
 
     this->droneManager_->OnUpdate();
 
-    this->renderer_->Draw(orthoViewMatrixCached);
+    // TEMP
+    this->renderer_->DrawText("hello world", Vector<int>(10.0f, 450.0f), 1);
+
+    this->renderer_->Render(orthoViewMatrixCached);
 
     // update other events like input handling
     glfwPollEvents();
@@ -114,7 +129,7 @@ Drone* Engine::AddDrone(Drone* drone) const noexcept {
 
 Drone* Engine::AddDrone(Drone* drone, const std::string& tag) const noexcept {
   this->droneManager_->AddDrone(drone, tag);
-  this->renderer_->AddMesh(drone->GetMesh());
+  this->meshes_->push_back(drone->GetMesh());
   return drone;
 }
 

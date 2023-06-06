@@ -2,8 +2,10 @@
 SRC_DIR := src
 BUILD_DIR := builds
 TOOLS_DIR := tools
+LIBRARIES_DIR := $(SRC_DIR)/libs
 ENGINE_DIR := $(SRC_DIR)/engine
 SIMULATION_DIR := $(SRC_DIR)/simulation
+FREE_TYPE := $(LIBRARIES_DIR)/freetype
 
 # Subdirectories
 ENGINE_HEADER_DIR := $(ENGINE_DIR)/headers
@@ -12,13 +14,18 @@ SIMULATION_HEADER_DIR := $(SIMULATION_DIR)/headers
 SIMULATION_SOURCE_DIR := $(SIMULATION_DIR)/impl
 TRACY_DIR := $(TOOLS_DIR)/tracy
 
-# Commands
-GXX := g++ -Wall -Werror -pthread -std=c++2a -O3
-GXX_DEBUG := g++ -g -pthread -std=c++2a -O3
+# Libraries
+LINKER_LIBS := -lglfw3 -lopengl32 -lgdi32 -lglew32 -I$(FREE_TYPE) $(FREE_TYPE)/libfreetype.a
+TRACY_LIBS := -L$(TRACY_DIR)/tracy -lws2_32 -lwinmm -ldbghelp
 
-LINKER_LIBS := -lglfw3 -lopengl32 -lgdi32 -lglew32
+# Flags
+GXX_WERROR_FLAGS := -Wall -Werror
+GXX_FLAGS := -pthread -std=c++2a -O3
 TRACY_FLAGS := -D_WIN32_WINNT=0x0602 -DWINVER=0x0602 -DTRACY_ENABLE
-TRACY_LINKER_FLAGS := -L$(TRACY_DIR)/tracy -lws2_32 -lwinmm -ldbghelp
+
+# Commands
+GXX := g++ $(GXX_WERROR_FLAGS) $(GXX_FLAGS)
+GXX_DEBUG := g++ -g $(GXX_FLAGS)
 
 # Files
 MAIN_FILE := $(SRC_DIR)/main.cpp
@@ -30,13 +37,13 @@ EXE_NAME := $(BUILD_DIR)/Main.exe
 
 # Calls
 all: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES)
-	$(GXX) -c $(MAIN_FILE) -o CompiledFile.o
+	$(GXX) -c $(MAIN_FILE) -o CompiledFile.o -I$(FREE_TYPE) 
 	$(GXX) $(SOURCE_FILES) CompiledFile.o -o $(EXE_NAME) $(LINKER_LIBS) 
 	rm CompiledFile.o
 
 debug: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES) $(TRACY_DIR)/tracy/Tracy.hpp $(TRACY_DIR)/TracyClient.cpp
 	$(GXX_DEBUG) $(TRACY_FLAGS) -c $(MAIN_FILE) -o CompiledFile.o
-	$(GXX_DEBUG) $(TRACY_FLAGS) $(SOURCE_FILES) CompiledFile.o $(TRACY_DIR)/TracyClient.cpp -o $(EXE_NAME) $(LINKER_LIBS) $(TRACY_LINKER_FLAGS)
+	$(GXX_DEBUG) $(TRACY_FLAGS) $(SOURCE_FILES) CompiledFile.o $(TRACY_DIR)/TracyClient.cpp -o $(EXE_NAME) $(LINKER_LIBS) $(TRACY_LIBS)
 	rm CompiledFile.o
 
 

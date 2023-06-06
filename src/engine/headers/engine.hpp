@@ -19,6 +19,7 @@ class Engine;
 #include "computeShaderCompiler.hpp"
 #include "computeShader.hpp"
 #include "computeShaderBuffer.hpp"
+#include "mesh.hpp"
 // Libs
 #include "../../libs/glm/mat4x4.hpp"
 
@@ -33,6 +34,10 @@ class Engine {
   Camera* camera_;
   Vector<int> mousePosition_;
 
+  // TEMP
+  std::vector<Mesh*>* meshes_;
+
+  // Compute shaders
   std::map<std::string, ComputeShader*>* computeShaders_;
   std::map<std::string, ComputeShaderBuffer*>* computeShaderBuffers_;
 

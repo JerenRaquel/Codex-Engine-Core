@@ -26,6 +26,8 @@ class Shader {
   void PassUniform3f(const char* name,
                      const Vector3<float>& data) const noexcept;
   void PassUniformMatrix(const char* name, glm::mat4x4* data) const noexcept;
+  void PassUniformMatrix(const char* name,
+                         const glm::mat4x4* data) const noexcept;
 
   void Use() noexcept;
 
