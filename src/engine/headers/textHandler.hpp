@@ -11,8 +11,8 @@
 // Libs
 #include "ft2build.h"
 #include FT_FREETYPE_H
-#include "../../libs/glm/mat4x4.hpp"
-#include "../../libs/glm/gtc/matrix_transform.hpp"
+#include "mat4x4.hpp"
+#include "gtc/matrix_transform.hpp"
 // Custom
 #include "vector.hpp"
 

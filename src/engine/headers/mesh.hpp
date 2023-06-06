@@ -9,8 +9,8 @@
 // Custom
 #include "vector.hpp"
 // Lib
-#include "../../libs/glm/mat4x4.hpp"
-#include "../../libs/glm/gtc/matrix_transform.hpp"
+#include "mat4x4.hpp"
+#include "gtc/matrix_transform.hpp"
 
 class Mesh {
  private:

@@ -5,7 +5,10 @@ TOOLS_DIR := tools
 LIBRARIES_DIR := $(SRC_DIR)/libs
 ENGINE_DIR := $(SRC_DIR)/engine
 SIMULATION_DIR := $(SRC_DIR)/simulation
+
+# Header Directories
 FREE_TYPE := $(LIBRARIES_DIR)/freetype
+GLM := $(LIBRARIES_DIR)/glm
 
 # Subdirectories
 ENGINE_HEADER_DIR := $(ENGINE_DIR)/headers
@@ -15,7 +18,8 @@ SIMULATION_SOURCE_DIR := $(SIMULATION_DIR)/impl
 TRACY_DIR := $(TOOLS_DIR)/tracy
 
 # Libraries
-LINKER_LIBS := -lglfw3 -lopengl32 -lgdi32 -lglew32 -I$(FREE_TYPE) $(FREE_TYPE)/libfreetype.a
+INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM)
+LINKER_LIBS := -lglfw3 -lopengl32 -lgdi32 -lglew32 $(INCLUDE_PATHS) $(FREE_TYPE)/libfreetype.a
 TRACY_LIBS := -L$(TRACY_DIR)/tracy -lws2_32 -lwinmm -ldbghelp
 
 # Flags
@@ -37,7 +41,7 @@ EXE_NAME := $(BUILD_DIR)/Main.exe
 
 # Calls
 all: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES)
-	$(GXX) -c $(MAIN_FILE) -o CompiledFile.o -I$(FREE_TYPE) 
+	$(GXX) -c $(MAIN_FILE) -o CompiledFile.o $(INCLUDE_PATHS) 
 	$(GXX) $(SOURCE_FILES) CompiledFile.o -o $(EXE_NAME) $(LINKER_LIBS) 
 	rm CompiledFile.o
 

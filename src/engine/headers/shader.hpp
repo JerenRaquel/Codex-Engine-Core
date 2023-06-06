@@ -11,8 +11,8 @@
 #include "shaderCompiler.hpp"
 #include "vector.hpp"
 // Lib
-#include "../../libs/glm/mat4x4.hpp"
-#include "../../libs/glm/gtc/type_ptr.hpp"
+#include "mat4x4.hpp"
+#include "gtc/type_ptr.hpp"
 
 class Shader {
  private:

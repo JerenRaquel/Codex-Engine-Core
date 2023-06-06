@@ -6,8 +6,8 @@
 #include <stdexcept>
 #include <iostream>
 // Lib
-#include "../../libs/glm/vec3.hpp"
-#include "../../libs/glm/gtc/matrix_transform.hpp"
+#include "vec3.hpp"
+#include "gtc/matrix_transform.hpp"
 
 template <typename T>
 class Vector {

@@ -21,7 +21,7 @@ class Engine;
 #include "computeShaderBuffer.hpp"
 #include "mesh.hpp"
 // Libs
-#include "../../libs/glm/mat4x4.hpp"
+#include "mat4x4.hpp"
 
 // Simulation
 #include "../../simulation/headers/droneManager.hpp"

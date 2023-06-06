@@ -7,7 +7,7 @@
 #include "vector.hpp"
 #include "line.hpp"
 // Lib
-#include "../../libs/glm/mat4x4.hpp"
+#include "mat4x4.hpp"
 
 class OutlineCollider {
  private:
