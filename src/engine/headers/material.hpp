@@ -5,6 +5,7 @@
 #include <string>
 // Custom
 #include "vector.hpp"
+#include "helpers.hpp"
 
 class Material {
  private:
@@ -16,6 +17,9 @@ class Material {
   Material(const std::string& shaderName);
   Material(const std::string& shaderName, const Vector3<float>& color);
   ~Material();
+
+  // Utility
+  Material* RandomizeColor() noexcept;
 
   // Setters
   Material* SetShaderName(const std::string& shaderName) noexcept;

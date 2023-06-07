@@ -10,6 +10,12 @@ Material::Material(const std::string& shaderName, const Vector3<float>& color)
 
 Material::~Material() {}
 
+// Utility
+Material* Material::RandomizeColor() noexcept {
+  this->color_ = GenerateRandomColor();
+  return this;
+}
+
 // Setters
 Material* Material::SetShaderName(const std::string& shaderName) noexcept {
   this->shaderName_ = shaderName;

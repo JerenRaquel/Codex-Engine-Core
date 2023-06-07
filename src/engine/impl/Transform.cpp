@@ -1,4 +1,4 @@
-#include "Transform.hpp"
+#include "transform.hpp"
 
 Transform::Transform(Vector<float>* const position, const Vector<float>& scale,
                      const float& rotation) {
@@ -12,18 +12,23 @@ Transform::Transform(Vector<float>* const position, const Vector<float>& scale,
 Transform::~Transform() { delete this->modelMatrix_; }
 
 // Utility
-Transform* Transform::Rotate(const float& angle) noexcept {
+Transform* const Transform::RandomizeRotation() noexcept {
+  return this->SetRotation(std::rand() % 360);
+}
+
+Transform* const Transform::Rotate(const float& angle) noexcept {
   this->rotation_ += angle;
   this->isModelMatrixDirty_ = true;
   return this;
 }
 
-Transform* Transform::RotateTowards(const Vector<float>& direction) noexcept {
+Transform* const Transform::RotateTowards(
+    const Vector<float>& direction) noexcept {
   return this->RotateTowards(direction, 1.0f);
 }
 
-Transform* Transform::RotateTowards(const Vector<float>& direction,
-                                    const float& bais) noexcept {
+Transform* const Transform::RotateTowards(const Vector<float>& direction,
+                                          const float& bais) noexcept {
   float turningAngle = direction.ToDegreeAngle() - this->rotation_;
   if (turningAngle > 180.0f) {
     turningAngle -= 360.0f;
@@ -35,32 +40,34 @@ Transform* Transform::RotateTowards(const Vector<float>& direction,
   return this;
 }
 
-Transform* Transform::Translate(const Vector<float>& direction,
-                                const float& magnitude) noexcept {
+Transform* const Transform::Translate(const Vector<float>& direction,
+                                      const float& magnitude) noexcept {
   *(this->position_) += direction * magnitude;
   this->isModelMatrixDirty_ = true;
   return this;
 }
 
 // Setters
-Transform* Transform::SetScale(const Vector<float>& scale) noexcept {
+Transform* const Transform::SetScale(const Vector<float>& scale) noexcept {
   this->scale_ = scale;
   this->isModelMatrixDirty_ = true;
   return this;
 }
 
-Transform* Transform::SetPosition(const Vector<float>& position) noexcept {
+Transform* const Transform::SetPosition(
+    const Vector<float>& position) noexcept {
   return this->SetPosition(position.x, position.y);
 }
 
-Transform* Transform::SetPosition(const float& x, const float& y) noexcept {
+Transform* const Transform::SetPosition(const float& x,
+                                        const float& y) noexcept {
   this->position_->x = x;
   this->position_->y = y;
   this->isModelMatrixDirty_ = true;
   return this;
 }
 
-Transform* Transform::SetRotation(const float& rotation) noexcept {
+Transform* const Transform::SetRotation(const float& rotation) noexcept {
   this->rotation_ = rotation;
   if (this->rotation_ <= -360.0f) {
     this->rotation_ += 360.0f;

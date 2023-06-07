@@ -24,18 +24,19 @@ class Transform {
   ~Transform();
 
   // Utility
-  Transform* Rotate(const float& angle) noexcept;
-  Transform* RotateTowards(const Vector<float>& direction) noexcept;
-  Transform* RotateTowards(const Vector<float>& direction,
-                           const float& bais) noexcept;
-  Transform* Translate(const Vector<float>& direction,
-                       const float& magnitude) noexcept;
+  Transform* const RandomizeRotation() noexcept;
+  Transform* const Rotate(const float& angle) noexcept;
+  Transform* const RotateTowards(const Vector<float>& direction) noexcept;
+  Transform* const RotateTowards(const Vector<float>& direction,
+                                 const float& bais) noexcept;
+  Transform* const Translate(const Vector<float>& direction,
+                             const float& magnitude) noexcept;
 
   // Setters
-  Transform* SetScale(const Vector<float>& scale) noexcept;
-  Transform* SetPosition(const Vector<float>& position) noexcept;
-  Transform* SetPosition(const float& x, const float& y) noexcept;
-  Transform* SetRotation(const float& rotation) noexcept;
+  Transform* const SetScale(const Vector<float>& scale) noexcept;
+  Transform* const SetPosition(const Vector<float>& position) noexcept;
+  Transform* const SetPosition(const float& x, const float& y) noexcept;
+  Transform* const SetRotation(const float& rotation) noexcept;
 
   // Getters
   glm::mat4x4* GetModelMatrix() noexcept;
