@@ -39,12 +39,15 @@ void Engine::CalculateMousePosition() noexcept {
   this->mousePosition_ = Vector<int>(xpos - windowX, ypos - windowY);
 }
 
-Engine::Engine(const Vector<int>& windowSize, const std::string& name) {
+Engine::Engine(const Vector<int>& windowSize, const std::string& name,
+               const std::vector<std::string>& args) {
   this->windowSize_ = windowSize;
+  this->args_ = new std::vector<std::string>(args);
   this->renderer_ =
       new RenderEngine(windowSize, name, "BasicCrayon-Regular.ttf", "Crayon");
   this->computeShaderCompiler_ = new ComputeShaderCompiler();
   this->camera_ = new Camera(windowSize, 0.1f, 100.0f);
+  this->actions_ = new std::vector<Action*>();
   this->droneManager_ = new DroneManager(this);
   this->renderData_ = new std::vector<RenderData*>();
   this->computeShaders_ = new std::map<std::string, ComputeShader*>();
@@ -57,6 +60,11 @@ Engine::~Engine() {
   delete this->renderer_;
   delete this->computeShaderCompiler_;
   delete this->camera_;
+
+  for (Action* action : *this->actions_) {
+    delete action;
+  }
+  delete this->actions_;
 
   for (auto renderData : *this->renderData_) {
     delete renderData;
@@ -76,21 +84,14 @@ void Engine::Start() {
   this->renderer_->CompileShader("vertex.vs", "fragment.fs", "default");
   this->renderer_->CompileShader("text.vs", "text.fs", "Crayon");
 
-  // Initilize simulation stuff
   // TEMP - start
-  float vertices[] = {
-      0.0f,  2.5f,  0.0f,  // top center
-      -2.5f, -2.5f, 0.0f,  // bottom left
-      2.5f,  -2.5f, 0.0f,  // bottom right
-  };
-  unsigned int indices[] = {
-      0, 1, 2,  // first triangle
-  };
-
-  Mesh* droneMesh = new Mesh(vertices, 9, indices, 3);
-  this->renderer_->AddMeshType("drone", droneMesh);
   this->renderer_->SetRenderDataPointer(this->renderData_);
   // TEMP - end
+
+  // Initilize actions
+  for (unsigned int i = 0; i < this->actions_->size(); i++) {
+    this->actions_->at(i)->OnStart(this);
+  }
 
   this->droneManager_->OnStart();
 
@@ -101,11 +102,11 @@ void Engine::Start() {
     glm::mat4x4* orthoViewMatrixCached = this->camera_->GetViewOrthoMatrix();
     this->CalculateMousePosition();
 
+    // Update actions
+    for (unsigned int i = 0; i < this->actions_->size(); i++) {
+      this->actions_->at(i)->OnUpdate(this);
+    }
     this->droneManager_->OnUpdate();
-
-    // TEMP - start
-    this->renderer_->DrawText("hello world", Vector<int>(10.0f, 450.0f), 1);
-    // TEMP - end
 
     this->renderer_->Render(orthoViewMatrixCached);
 
@@ -115,7 +116,7 @@ void Engine::Start() {
 }
 
 void Engine::CompileComputeShader(const std::string& computeFile,
-                                  const std::string& name) {
+                                  const std::string& name) const {
   if (this->computeShaders_->count(name) > 0) {
     throw std::runtime_error("Compute shader already exists");
   }
@@ -138,6 +139,11 @@ ComputeShaderBuffer* const Engine::AssignNewComputeShaderBuffer(
   return buffer;
 }
 
+const Engine* const Engine::AddAction(Action* action) const noexcept {
+  this->actions_->push_back(action);
+  return this;
+}
+
 Drone* Engine::AddDrone(Drone* drone) const noexcept {
   return this->AddDrone(drone, "generic");
 }
@@ -158,6 +164,10 @@ RenderEngine* const Engine::GetRenderer() const noexcept {
 }
 
 Vector<int> Engine::GetWindowSize() const noexcept { return this->windowSize_; }
+
+std::vector<std::string>* const Engine::GetArgs() const noexcept {
+  return this->args_;
+}
 
 DroneManager* const Engine::GetDroneManager() const noexcept {
   return this->droneManager_;

@@ -20,48 +20,56 @@ class Engine;
 #include "computeShader.hpp"
 #include "computeShaderBuffer.hpp"
 #include "mesh.hpp"
+#include "action.hpp"
 #include "droneManager.hpp"
 // Libs
 #include "mat4x4.hpp"
 
+class Action;
+
 class Engine {
  private:
+  // Engine Data
+  std::vector<std::string>* args_;
   Vector<int> windowSize_;
   RenderEngine* renderer_;
-  ComputeShaderCompiler* computeShaderCompiler_;
   Camera* camera_;
   Vector<int> mousePosition_;
+  std::vector<Action*>* actions_;
 
-  // TEMP
+  // TEMP - start
   std::vector<RenderData*>* renderData_;
+  DroneManager* droneManager_;
+  // TEMP - end
 
   // Compute shaders
+  ComputeShaderCompiler* computeShaderCompiler_;
   std::map<std::string, ComputeShader*>* computeShaders_;
   std::map<std::string, ComputeShaderBuffer*>* computeShaderBuffers_;
 
   void MoveCamera() noexcept;
   void CalculateMousePosition() noexcept;
 
-  // Simulation stuff
-  DroneManager* droneManager_;
-
  public:
-  Engine(const Vector<int>& windowSize, const std::string& name);
+  Engine(const Vector<int>& windowSize, const std::string& name,
+         const std::vector<std::string>& args);
   ~Engine();
 
   // Utility
   void Start();
   void CompileComputeShader(const std::string& computeFile,
-                            const std::string& name);
+                            const std::string& name) const;
   ComputeShaderBuffer* const AssignNewComputeShaderBuffer(
       const std::string& name, const unsigned int& width,
       const unsigned int& height) const;
+  const Engine* const AddAction(Action* action) const noexcept;
   Drone* AddDrone(Drone* drone) const noexcept;
   Drone* AddDrone(Drone* drone, const std::string& tag) const noexcept;
 
   // Getters
   RenderEngine* const GetRenderer() const noexcept;
   Vector<int> GetWindowSize() const noexcept;
+  std::vector<std::string>* const GetArgs() const noexcept;
   DroneManager* const GetDroneManager() const noexcept;
   Vector<int> GetMousePosition() const noexcept;
   ComputeShader* const GetComputeShader(const std::string& name) const;
