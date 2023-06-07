@@ -48,7 +48,6 @@ Engine::Engine(const Vector<int>& windowSize, const std::string& name,
   this->computeShaderCompiler_ = new ComputeShaderCompiler();
   this->camera_ = new Camera(windowSize, 0.1f, 100.0f);
   this->actions_ = new std::vector<Action*>();
-  this->droneManager_ = new DroneManager(this);
   this->renderData_ = new std::vector<RenderData*>();
   this->computeShaders_ = new std::map<std::string, ComputeShader*>();
   this->computeShaderBuffers_ =
@@ -56,7 +55,6 @@ Engine::Engine(const Vector<int>& windowSize, const std::string& name,
 }
 
 Engine::~Engine() {
-  delete this->droneManager_;
   delete this->renderer_;
   delete this->computeShaderCompiler_;
   delete this->camera_;
@@ -104,7 +102,6 @@ void Engine::Start() {
     for (unsigned int i = 0; i < this->actions_->size(); i++) {
       this->actions_->at(i)->OnUpdate(this);
     }
-    this->droneManager_->OnUpdate();
 
     this->renderer_->Render(orthoViewMatrixCached);
 
@@ -142,20 +139,6 @@ const Engine* const Engine::AddAction(Action* action) const noexcept {
   return this;
 }
 
-Drone* Engine::AddDrone(Drone* drone) const noexcept {
-  return this->AddDrone(drone, "generic");
-}
-
-Drone* Engine::AddDrone(Drone* drone, const std::string& tag) const noexcept {
-  this->droneManager_->AddDrone(drone, tag);
-  RenderData* renderData = new RenderData();
-  renderData->meshType = "drone";
-  renderData->material = drone->GetMaterial();
-  renderData->transform = drone->GetTransform();
-  this->renderData_->push_back(renderData);
-  return drone;
-}
-
 // Getters
 RenderEngine* const Engine::GetRenderer() const noexcept {
   return this->renderer_;
@@ -165,10 +148,6 @@ Vector<int> Engine::GetWindowSize() const noexcept { return this->windowSize_; }
 
 std::vector<std::string>* const Engine::GetArgs() const noexcept {
   return this->args_;
-}
-
-DroneManager* const Engine::GetDroneManager() const noexcept {
-  return this->droneManager_;
 }
 
 Vector<int> Engine::GetMousePosition() const noexcept {

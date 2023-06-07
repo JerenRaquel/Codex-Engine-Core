@@ -15,30 +15,6 @@ void TestAction::InternalStart(const Engine* const engine) const noexcept {
 
   Mesh* droneMesh = new Mesh(vertices, 9, indices, 3);
   engine->GetRenderer()->AddMeshType("drone", droneMesh);
-
-  int droneCount = 1000;
-  if ((*(engine->GetArgs())).size() > 0) {
-    droneCount = std::atoi((*(engine->GetArgs()))[0].c_str());
-  }
-  for (int i = 0; i < droneCount; i++) {
-    Vector<float>* position =
-        new Vector<float>(std::rand() % engine->GetWindowSize().x,
-                          std::rand() % engine->GetWindowSize().y);
-    Drone* drone = engine->AddDrone(
-        new Boids(position, Vector<float>(2.5f, 2.5f)), "Boids");
-    drone->GetMaterial()->RandomizeColor();
-    drone->GetTransform()->RandomizeRotation();
-  }
-
-  for (unsigned int i = 0; i < 10; i++) {
-    Vector<float>* position =
-        new Vector<float>(std::rand() % engine->GetWindowSize().x,
-                          std::rand() % engine->GetWindowSize().y);
-    Drone* drone = engine->AddDrone(
-        new Alpha(position, Vector<float>(10.0f, 10.0f)), "Alpha");
-    drone->GetMaterial()->RandomizeColor();
-    drone->GetTransform()->RandomizeRotation();
-  }
 }
 
 void TestAction::InternalUpdate(const Engine* const engine) const noexcept {

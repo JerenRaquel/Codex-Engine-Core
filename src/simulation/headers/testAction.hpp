@@ -3,9 +3,6 @@
 
 // Engine
 #include "action.hpp"
-// Simulation
-#include "alpha.hpp"
-#include "boids.hpp"
 
 class TestAction : public Action {
  private:

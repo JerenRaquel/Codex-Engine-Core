@@ -1,11 +1,10 @@
 #ifndef ENGINE_HPP_
 #define ENGINE_HPP_
 
-class Drone;
-class DroneManager;
 class RenderEngine;
 class Camera;
 class Engine;
+class Action;
 
 // Std
 #include <string>
@@ -21,11 +20,8 @@ class Engine;
 #include "computeShaderBuffer.hpp"
 #include "mesh.hpp"
 #include "action.hpp"
-#include "droneManager.hpp"
 // Libs
 #include "mat4x4.hpp"
-
-class Action;
 
 class Engine {
  private:
@@ -39,7 +35,6 @@ class Engine {
 
   // TEMP - start
   std::vector<RenderData*>* renderData_;
-  DroneManager* droneManager_;
   // TEMP - end
 
   // Compute shaders
@@ -63,14 +58,11 @@ class Engine {
       const std::string& name, const unsigned int& width,
       const unsigned int& height) const;
   const Engine* const AddAction(Action* action) const noexcept;
-  Drone* AddDrone(Drone* drone) const noexcept;
-  Drone* AddDrone(Drone* drone, const std::string& tag) const noexcept;
 
   // Getters
   RenderEngine* const GetRenderer() const noexcept;
   Vector<int> GetWindowSize() const noexcept;
   std::vector<std::string>* const GetArgs() const noexcept;
-  DroneManager* const GetDroneManager() const noexcept;
   Vector<int> GetMousePosition() const noexcept;
   ComputeShader* const GetComputeShader(const std::string& name) const;
   ComputeShaderBuffer* const GetComputeShaderBuffer(
