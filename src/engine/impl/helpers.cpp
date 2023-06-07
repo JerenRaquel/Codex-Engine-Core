@@ -11,3 +11,10 @@ float Clamp(float value, float min, float max) noexcept {
   if (value > max) return max;
   return value;
 }
+
+Vector3<float> GenerateRandomColor() noexcept {
+  float r = static_cast<float>(std::rand() % 255) / 255.0f;
+  float g = static_cast<float>(std::rand() % 255) / 255.0f;
+  float b = static_cast<float>(std::rand() % 255) / 255.0f;
+  return Vector3<float>(r, g, b);
+}
