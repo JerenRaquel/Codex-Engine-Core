@@ -46,7 +46,7 @@ Engine::Engine(const Vector<int>& windowSize, const std::string& name) {
   this->computeShaderCompiler_ = new ComputeShaderCompiler();
   this->camera_ = new Camera(windowSize, 0.1f, 100.0f);
   this->droneManager_ = new DroneManager(this);
-  this->meshes_ = new std::vector<Mesh*>();
+  this->renderData_ = new std::vector<RenderData*>();
   this->computeShaders_ = new std::map<std::string, ComputeShader*>();
   this->computeShaderBuffers_ =
       new std::map<std::string, ComputeShaderBuffer*>();
@@ -58,10 +58,10 @@ Engine::~Engine() {
   delete this->computeShaderCompiler_;
   delete this->camera_;
 
-  for (unsigned int i = 0; i < this->meshes_->size(); i++) {
-    delete this->meshes_->at(i);
+  for (auto renderData : *this->renderData_) {
+    delete renderData;
   }
-  delete this->meshes_;
+  delete this->renderData_;
 
   delete this->computeShaders_;
   for (auto& computeShaderBuffer : *this->computeShaderBuffers_) {
@@ -77,7 +77,21 @@ void Engine::Start() {
   this->renderer_->CompileShader("text.vs", "text.fs", "Crayon");
 
   // Initilize simulation stuff
-  this->renderer_->SetMeshPointer(this->meshes_);  // TEMP
+  // TEMP - start
+  float vertices[] = {
+      0.0f,  2.5f,  0.0f,  // top center
+      -2.5f, -2.5f, 0.0f,  // bottom left
+      2.5f,  -2.5f, 0.0f,  // bottom right
+  };
+  unsigned int indices[] = {
+      0, 1, 2,  // first triangle
+  };
+
+  Mesh* droneMesh = new Mesh(vertices, 9, indices, 3);
+  this->renderer_->AddMeshType("drone", droneMesh);
+  this->renderer_->SetRenderDataPointer(this->renderData_);
+  // TEMP - end
+
   this->droneManager_->OnStart();
 
   // Main loop
@@ -89,8 +103,9 @@ void Engine::Start() {
 
     this->droneManager_->OnUpdate();
 
-    // TEMP
+    // TEMP - start
     this->renderer_->DrawText("hello world", Vector<int>(10.0f, 450.0f), 1);
+    // TEMP - end
 
     this->renderer_->Render(orthoViewMatrixCached);
 
@@ -129,7 +144,11 @@ Drone* Engine::AddDrone(Drone* drone) const noexcept {
 
 Drone* Engine::AddDrone(Drone* drone, const std::string& tag) const noexcept {
   this->droneManager_->AddDrone(drone, tag);
-  this->meshes_->push_back(drone->GetMesh());
+  RenderData* renderData = new RenderData();
+  renderData->meshType = "drone";
+  renderData->material = drone->GetMaterial();
+  renderData->transform = drone->GetTransform();
+  this->renderData_->push_back(renderData);
   return drone;
 }
 

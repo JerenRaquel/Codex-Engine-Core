@@ -29,7 +29,7 @@ void Mesh::Bind() const noexcept {
 void Mesh::Unbind() const noexcept { glBindVertexArray(0); }
 
 Mesh::Mesh(GLfloat* vertices, unsigned int verticesSize, GLuint* indices,
-           unsigned int indicesSize, Vector<float>* position) {
+           unsigned int indicesSize) {
   this->vertices_ = new GLfloat[verticesSize];
   for (unsigned int i = 0; i < verticesSize; i++) {
     this->vertices_[i] = vertices[i];
@@ -42,13 +42,10 @@ Mesh::Mesh(GLfloat* vertices, unsigned int verticesSize, GLuint* indices,
   }
   this->indicesSize_ = indicesSize;
 
-  this->modelMatrix_ = new glm::mat4x4(1.0f);
-  this->position_ = position;
   this->CreateBuffer();
 }
 
 Mesh::~Mesh() {
-  delete this->modelMatrix_;
   glDeleteBuffers(1, &this->VBO_);
   glDeleteBuffers(1, &this->EBO_);
   glDeleteBuffers(1, &this->VAO_);
@@ -59,106 +56,3 @@ void Mesh::Draw() const noexcept {
   glDrawElements(GL_TRIANGLES, this->indicesSize_, GL_UNSIGNED_INT, 0);
   Unbind();
 }
-
-Mesh* Mesh::Rotate(const float& angle) noexcept {
-  this->rotation_ += angle;
-  this->isModelMatrixDirty = true;
-  return this;
-}
-
-Mesh* Mesh::RotateTowards(const Vector<float>& direction) noexcept {
-  return this->RotateTowards(direction, 1.0f);
-}
-
-Mesh* Mesh::RotateTowards(const Vector<float>& direction,
-                          const float& bais) noexcept {
-  float turningAngle = direction.ToDegreeAngle() - this->rotation_;
-  if (turningAngle > 180.0f) {
-    turningAngle -= 360.0f;
-  } else if (turningAngle < -180.0f) {
-    turningAngle += 360.0f;
-  }
-
-  this->Rotate(turningAngle * bais);
-  return this;
-}
-
-Mesh* Mesh::Translate(const Vector<float>& direction,
-                      const float& magnitude) noexcept {
-  *(this->position_) += direction * magnitude;
-  this->isModelMatrixDirty = true;
-  return this;
-}
-
-Mesh* Mesh::SetShaderName(const std::string& shaderName) noexcept {
-  this->shaderName_ = shaderName;
-  return this;
-}
-
-Mesh* Mesh::SetColor(const Vector3<float>& color) noexcept {
-  this->color_ = color;
-  return this;
-}
-
-Mesh* Mesh::SetColor(const float& r, const float& g, const float& b) noexcept {
-  this->color_ = Vector3<float>(r, g, b);
-  return this;
-}
-
-Mesh* Mesh::SetScale(const Vector<float>& scale) noexcept {
-  this->scale_ = scale;
-  this->isModelMatrixDirty = true;
-  return this;
-}
-
-Mesh* Mesh::SetPosition(const Vector<float>& position) noexcept {
-  *(this->position_) = position;
-  this->isModelMatrixDirty = true;
-  return this;
-}
-
-Mesh* Mesh::SetPosition(const float& x, const float& y) noexcept {
-  this->position_->x = x;
-  this->position_->y = y;
-  this->isModelMatrixDirty = true;
-  return this;
-}
-
-Mesh* Mesh::SetRotation(const float& rotation) noexcept {
-  this->rotation_ = rotation;
-  if (this->rotation_ <= -360.0f) {
-    this->rotation_ += 360.0f;
-  } else if (this->rotation_ >= 360.0f) {
-    this->rotation_ -= 360.0f;
-  }
-  this->isModelMatrixDirty = true;
-  return this;
-}
-
-std::string Mesh::GetShaderName() const noexcept { return this->shaderName_; }
-
-glm::mat4x4* Mesh::GetModelMatrix() noexcept {
-  if (this->isModelMatrixDirty) {
-    delete this->modelMatrix_;
-    this->modelMatrix_ = new glm::mat4x4(1.0f);
-    *(this->modelMatrix_) =
-        glm::translate(*this->modelMatrix_, this->position_->ToGLMVec3f());
-    *(this->modelMatrix_) =
-        glm::rotate(*this->modelMatrix_, glm::radians(this->rotation_),
-                    glm::vec3(0, 0, -1));
-    *(this->modelMatrix_) =
-        glm::scale(*this->modelMatrix_, this->scale_.ToGLMVec3f());
-
-    this->isModelMatrixDirty = false;
-  }
-  return this->modelMatrix_;
-}
-
-const Vector3<float>& Mesh::GetColor() const noexcept { return this->color_; }
-
-Vector<float> Mesh::GetDirectionVector() const noexcept {
-  return Vector<float>(glm::cos(glm::radians(-this->rotation_ + 90.0f)),
-                       glm::sin(glm::radians(-this->rotation_ + 90.0f)));
-}
-
-const float Mesh::GetRotation() const noexcept { return this->rotation_; }

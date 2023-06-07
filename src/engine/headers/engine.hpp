@@ -33,7 +33,7 @@ class Engine {
   Vector<int> mousePosition_;
 
   // TEMP
-  std::vector<Mesh*>* meshes_;
+  std::vector<RenderData*>* renderData_;
 
   // Compute shaders
   std::map<std::string, ComputeShader*>* computeShaders_;

@@ -5,21 +5,15 @@ Drone::Drone(Vector<float>* position, Vector<float> scale)
 
 Drone::Drone(Vector<float>* position, Vector<float> scale,
              Vector3<float> color) {
-  float vertices[] = {
-      0.0f,  2.5f,  0.0f,  // top center
-      -2.5f, -2.5f, 0.0f,  // bottom left
-      2.5f,  -2.5f, 0.0f,  // bottom right
-  };
-  unsigned int indices[] = {
-      0, 1, 2,  // first triangle
-  };
-
-  this->position_ = position;
-  this->mesh_ = new Mesh(vertices, 9, indices, 3, position);
-  this->mesh_->SetScale(scale)->SetColor(color);
+  this->material_ = new Material();
+  this->material_->SetColor(color);
+  this->transform_ = new Transform(position, scale);
 }
 
-Drone::~Drone() {}
+Drone::~Drone() {
+  delete this->material_;
+  delete this->transform_;
+}
 
 void Drone::OnStart(Engine* const engine, const std::string& tag,
                     const unsigned int id) noexcept {
@@ -31,8 +25,12 @@ void Drone::OnUpdate(Engine* const engine, const std::string& tag,
   this->InternalUpdate(engine, tag, id);
 }
 
-Mesh* const Drone::GetMesh() const noexcept { return this->mesh_; }
+Material* const Drone::GetMaterial() const noexcept { return this->material_; }
+
+Transform* const Drone::GetTransform() const noexcept {
+  return this->transform_;
+}
 
 Vector<float>* const Drone::GetPosition() const noexcept {
-  return this->position_;
+  return this->transform_->GetPosition();
 }

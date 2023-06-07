@@ -38,32 +38,31 @@ void RenderEngine::RenderMeshBatch(
     const glm::mat4x4* const orthoViewMatrix) const noexcept {
   ZoneScopedN("RenderEngine::RenderMeshBatch");
   //* Check if mesh pointer is valid
-  if (this->meshPointer_ == nullptr) return;
+  if (this->renderDataPointer_ == nullptr) return;
 
   //* Draw Calls
-  std::string shaderName = "default";
-  Shader* shader = this->shaders_->at("default");
-  shader->Use();
-  for (unsigned int i = 0; i < this->meshPointer_->size(); i++) {
+  Shader* shader = nullptr;
+  for (unsigned int i = 0; i < this->renderDataPointer_->size(); i++) {
+    RenderData* data = this->renderDataPointer_->at(i);
+
+    if (this->meshTypes_->count(data->meshType) == 0) continue;
+
     // Load Active Shader
-    if (shaderName != this->meshPointer_->at(i)->GetShaderName()) {
-      shaderName = this->meshPointer_->at(i)->GetShaderName();
-      if (this->shaders_->count(shaderName) > 0) {
-        shader = this->shaders_->at(shaderName);
-      } else {
-        shader = this->shaders_->at("default");
-      }
-      shader->Use();
+    const std::string shaderName = data->material->GetShaderName();
+    if (this->shaders_->count(shaderName) > 0) {
+      shader = this->shaders_->at(shaderName);
+    } else {
+      shader = this->shaders_->at("default");
     }
+    shader->Use();
 
     // Update Uniforms
     ZoneScopedN("RenderEngine::RenderMeshBatch::UpdateMVP");
-    glm::mat4x4 mvp =
-        *(orthoViewMatrix) * *(this->meshPointer_->at(i)->GetModelMatrix());
+    glm::mat4x4 mvp = *(orthoViewMatrix) * *(data->transform->GetModelMatrix());
     shader->PassUniformMatrix("mvp", &mvp);
-    shader->PassUniform3f("color", this->meshPointer_->at(i)->GetColor());
+    shader->PassUniform3f("color", data->material->GetColor());
 
-    this->meshPointer_->at(i)->Draw();
+    this->meshTypes_->at(data->meshType)->Draw();
   }
 }
 
@@ -93,6 +92,7 @@ RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name,
   this->shaderCompiler_ = new ShaderCompiler();
   this->textHandler_ = new TextHandler(defaultFontFile, size);
   this->textMetaData_ = new std::queue<TextMetaData>();
+  this->meshTypes_ = new std::map<std::string, Mesh*>();
 }
 
 RenderEngine::~RenderEngine() {
@@ -104,6 +104,10 @@ RenderEngine::~RenderEngine() {
   delete this->shaderCompiler_;
   delete this->textHandler_;
   delete this->textMetaData_;
+  for (auto mesh : *(this->meshTypes_)) {
+    delete mesh.second;
+  }
+  delete this->meshTypes_;
 
   glfwTerminate();
 }
@@ -149,8 +153,18 @@ void RenderEngine::CompileShader(const std::string& vertex,
   this->shaders_->insert(std::pair<std::string, Shader*>(name, shader));
 }
 
-void RenderEngine::SetMeshPointer(std::vector<Mesh*>* meshPointer) noexcept {
-  this->meshPointer_ = meshPointer;
+void RenderEngine::AddMeshType(const std::string& name, Mesh* const mesh) {
+  if (this->meshTypes_->count(name) > 0) {
+    throw std::runtime_error("ERROR: Mesh with name " + name +
+                             " already exists!");
+  }
+  this->meshTypes_->insert(std::pair<std::string, Mesh*>(name, mesh));
+}
+
+// Setters
+void RenderEngine::SetRenderDataPointer(
+    std::vector<RenderData*>* const renderDataPointer) noexcept {
+  this->renderDataPointer_ = renderDataPointer;
 }
 
 Shader* const RenderEngine::GetShader(const std::string& name) {

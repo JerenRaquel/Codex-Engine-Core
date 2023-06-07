@@ -7,12 +7,15 @@
 #include "mesh.hpp"
 #include "vector.hpp"
 #include "engine.hpp"
+#include "material.hpp"
+#include "transform.hpp"
 
 // Based Class
 class Drone {
  protected:
-  Mesh* mesh_;
-  Vector<float>* position_;
+  Material* material_;
+  Transform* transform_;
+
   virtual void InternalStart(Engine* const engine, const std::string& tag,
                              const unsigned int id) = 0;
   virtual void InternalUpdate(Engine* const engine, const std::string& tag,
@@ -29,7 +32,8 @@ class Drone {
   void OnUpdate(Engine* const engine, const std::string& tag,
                 const unsigned int id) noexcept;
   // Getters
-  Mesh* const GetMesh() const noexcept;
+  Material* const GetMaterial() const noexcept;
+  Transform* const GetTransform() const noexcept;
   Vector<float>* const GetPosition() const noexcept;
 };
 #endif  // DRONE_HPP_

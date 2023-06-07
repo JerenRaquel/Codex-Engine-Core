@@ -1,0 +1,103 @@
+#include "Transform.hpp"
+
+Transform::Transform(Vector<float>* const position, const Vector<float>& scale,
+                     const float& rotation) {
+  this->position_ = position;
+  this->scale_ = scale;
+  this->rotation_ = rotation;
+  this->isModelMatrixDirty_ = true;
+  this->modelMatrix_ = new glm::mat4x4(1.0f);
+}
+
+Transform::~Transform() { delete this->modelMatrix_; }
+
+// Utility
+Transform* Transform::Rotate(const float& angle) noexcept {
+  this->rotation_ += angle;
+  this->isModelMatrixDirty_ = true;
+  return this;
+}
+
+Transform* Transform::RotateTowards(const Vector<float>& direction) noexcept {
+  return this->RotateTowards(direction, 1.0f);
+}
+
+Transform* Transform::RotateTowards(const Vector<float>& direction,
+                                    const float& bais) noexcept {
+  float turningAngle = direction.ToDegreeAngle() - this->rotation_;
+  if (turningAngle > 180.0f) {
+    turningAngle -= 360.0f;
+  } else if (turningAngle < -180.0f) {
+    turningAngle += 360.0f;
+  }
+
+  this->Rotate(turningAngle * bais);
+  return this;
+}
+
+Transform* Transform::Translate(const Vector<float>& direction,
+                                const float& magnitude) noexcept {
+  *(this->position_) += direction * magnitude;
+  this->isModelMatrixDirty_ = true;
+  return this;
+}
+
+// Setters
+Transform* Transform::SetScale(const Vector<float>& scale) noexcept {
+  this->scale_ = scale;
+  this->isModelMatrixDirty_ = true;
+  return this;
+}
+
+Transform* Transform::SetPosition(const Vector<float>& position) noexcept {
+  return this->SetPosition(position.x, position.y);
+}
+
+Transform* Transform::SetPosition(const float& x, const float& y) noexcept {
+  this->position_->x = x;
+  this->position_->y = y;
+  this->isModelMatrixDirty_ = true;
+  return this;
+}
+
+Transform* Transform::SetRotation(const float& rotation) noexcept {
+  this->rotation_ = rotation;
+  if (this->rotation_ <= -360.0f) {
+    this->rotation_ += 360.0f;
+  } else if (this->rotation_ >= 360.0f) {
+    this->rotation_ -= 360.0f;
+  }
+  this->isModelMatrixDirty_ = true;
+  return this;
+}
+
+// Getters
+glm::mat4x4* Transform::GetModelMatrix() noexcept {
+  if (this->isModelMatrixDirty_) {
+    delete this->modelMatrix_;
+    this->modelMatrix_ = new glm::mat4x4(1.0f);
+    *(this->modelMatrix_) =
+        glm::translate(*this->modelMatrix_, this->position_->ToGLMVec3f());
+    *(this->modelMatrix_) =
+        glm::rotate(*this->modelMatrix_, glm::radians(this->rotation_),
+                    glm::vec3(0, 0, -1));
+    *(this->modelMatrix_) =
+        glm::scale(*this->modelMatrix_, this->scale_.ToGLMVec3f());
+
+    this->isModelMatrixDirty_ = false;
+  }
+  return this->modelMatrix_;
+}
+
+Vector<float> Transform::GetDirectionVector() const noexcept {
+  return Vector<float>(glm::cos(glm::radians(-this->rotation_ + 90.0f)),
+                       glm::sin(glm::radians(-this->rotation_ + 90.0f)));
+}
+
+const float Transform::GetRotation() const noexcept { return this->rotation_; }
+
+Vector<float> Transform::GetScale() const noexcept { return this->scale_; }
+
+Vector<float>* const Transform::GetPosition() const noexcept {
+  return this->position_;
+}
