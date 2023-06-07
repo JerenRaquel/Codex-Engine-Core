@@ -7,8 +7,6 @@
 class Alpha : public Drone {
  private:
   // Base Class
-  void InternalStart(Engine* const engine, const std::string& tag,
-                     const unsigned int id) override;
   void InternalUpdate(Engine* const engine, const std::string& tag,
                       const unsigned int id) override;
 

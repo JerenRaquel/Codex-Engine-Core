@@ -24,14 +24,20 @@ void TestAction::InternalStart(const Engine* const engine) const noexcept {
     Vector<float>* position =
         new Vector<float>(std::rand() % engine->GetWindowSize().x,
                           std::rand() % engine->GetWindowSize().y);
-    engine->AddDrone(new Boids(position, Vector<float>(2.5f, 2.5f)), "Boids");
+    Drone* drone = engine->AddDrone(
+        new Boids(position, Vector<float>(2.5f, 2.5f)), "Boids");
+    drone->GetMaterial()->RandomizeColor();
+    drone->GetTransform()->RandomizeRotation();
   }
 
   for (unsigned int i = 0; i < 10; i++) {
     Vector<float>* position =
         new Vector<float>(std::rand() % engine->GetWindowSize().x,
                           std::rand() % engine->GetWindowSize().y);
-    engine->AddDrone(new Alpha(position, Vector<float>(10.0f, 10.0f)), "Alpha");
+    Drone* drone = engine->AddDrone(
+        new Alpha(position, Vector<float>(10.0f, 10.0f)), "Alpha");
+    drone->GetMaterial()->RandomizeColor();
+    drone->GetTransform()->RandomizeRotation();
   }
 }
 

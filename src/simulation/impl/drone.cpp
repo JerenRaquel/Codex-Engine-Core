@@ -15,11 +15,6 @@ Drone::~Drone() {
   delete this->transform_;
 }
 
-void Drone::OnStart(Engine* const engine, const std::string& tag,
-                    const unsigned int id) noexcept {
-  this->InternalStart(engine, tag, id);
-}
-
 void Drone::OnUpdate(Engine* const engine, const std::string& tag,
                      const unsigned int id) noexcept {
   this->InternalUpdate(engine, tag, id);

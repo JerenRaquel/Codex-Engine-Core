@@ -93,8 +93,6 @@ void Engine::Start() {
     this->actions_->at(i)->OnStart(this);
   }
 
-  this->droneManager_->OnStart();
-
   // Main loop
   while (!glfwWindowShouldClose(this->renderer_->GetWindow())) {
     FrameMark;

@@ -16,8 +16,6 @@ class Drone {
   Material* material_;
   Transform* transform_;
 
-  virtual void InternalStart(Engine* const engine, const std::string& tag,
-                             const unsigned int id) = 0;
   virtual void InternalUpdate(Engine* const engine, const std::string& tag,
                               const unsigned int id) = 0;
 
@@ -27,8 +25,6 @@ class Drone {
   virtual ~Drone();
 
   // Utility
-  void OnStart(Engine* const engine, const std::string& tag,
-               const unsigned int id) noexcept;
   void OnUpdate(Engine* const engine, const std::string& tag,
                 const unsigned int id) noexcept;
   // Getters

@@ -36,7 +36,6 @@ class DroneManager {
   ~DroneManager();
 
   // Utility
-  void OnStart() const noexcept;
   void OnUpdate() const noexcept;
   DroneManager* const AddDrone(Drone* drone, const std::string& tag);
 

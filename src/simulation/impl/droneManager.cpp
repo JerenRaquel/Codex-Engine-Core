@@ -32,16 +32,6 @@ DroneManager::~DroneManager() {
 }
 
 // Utility
-void DroneManager::OnStart() const noexcept {
-  for (auto pair : *this->droneMap_) {
-    for (unsigned int i = 0; i < pair.second->size(); i++) {
-      DroneData* droneData = pair.second->at(i);
-      droneData->drone->OnStart(this->engineRef_, droneData->tag,
-                                droneData->id);
-    }
-  }
-}
-
 void DroneManager::OnUpdate() const noexcept {
   ZoneScopedN("Engine::DroneUpdates");
   for (auto pair : *this->droneMap_) {

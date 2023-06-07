@@ -1,14 +1,5 @@
 #include "../headers/alpha.hpp"
 
-void Alpha::InternalStart(Engine* const engine, const std::string& tag,
-                          const unsigned int id) {
-  float r = static_cast<float>(std::rand() % 255) / 255.0f;
-  float g = static_cast<float>(std::rand() % 255) / 255.0f;
-  float b = static_cast<float>(std::rand() % 255) / 255.0f;
-  this->material_->SetColor(r, g, b);
-  this->transform_->SetRotation(std::rand() % 360);
-}
-
 void Alpha::InternalUpdate(Engine* const engine, const std::string& tag,
                            const unsigned int id) {
   // Fly towards center
