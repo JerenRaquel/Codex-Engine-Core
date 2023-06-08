@@ -9,7 +9,7 @@ out vec4 fragColor;
 
 void main() {  
 	float alpha = texture(text, TexCoords).r;
-	if (alpha == 0.0) {
+	if (alpha <= 0.9) {
 		discard;
 	} else {
 		fragColor = vec4(textColor, alpha);

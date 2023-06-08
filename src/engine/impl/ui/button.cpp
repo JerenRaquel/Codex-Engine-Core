@@ -1,24 +1,28 @@
 #include "ui/button.hpp"
 
 void Button::SetupMeshData(const Vector<float>& position,
-                           const Vector<float>& scale) noexcept {
+                           const Vector<float>& scale) noexcept {}
+
+Button::Button(const Vector<float>& position, void (*callback)(void),
+               const Vector<float>& scale) {
+  this->callback_ = callback;
   this->material_ =
       new Material("button", Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f);
   this->transform_ = new Transform(position, scale);
 }
 
 Button::Button(const Vector<float>& position, void (*callback)(void),
-               const Vector<float>& scale) {
-  this->callback_ = callback;
-  this->SetupMeshData(position, scale);
-}
-
-Button::Button(const Vector<float>& position, void (*callback)(void),
                const std::string& text) {
   this->name_ = text;
   this->callback_ = callback;
-  // TODO: Implement something better?
-  this->SetupMeshData(position, Vector<float>(text.length() * 0.5f, 1.0f));
+  this->material_ =
+      new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f);
+  float width = (text.length() * TextHandler_MaxWidth_) / 2.0f;
+  float height = (TextHandler_MaxHeight_ + 20) / 2.0f;
+  Vector<float> scale(width, height);
+  this->transform_ = new Transform(position, scale);
+  Vector<float> namePos = position - scale;
+  this->namePosition_ = Vector<int>(namePos.x + 40, namePos.y + 10);
 }
 
 Button::~Button() {
@@ -58,6 +62,10 @@ Button* Button::SetColor(const float& r, const float& g,
 
 // Getters
 const std::string& Button::GetName() const noexcept { return this->name_; }
+
+const Vector<int>& Button::GetNamePosition() const noexcept {
+  return this->namePosition_;
+}
 
 Transform* const Button::GetTransform() const noexcept {
   return this->transform_;

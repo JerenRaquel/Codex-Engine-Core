@@ -8,11 +8,13 @@
 #include "mesh.hpp"
 #include "material.hpp"
 #include "transform.hpp"
+#include "textHandler.hpp"
 
 class Button {
  private:
   void (*callback_)(void);
-  std::string name_;
+  std::string name_ = "";
+  Vector<int> namePosition_;
 
   //* Mesh Data
   Transform* transform_;
@@ -39,6 +41,7 @@ class Button {
 
   // Getters
   const std::string& GetName() const noexcept;
+  const Vector<int>& GetNamePosition() const noexcept;
   Transform* const GetTransform() const noexcept;
   Material* const GetMaterial() const noexcept;
 };

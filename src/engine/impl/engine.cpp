@@ -149,6 +149,8 @@ void Engine::Start() {
     // TEMP - start
     for (unsigned int i = 0; i < this->buttons_->size(); i++) {
       Button* button = this->buttons_->at(i);
+      this->renderer_->DrawText(button->GetName(), button->GetNamePosition(),
+                                1);
       if (button->IsHovered(this->mousePosition_) && this->isMouseDown_) {
         button->InvokeCallback();
         this->isMouseDown_ = false;

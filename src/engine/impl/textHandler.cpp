@@ -1,5 +1,8 @@
 #include "../headers/textHandler.hpp"
 
+unsigned TextHandler_MaxWidth_ = 0;
+unsigned TextHandler_MaxHeight_ = 0;
+
 TextHandler::TextHandler(const std::string& fontFile,
                          const Vector<int>& windowSize) {
   // Setup FreeType
@@ -45,6 +48,13 @@ TextHandler::TextHandler(const std::string& fontFile,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    if (face->glyph->bitmap.width > TextHandler_MaxWidth_) {
+      TextHandler_MaxWidth_ = face->glyph->bitmap.width;
+    }
+    if (face->glyph->bitmap.rows > TextHandler_MaxHeight_) {
+      TextHandler_MaxHeight_ = face->glyph->bitmap.rows;
+    }
 
     Character character = {
         textureID,

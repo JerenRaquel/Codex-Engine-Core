@@ -16,6 +16,9 @@
 // Custom
 #include "vector.hpp"
 
+extern unsigned TextHandler_MaxWidth_;
+extern unsigned TextHandler_MaxHeight_;
+
 class TextHandler {
  private:
   const std::string fontPath_ = "assets/fonts/";
