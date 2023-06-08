@@ -5,7 +5,7 @@
 #include "mat4x4.hpp"
 #include "gtc/matrix_transform.hpp"
 // Custom
-#include "vector.hpp"
+#include "util/vector.hpp"
 
 class Camera {
  private:

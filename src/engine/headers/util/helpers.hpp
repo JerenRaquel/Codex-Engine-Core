@@ -4,7 +4,7 @@
 // Std
 #include <cmath>
 // Engine
-#include "vector.hpp"
+#include "util/vector.hpp"
 
 float Lerp(float a, float b, float rate) noexcept;
 float Distance(float x, float y) noexcept;

@@ -4,7 +4,7 @@
 // Lib
 #include "mat4x4.hpp"
 // Custom
-#include "vector.hpp"
+#include "util/vector.hpp"
 
 class Transform {
  private:

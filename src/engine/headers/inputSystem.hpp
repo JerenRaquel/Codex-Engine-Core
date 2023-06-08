@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 // Engine
-#include "vector.hpp"
+#include "util/vector.hpp"
 #include "renderEngine.hpp"
 
 class InputSystem {

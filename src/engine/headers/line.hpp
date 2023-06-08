@@ -2,7 +2,7 @@
 #define LINE_HPP_
 
 // Custom
-#include "vector.hpp"
+#include "util/vector.hpp"
 // Lib
 #include "mat4x4.hpp"
 #include "gtc/matrix_transform.hpp"

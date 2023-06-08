@@ -6,7 +6,7 @@
 #include <vector>
 #include <algorithm>
 // Custom
-#include "vector.hpp"
+#include "util/vector.hpp"
 
 template <typename T>
 class DataStream {

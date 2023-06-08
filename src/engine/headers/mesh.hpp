@@ -7,7 +7,7 @@
 // Std
 #include <string>
 // Custom
-#include "vector.hpp"
+#include "util/vector.hpp"
 // Lib
 #include "mat4x4.hpp"
 #include "gtc/matrix_transform.hpp"

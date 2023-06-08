@@ -1,4 +1,4 @@
-#include "../headers/helpers.hpp"
+#include "util/helpers.hpp"
 
 float Lerp(float a, float b, float rate) noexcept { return a + (b - a) * rate; }
 

@@ -7,7 +7,7 @@
 // Std
 #include <string>
 // Custom
-#include "vector.hpp"
+#include "util/vector.hpp"
 #include "computeShaderCompiler.hpp"
 #include "computeShaderBuffer.hpp"
 

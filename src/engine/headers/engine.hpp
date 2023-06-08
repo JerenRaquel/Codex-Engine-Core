@@ -13,8 +13,8 @@ class Scene;
 #include <vector>
 #include <map>
 // Custom
-#include "helpers.hpp"
-#include "vector.hpp"
+#include "util/helpers.hpp"
+#include "util/vector.hpp"
 #include "renderEngine.hpp"
 #include "camera.hpp"
 #include "compute_shaders/computeShaderCompiler.hpp"

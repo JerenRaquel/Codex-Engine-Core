@@ -9,7 +9,7 @@
 #include <vector>
 // Custom
 #include "shaderCompiler.hpp"
-#include "vector.hpp"
+#include "util/vector.hpp"
 // Lib
 #include "mat4x4.hpp"
 #include "gtc/type_ptr.hpp"

@@ -1,4 +1,4 @@
-#include "../headers/textHandler.hpp"
+#include "ui/textHandler.hpp"
 
 unsigned TextHandler_MaxWidth_ = 0;
 unsigned TextHandler_MaxHeight_ = 0;

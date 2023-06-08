@@ -14,12 +14,12 @@
 // Lib
 #include "mat4x4.hpp"
 // Custom
-#include "vector.hpp"
+#include "util/vector.hpp"
 #include "mesh.hpp"
 #include "shaders/shader.hpp"
 #include "shaders/shaderCompiler.hpp"
 #include "camera.hpp"
-#include "textHandler.hpp"
+#include "ui/textHandler.hpp"
 #include "material.hpp"
 #include "transform.hpp"
 #include "renderData.hpp"

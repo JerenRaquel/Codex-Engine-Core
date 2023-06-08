@@ -4,8 +4,8 @@
 // Std
 #include <string>
 // Custom
-#include "vector.hpp"
-#include "helpers.hpp"
+#include "util/vector.hpp"
+#include "util/helpers.hpp"
 
 class Material {
  private:

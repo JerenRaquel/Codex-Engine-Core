@@ -8,7 +8,7 @@
 // Engine
 #include "material.hpp"
 #include "transform.hpp"
-#include "vector.hpp"
+#include "util/vector.hpp"
 #include "shaders/shader.hpp"
 
 class MeshRenderData {

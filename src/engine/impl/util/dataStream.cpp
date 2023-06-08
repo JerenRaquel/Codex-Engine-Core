@@ -1,4 +1,4 @@
-#include "../headers/dataStream.hpp"
+#include "util/dataStream.hpp"
 
 template <typename T>
 DataStream<T>::DataStream(std::vector<T*>* data) {

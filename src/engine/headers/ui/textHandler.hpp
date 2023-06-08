@@ -14,7 +14,7 @@
 #include "mat4x4.hpp"
 #include "gtc/matrix_transform.hpp"
 // Custom
-#include "vector.hpp"
+#include "util/vector.hpp"
 
 extern unsigned TextHandler_MaxWidth_;
 extern unsigned TextHandler_MaxHeight_;

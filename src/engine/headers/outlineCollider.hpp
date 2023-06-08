@@ -4,7 +4,7 @@
 // Std
 #include <vector>
 // Custom
-#include "vector.hpp"
+#include "util/vector.hpp"
 #include "line.hpp"
 // Lib
 #include "mat4x4.hpp"
