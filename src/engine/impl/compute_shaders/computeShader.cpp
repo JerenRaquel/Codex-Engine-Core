@@ -1,4 +1,4 @@
-#include "../headers/computeShader.hpp"
+#include "compute_shaders/computeShader.hpp"
 
 ComputeShader::ComputeShader(ComputeShaderCompiler* compiler,
                              const std::string& computeFile) {

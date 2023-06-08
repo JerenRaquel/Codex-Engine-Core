@@ -1,4 +1,4 @@
-#include "../headers/shaderCompiler.hpp"
+#include "shaders/shaderCompiler.hpp"
 
 void ShaderCompiler::ValidateShader(GLuint shaderID,
                                     const char* shaderType) const noexcept {

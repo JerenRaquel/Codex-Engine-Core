@@ -16,8 +16,8 @@
 // Custom
 #include "vector.hpp"
 #include "mesh.hpp"
-#include "shader.hpp"
-#include "shaderCompiler.hpp"
+#include "shaders/shader.hpp"
+#include "shaders/shaderCompiler.hpp"
 #include "camera.hpp"
 #include "textHandler.hpp"
 #include "material.hpp"

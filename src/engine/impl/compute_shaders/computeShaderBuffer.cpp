@@ -1,4 +1,4 @@
-#include "../headers/computeShaderBuffer.hpp"
+#include "compute_shaders/computeShaderBuffer.hpp"
 
 ComputeShaderBuffer::ComputeShaderBuffer(const unsigned int& width,
                                          const unsigned int& height)

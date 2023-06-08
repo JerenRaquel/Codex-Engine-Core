@@ -1,4 +1,4 @@
-#include "../headers/shader.hpp"
+#include "shaders/shader.hpp"
 
 Shader::Shader(ShaderCompiler* compiler, const std::string& vertexFile,
                const std::string& fragmentFile) {

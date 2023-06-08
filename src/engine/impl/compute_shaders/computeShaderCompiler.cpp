@@ -1,4 +1,4 @@
-#include "../headers/computeShaderCompiler.hpp"
+#include "compute_shaders/computeShaderCompiler.hpp"
 
 void ComputeShaderCompiler::ValidateShader(GLuint shaderID) const noexcept {
   static const unsigned int bufferSize = 512;
