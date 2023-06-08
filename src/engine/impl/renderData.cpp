@@ -58,8 +58,4 @@ const Vector<int>& TextRenderData::GetPosition() const noexcept {
   return this->position_;
 }
 
-const Vector3<float>& TextRenderData::GetColor() const noexcept {
-  return this->color_;
-}
-
 const int TextRenderData::GetScale() const noexcept { return this->scale_; }

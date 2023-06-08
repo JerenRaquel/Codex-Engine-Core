@@ -75,7 +75,7 @@ void RenderEngine::RenderTextBatch(
 
   for (unsigned int i = 0; i < textRenderData->size(); i++) {
     TextRenderData* data = textRenderData->at(i);
-    shader->PassUniform3f("textColor", data->GetColor());
+    shader->PassUniform3f("textColor", data->color_);
     this->textHandler_->DrawText(data->GetText(), data->GetPosition(),
                                  data->GetScale());
   }

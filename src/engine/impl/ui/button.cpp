@@ -1,25 +1,35 @@
 #include "ui/button.hpp"
 
 Button::Button(const Vector<float>& position, const Vector<float>& scale,
-               void (*callback)(const Engine* const engine)) {
+               void (*callback)(const Engine* const engine,
+                                const Button* const self)) {
   this->callback_ = callback;
   this->material_ =
       new Material("button", Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f);
   this->transform_ = new Transform(position, scale);
+
+  this->meshRenderData_ =
+      new MeshRenderData("Quad", this->material_, this->transform_);
 }
 
 Button::Button(const Vector<float>& position, const std::string& text,
-               void (*callback)(const Engine* const engine)) {
-  this->name_ = text;
+               void (*callback)(const Engine* const engine,
+                                const Button* const self)) {
   this->callback_ = callback;
   this->material_ =
       new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f);
+
   float width = (text.length() * TextHandler_MaxWidth_) / 2.0f;
   float height = (TextHandler_MaxHeight_ + 20) / 2.0f;
   Vector<float> scale(width, height);
   this->transform_ = new Transform(position, scale);
   Vector<float> namePos = position - scale;
-  this->namePosition_ = Vector<int>(namePos.x + 40, namePos.y + 10);
+
+  this->meshRenderData_ =
+      new MeshRenderData("Quad", this->material_, this->transform_);
+  this->textRenderData_ =
+      new TextRenderData(text, Vector<int>(namePos.x + 40, namePos.y + 10),
+                         Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f);
 }
 
 Button::~Button() {
@@ -29,7 +39,7 @@ Button::~Button() {
 
 // Utility
 void Button::InvokeCallback(const Engine* const engine) const noexcept {
-  this->callback_(engine);
+  this->callback_(engine, this);
 }
 
 bool Button::IsHovered(const Vector<float>& mousePosition) noexcept {
@@ -44,26 +54,43 @@ bool Button::IsHovered(const Vector<float>& mousePosition) noexcept {
 }
 
 // Setters
-Button* Button::SetAlpha(const float& alpha) noexcept {
+const Button* const Button::SetAlpha(const float& alpha) noexcept {
   this->material_->SetAlpha(alpha);
   return this;
 }
 
-Button* Button::SetColor(const Vector3<float>& color) noexcept {
+const Button* const Button::SetColor(const Vector3<float>& color) noexcept {
   return this->SetColor(color.x, color.y, color.z);
 }
 
-Button* Button::SetColor(const float& r, const float& g,
-                         const float& b) noexcept {
+const Button* const Button::SetColor(const float& r, const float& g,
+                                     const float& b) noexcept {
   this->material_->SetColor(r, g, b);
   return this;
 }
 
-// Getters
-const std::string& Button::GetName() const noexcept { return this->name_; }
+const Button* const Button::SetTextColor(
+    const Vector3<float>& color) const noexcept {
+  if (this->textRenderData_ == nullptr) return this;
 
-const Vector<int>& Button::GetNamePosition() const noexcept {
-  return this->namePosition_;
+  this->textRenderData_->color_ = color;
+  return this;
+}
+
+const Button* const Button::SetTextColor(const float& r, const float& g,
+                                         const float& b) const noexcept {
+  return this->SetTextColor(Vector3<float>(r, g, b));
+}
+
+// Getters
+const std::string Button::GetName() const noexcept {
+  if (this->textRenderData_ == nullptr) return "";
+  return this->textRenderData_->GetText();
+}
+
+const Vector<int> Button::GetNamePosition() const noexcept {
+  if (this->textRenderData_ == nullptr) return Vector<int>(0, 0);
+  return this->textRenderData_->GetPosition();
 }
 
 Transform* const Button::GetTransform() const noexcept {
@@ -71,3 +98,11 @@ Transform* const Button::GetTransform() const noexcept {
 }
 
 Material* const Button::GetMaterial() const noexcept { return this->material_; }
+
+MeshRenderData* const Button::GetMeshRenderData() const noexcept {
+  return this->meshRenderData_;
+}
+
+TextRenderData* const Button::GetTextRenderData() const noexcept {
+  return this->textRenderData_;
+}

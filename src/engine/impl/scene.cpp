@@ -70,11 +70,10 @@ const Scene* const Scene::AddTextRenderData(
 
 const Scene* const Scene::AddButton(Button* button) const noexcept {
   this->buttons_->push_back(button);
-  this->textRenderDataPointer_->push_back(
-      new TextRenderData(button->GetName(), button->GetNamePosition(),
-                         Vector3<float>(1.0f, 1.0f, 1.0f), 1));
-  this->meshRenderDataPointer_->push_back(new MeshRenderData(
-      "Quad", button->GetMaterial(), button->GetTransform()));
+  if (button->GetTextRenderData() != nullptr) {
+    this->textRenderDataPointer_->push_back(button->GetTextRenderData());
+  }
+  this->meshRenderDataPointer_->push_back(button->GetMeshRenderData());
 
   return this;
 }

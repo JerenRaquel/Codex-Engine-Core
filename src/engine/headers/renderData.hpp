@@ -38,11 +38,11 @@ class TextRenderData {
  private:
   std::string text_;
   Vector<int> position_;
-  Vector3<float> color_;
   int scale_;
 
  public:
   bool shouldRender_ = true;
+  Vector3<float> color_;
 
   TextRenderData(const std::string& text, const Vector<int>& position,
                  const Vector3<float>& color, const int scale);
@@ -51,7 +51,6 @@ class TextRenderData {
   // Getters
   const std::string& GetText() const noexcept;
   const Vector<int>& GetPosition() const noexcept;
-  const Vector3<float>& GetColor() const noexcept;
   const int GetScale() const noexcept;
 };
 #endif  // RENDERDATA_HPP_
