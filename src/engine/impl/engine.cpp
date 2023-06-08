@@ -33,10 +33,41 @@ void Engine::CalculateMousePosition() noexcept {
   double xpos, ypos;
   glfwGetCursorPos(this->renderer_->GetWindow(), &xpos, &ypos);
 
-  int windowX, windowY;
-  glfwGetWindowPos(this->renderer_->GetWindow(), &windowX, &windowY);
+  this->mousePosition_ = Vector<float>(xpos, ypos);
+  if (glfwGetMouseButton(this->GetRenderer()->GetWindow(),
+                         GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+    this->isMouseDown_ = true;
+  } else {
+    this->isMouseDown_ = false;
+  }
+}
 
-  this->mousePosition_ = Vector<int>(xpos - windowX, ypos - windowY);
+void Engine::CreatePrimativeMeshes() const noexcept {
+  float coneVertices[] = {
+      0.0f,  2.5f,  0.0f,  // top center
+      -2.5f, -2.5f, 0.0f,  // bottom left
+      2.5f,  -2.5f, 0.0f,  // bottom right
+  };
+  unsigned int coneIndices[] = {
+      0, 1, 2,  // first triangle
+  };
+
+  Mesh* coneMesh = new Mesh(coneVertices, 9, coneIndices, 3);
+  this->renderer_->AddMeshType("Cone", coneMesh);
+
+  float quadVertices[] = {
+      -1.0f, 1.0f,  0.0f,  // top left
+      -1.0f, -1.0f, 0.0f,  // bottom left
+      1.0f,  -1.0f, 0.0f,  // bottom right
+      1.0f,  1.0f,  0.0f,  // top right
+  };
+  unsigned int quadIndices[] = {
+      0, 1, 2,  // first triangle
+      0, 2, 3,  // second triangle
+  };
+
+  Mesh* quadMesh = new Mesh(quadVertices, 12, quadIndices, 6);
+  this->renderer_->AddMeshType("Quad", quadMesh);
 }
 
 Engine::Engine(const Vector<int>& windowSize, const std::string& name,
@@ -48,10 +79,13 @@ Engine::Engine(const Vector<int>& windowSize, const std::string& name,
   this->computeShaderCompiler_ = new ComputeShaderCompiler();
   this->camera_ = new Camera(windowSize, 0.1f, 100.0f);
   this->actions_ = new std::vector<Action*>();
-  this->renderData_ = new std::vector<RenderData*>();
   this->computeShaders_ = new std::map<std::string, ComputeShader*>();
   this->computeShaderBuffers_ =
       new std::map<std::string, ComputeShaderBuffer*>();
+  // TEMP - start
+  this->renderData_ = new std::vector<RenderData*>();
+  this->buttons_ = new std::vector<Button*>();
+  // TEMP - end
 }
 
 Engine::~Engine() {
@@ -64,23 +98,32 @@ Engine::~Engine() {
   }
   delete this->actions_;
 
-  for (auto renderData : *this->renderData_) {
-    delete renderData;
-  }
-  delete this->renderData_;
-
   delete this->computeShaders_;
   for (auto& computeShaderBuffer : *this->computeShaderBuffers_) {
     delete computeShaderBuffer.second;
   }
   delete this->computeShaderBuffers_;
+
+  // TEMP - start
+  for (auto renderData : *this->renderData_) {
+    delete renderData;
+  }
+  delete this->renderData_;
+
+  for (auto button : *this->buttons_) {
+    delete button;
+  }
+  delete this->buttons_;
+  // TEMP - end
 }
 
 // Utility
 void Engine::Start() {
   // Initilize renderer stuff
   this->renderer_->CompileShader("vertex.vs", "fragment.fs", "default");
+  this->renderer_->CompileShader("button.vs", "button.fs", "button");
   this->renderer_->CompileShader("text.vs", "text.fs", "Crayon");
+  this->CreatePrimativeMeshes();
 
   // TEMP - start
   this->renderer_->SetRenderDataPointer(this->renderData_);
@@ -102,6 +145,17 @@ void Engine::Start() {
     for (unsigned int i = 0; i < this->actions_->size(); i++) {
       this->actions_->at(i)->OnUpdate(this);
     }
+
+    // TEMP - start
+    for (unsigned int i = 0; i < this->buttons_->size(); i++) {
+      Button* button = this->buttons_->at(i);
+      if (button->IsHovered(this->mousePosition_) && this->isMouseDown_) {
+        button->InvokeCallback();
+        this->isMouseDown_ = false;
+        break;
+      }
+    }
+    // TEMP - end
 
     this->renderer_->Render(orthoViewMatrixCached);
 
@@ -139,6 +193,16 @@ const Engine* const Engine::AddAction(Action* action) const noexcept {
   return this;
 }
 
+const Engine* const Engine::AddButton(Button* button) const noexcept {
+  this->buttons_->push_back(button);
+  RenderData* renderData = new RenderData();
+  renderData->meshType = "Quad";
+  renderData->material = button->GetMaterial();
+  renderData->transform = button->GetTransform();
+  this->renderData_->push_back(renderData);
+  return this;
+}
+
 // Getters
 RenderEngine* const Engine::GetRenderer() const noexcept {
   return this->renderer_;
@@ -150,7 +214,7 @@ std::vector<std::string>* const Engine::GetArgs() const noexcept {
   return this->args_;
 }
 
-Vector<int> Engine::GetMousePosition() const noexcept {
+Vector<float> Engine::GetMousePosition() const noexcept {
   return this->mousePosition_;
 }
 

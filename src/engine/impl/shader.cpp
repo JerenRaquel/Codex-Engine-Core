@@ -8,21 +8,30 @@ Shader::Shader(ShaderCompiler* compiler, const std::string& vertexFile,
 
 Shader::~Shader() { glDeleteProgram(this->shaderID_); }
 
+void Shader::PassUniform1f(const char* name, const float& data) const noexcept {
+  int ID = glGetUniformLocation(this->shaderID_, name);
+  if (ID == -1) return;
+  glUniform1f(ID, data);
+}
+
 void Shader::PassUniform3f(const char* name,
                            const Vector3<float>& data) const noexcept {
-  GLuint ID = glGetUniformLocation(this->shaderID_, name);
+  int ID = glGetUniformLocation(this->shaderID_, name);
+  if (ID == -1) return;
   glUniform3f(ID, data.x, data.y, data.z);
 }
 
 void Shader::PassUniformMatrix(const char* name,
                                glm::mat4x4* data) const noexcept {
-  GLuint ID = glGetUniformLocation(this->shaderID_, name);
+  int ID = glGetUniformLocation(this->shaderID_, name);
+  if (ID == -1) return;
   glUniformMatrix4fv(ID, 1, GL_FALSE, &(*data)[0][0]);
 }
 
 void Shader::PassUniformMatrix(const char* name,
                                const glm::mat4x4* data) const noexcept {
-  GLuint ID = glGetUniformLocation(this->shaderID_, name);
+  int ID = glGetUniformLocation(this->shaderID_, name);
+  if (ID == -1) return;
   glUniformMatrix4fv(ID, 1, GL_FALSE, &(*data)[0][0]);
 }
 

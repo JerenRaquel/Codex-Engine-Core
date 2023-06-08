@@ -3,18 +3,10 @@
 // Base Class
 void TestAction::InternalStart(const Engine* const engine) const noexcept {
   engine->CompileComputeShader("CalulateDistances.comp", "CalulateDistances");
-
-  float vertices[] = {
-      0.0f,  2.5f,  0.0f,  // top center
-      -2.5f, -2.5f, 0.0f,  // bottom left
-      2.5f,  -2.5f, 0.0f,  // bottom right
-  };
-  unsigned int indices[] = {
-      0, 1, 2,  // first triangle
-  };
-
-  Mesh* droneMesh = new Mesh(vertices, 9, indices, 3);
-  engine->GetRenderer()->AddMeshType("drone", droneMesh);
+  engine->AddButton(new Button(
+      Vector<float>(800, 450),
+      []() { std::cout << "BUTTON::Invoked" << std::endl; },
+      Vector<float>(100, 100)));
 }
 
 void TestAction::InternalUpdate(const Engine* const engine) const noexcept {

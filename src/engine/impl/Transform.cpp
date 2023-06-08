@@ -1,6 +1,6 @@
 #include "transform.hpp"
 
-Transform::Transform(Vector<float>* const position, const Vector<float>& scale,
+Transform::Transform(const Vector<float>& position, const Vector<float>& scale,
                      const float& rotation) {
   this->position_ = position;
   this->scale_ = scale;
@@ -42,7 +42,7 @@ Transform* const Transform::RotateTowards(const Vector<float>& direction,
 
 Transform* const Transform::Translate(const Vector<float>& direction,
                                       const float& magnitude) noexcept {
-  *(this->position_) += direction * magnitude;
+  this->position_ += direction * magnitude;
   this->isModelMatrixDirty_ = true;
   return this;
 }
@@ -61,8 +61,8 @@ Transform* const Transform::SetPosition(
 
 Transform* const Transform::SetPosition(const float& x,
                                         const float& y) noexcept {
-  this->position_->x = x;
-  this->position_->y = y;
+  this->position_.x = x;
+  this->position_.y = y;
   this->isModelMatrixDirty_ = true;
   return this;
 }
@@ -84,7 +84,7 @@ glm::mat4x4* Transform::GetModelMatrix() noexcept {
     delete this->modelMatrix_;
     this->modelMatrix_ = new glm::mat4x4(1.0f);
     *(this->modelMatrix_) =
-        glm::translate(*this->modelMatrix_, this->position_->ToGLMVec3f());
+        glm::translate(*this->modelMatrix_, this->position_.ToGLMVec3f());
     *(this->modelMatrix_) =
         glm::rotate(*this->modelMatrix_, glm::radians(this->rotation_),
                     glm::vec3(0, 0, -1));
@@ -105,6 +105,6 @@ const float Transform::GetRotation() const noexcept { return this->rotation_; }
 
 Vector<float> Transform::GetScale() const noexcept { return this->scale_; }
 
-Vector<float>* const Transform::GetPosition() const noexcept {
+Vector<float> Transform::GetPosition() const noexcept {
   return this->position_;
 }

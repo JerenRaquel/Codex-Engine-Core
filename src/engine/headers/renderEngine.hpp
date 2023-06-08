@@ -25,8 +25,8 @@
 
 struct RenderData {
   std::string meshType;
-  Material* material;    // Freed in Drone class
-  Transform* transform;  // Freed in Drone class
+  Material* material;    // Freed in created class
+  Transform* transform;  // Freed in created class
 };
 
 class RenderEngine {

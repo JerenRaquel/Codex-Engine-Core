@@ -23,6 +23,7 @@ class Shader {
          const std::string& fragmentFile);
   ~Shader();
 
+  void PassUniform1f(const char* name, const float& data) const noexcept;
   void PassUniform3f(const char* name,
                      const Vector3<float>& data) const noexcept;
   void PassUniformMatrix(const char* name, glm::mat4x4* data) const noexcept;

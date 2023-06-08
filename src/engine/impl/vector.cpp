@@ -82,16 +82,16 @@ bool Vector<T>::IsWithinDistance(const Vector<T>& other, float padding,
 }
 
 template <typename T>
-bool Vector<T>::IsWithinBoxDistance(const Vector<T>& other,
-                                    float distance) const noexcept {
-  return this->IsWithinRectDistance(other, distance, distance);
+bool Vector<T>::IsWithinBoxDistance(const Vector<T>& center,
+                                    float padding) const noexcept {
+  return this->IsWithinRectDistance(center, padding, padding);
 }
 
 template <typename T>
-bool Vector<T>::IsWithinRectDistance(const Vector<T>& other, float xPadding,
+bool Vector<T>::IsWithinRectDistance(const Vector<T>& center, float xPadding,
                                      float yPadding) const noexcept {
-  if (this->x < (other.x - xPadding) || this->x > (other.x + xPadding) ||
-      this->y < (other.y - yPadding) || this->y > (other.y + yPadding)) {
+  if (this->x < (center.x - xPadding) || this->x > (center.x + xPadding) ||
+      this->y < (center.y - yPadding) || this->y > (center.y + yPadding)) {
     return false;
   }
   return true;

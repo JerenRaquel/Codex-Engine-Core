@@ -10,16 +10,16 @@ class Transform {
  private:
   glm::mat4x4* modelMatrix_;
   bool isModelMatrixDirty_;
-  Vector<float>* position_;
+  Vector<float> position_;
   Vector<float> scale_;
   float rotation_;
 
  public:
-  Transform(Vector<float>* const position)
+  Transform(const Vector<float>& position)
       : Transform(position, Vector<float>(1.0f, 1.0f), 0) {}
-  Transform(Vector<float>* const position, const Vector<float>& scale)
+  Transform(const Vector<float>& position, const Vector<float>& scale)
       : Transform(position, scale, 0) {}
-  Transform(Vector<float>* const position, const Vector<float>& scale,
+  Transform(const Vector<float>& position, const Vector<float>& scale,
             const float& rotation);
   ~Transform();
 
@@ -43,6 +43,6 @@ class Transform {
   Vector<float> GetDirectionVector() const noexcept;
   const float GetRotation() const noexcept;
   Vector<float> GetScale() const noexcept;
-  Vector<float>* const GetPosition() const noexcept;
+  Vector<float> GetPosition() const noexcept;
 };
 #endif  // TRANSFORM_HPP_

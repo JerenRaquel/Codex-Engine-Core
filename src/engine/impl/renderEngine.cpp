@@ -32,6 +32,8 @@ void RenderEngine::InitOpenGL(const Vector<int>& size,
   // Draw pixels if close to the viewer
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
 }
 
 void RenderEngine::RenderMeshBatch(
@@ -44,6 +46,7 @@ void RenderEngine::RenderMeshBatch(
   Shader* shader = nullptr;
   for (unsigned int i = 0; i < this->renderDataPointer_->size(); i++) {
     RenderData* data = this->renderDataPointer_->at(i);
+    if (!data->material->ShouldRender()) continue;
 
     if (this->meshTypes_->count(data->meshType) == 0) continue;
 
@@ -61,6 +64,7 @@ void RenderEngine::RenderMeshBatch(
     glm::mat4x4 mvp = *(orthoViewMatrix) * *(data->transform->GetModelMatrix());
     shader->PassUniformMatrix("mvp", &mvp);
     shader->PassUniform3f("color", data->material->GetColor());
+    shader->PassUniform1f("alpha", data->material->GetAlpha());
 
     this->meshTypes_->at(data->meshType)->Draw();
   }

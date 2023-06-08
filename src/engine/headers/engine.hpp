@@ -20,6 +20,7 @@ class Action;
 #include "computeShaderBuffer.hpp"
 #include "mesh.hpp"
 #include "action.hpp"
+#include "ui/button.hpp"
 // Libs
 #include "mat4x4.hpp"
 
@@ -30,20 +31,25 @@ class Engine {
   Vector<int> windowSize_;
   RenderEngine* renderer_;
   Camera* camera_;
-  Vector<int> mousePosition_;
   std::vector<Action*>* actions_;
 
-  // TEMP - start
-  std::vector<RenderData*>* renderData_;
-  // TEMP - end
+  // Mouse Data
+  Vector<float> mousePosition_;
+  bool isMouseDown_ = false;
 
   // Compute shaders
   ComputeShaderCompiler* computeShaderCompiler_;
   std::map<std::string, ComputeShader*>* computeShaders_;
   std::map<std::string, ComputeShaderBuffer*>* computeShaderBuffers_;
 
+  // TEMP - start
+  std::vector<RenderData*>* renderData_;
+  std::vector<Button*>* buttons_;
+  // TEMP - end
+
   void MoveCamera() noexcept;
   void CalculateMousePosition() noexcept;
+  void CreatePrimativeMeshes() const noexcept;
 
  public:
   Engine(const Vector<int>& windowSize, const std::string& name,
@@ -58,12 +64,13 @@ class Engine {
       const std::string& name, const unsigned int& width,
       const unsigned int& height) const;
   const Engine* const AddAction(Action* action) const noexcept;
+  const Engine* const AddButton(Button* button) const noexcept;
 
   // Getters
   RenderEngine* const GetRenderer() const noexcept;
   Vector<int> GetWindowSize() const noexcept;
   std::vector<std::string>* const GetArgs() const noexcept;
-  Vector<int> GetMousePosition() const noexcept;
+  Vector<float> GetMousePosition() const noexcept;
   ComputeShader* const GetComputeShader(const std::string& name) const;
   ComputeShaderBuffer* const GetComputeShaderBuffer(
       const std::string& name) const noexcept;
