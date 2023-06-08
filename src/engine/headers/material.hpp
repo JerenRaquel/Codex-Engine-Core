@@ -37,6 +37,5 @@ class Material {
   const std::string& GetShaderName() const noexcept;
   const Vector3<float>& GetColor() const noexcept;
   const float& GetAlpha() const noexcept;
-  const bool ShouldRender() const noexcept;
 };
 #endif  // MATERIAL_HPP_

@@ -22,31 +22,17 @@
 #include "textHandler.hpp"
 #include "material.hpp"
 #include "transform.hpp"
-
-struct RenderData {
-  std::string meshType;
-  Material* material;    // Freed in created class
-  Transform* transform;  // Freed in created class
-};
+#include "renderData.hpp"
+#include "scene.hpp"
 
 class RenderEngine {
  private:
-  //* structs
-  struct TextMetaData {
-    std::string text;
-    Vector<int> position;
-    Vector3<float> color;
-    int scale;
-  };
-
   //* OpenGL
   GLFWwindow* window_;
 
   //* Mesh Data
   // Freed Here as well as content
   std::map<std::string, Mesh*>* meshTypes_ = nullptr;
-  // Freed in Engine class
-  std::vector<RenderData*>* renderDataPointer_ = nullptr;
 
   //* Shader Data
   ShaderCompiler* shaderCompiler_;
@@ -56,30 +42,26 @@ class RenderEngine {
   //* Text Data
   TextHandler* textHandler_;
   std::string defaultTextShaderName_;
-  std::queue<TextMetaData>* textMetaData_;
 
   //* Methods
   void InitOpenGL(const Vector<int>& size, const std::string& name);
-  void RenderMeshBatch(const glm::mat4x4* const orthoViewMatrix) const noexcept;
-  void RenderTextBatch(const glm::mat4x4* const orthoMatrix) const noexcept;
+  void RenderMeshBatch(
+      const glm::mat4x4* const orthoViewMatrix,
+      std::vector<MeshRenderData*>* const meshRenderData) const noexcept;
+  void RenderTextBatch(
+      const glm::mat4x4* const orthoMatrix,
+      std::vector<TextRenderData*>* const textRenderData) const noexcept;
 
  public:
   RenderEngine(const Vector<int>& size, const std::string& name,
                const std::string& defaultFontFile,
                const std::string& textShaderName);
   ~RenderEngine();
-  void Render(const glm::mat4x4* const orthoViewMatrix);
-  void DrawText(const std::string& text, const Vector<int>& position,
-                const int& scale) const noexcept;
-  void DrawText(const std::string& text, const Vector<int>& position,
-                const Vector3<float>& color, const int& scale) const noexcept;
+  void Render(const glm::mat4x4* const orthoViewMatrix,
+              const Scene* const scene) const noexcept;
   void CompileShader(const std::string& vertex, const std::string& fragment,
                      const std::string& name);
   void AddMeshType(const std::string& name, Mesh* const mesh);
-
-  // Setters
-  void SetRenderDataPointer(
-      std::vector<RenderData*>* const renderDataPointer) noexcept;
 
   // Getters
   Shader* const GetShader(const std::string& name);

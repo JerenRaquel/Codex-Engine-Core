@@ -5,6 +5,8 @@ class RenderEngine;
 class Camera;
 class Engine;
 class Action;
+class InputSystem;
+class Scene;
 
 // Std
 #include <string>
@@ -21,6 +23,8 @@ class Action;
 #include "mesh.hpp"
 #include "action.hpp"
 #include "ui/button.hpp"
+#include "scene.hpp"
+#include "inputSystem.hpp"
 // Libs
 #include "mat4x4.hpp"
 
@@ -31,48 +35,45 @@ class Engine {
   Vector<int> windowSize_;
   RenderEngine* renderer_;
   Camera* camera_;
-  std::vector<Action*>* actions_;
-
-  // Mouse Data
-  Vector<float> mousePosition_;
-  bool isMouseDown_ = false;
+  InputSystem* inputSystem_;
+  Action* mainAction_;
 
   // Compute shaders
   ComputeShaderCompiler* computeShaderCompiler_;
   std::map<std::string, ComputeShader*>* computeShaders_;
   std::map<std::string, ComputeShaderBuffer*>* computeShaderBuffers_;
 
-  // TEMP - start
-  std::vector<RenderData*>* renderData_;
-  std::vector<Button*>* buttons_;
-  // TEMP - end
+  // Scene Data
+  std::map<std::string, Scene*>* scenes_;
+  Scene* currentScene_;
+  std::string currentSceneName_;
 
   void MoveCamera() noexcept;
-  void CalculateMousePosition() noexcept;
   void CreatePrimativeMeshes() const noexcept;
+  void Start();
 
  public:
   Engine(const Vector<int>& windowSize, const std::string& name,
-         const std::vector<std::string>& args);
+         const std::vector<std::string>& args, Action* mainAction);
   ~Engine();
 
   // Utility
-  void Start();
   void CompileComputeShader(const std::string& computeFile,
                             const std::string& name) const;
   ComputeShaderBuffer* const AssignNewComputeShaderBuffer(
       const std::string& name, const unsigned int& width,
       const unsigned int& height) const;
-  const Engine* const AddAction(Action* action) const noexcept;
-  const Engine* const AddButton(Button* button) const noexcept;
+  Scene* const AddScene(const std::string& name, Scene* scene);
+  Scene* const SetCurrentScene(const std::string& name);
 
   // Getters
   RenderEngine* const GetRenderer() const noexcept;
   Vector<int> GetWindowSize() const noexcept;
   std::vector<std::string>* const GetArgs() const noexcept;
-  Vector<float> GetMousePosition() const noexcept;
   ComputeShader* const GetComputeShader(const std::string& name) const;
   ComputeShaderBuffer* const GetComputeShaderBuffer(
       const std::string& name) const noexcept;
+  InputSystem* const GetInputSystem() const noexcept;
+  Scene* const GetCurrentScene() const noexcept;
 };
 #endif  // ENGINE_HPP_

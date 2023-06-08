@@ -8,7 +8,7 @@
 // Engine
 #include "engine.hpp"
 // Simulation
-#include "testAction.hpp"
+#include "mainAction.hpp"
 
 int main(int argc, char** argv) {
   // Pack args into vector
@@ -18,9 +18,8 @@ int main(int argc, char** argv) {
   }
 
   // Start engine
-  Engine* engine = new Engine(Vector<int>(1600, 900), "Drone Simulation", args);
-  engine->AddAction(new TestAction());
-  engine->Start();
+  Engine* engine = new Engine(Vector<int>(1600, 900), "Drone Simulation", args,
+                              new MainAction());
   delete engine;
 
   return 0;

@@ -6,14 +6,14 @@
 
 class Action {
  protected:
-  virtual void InternalStart(const Engine* const engine) const noexcept = 0;
-  virtual void InternalUpdate(const Engine* const engine) const noexcept = 0;
+  virtual void InternalStart(Engine* const engine) const noexcept = 0;
+  virtual void InternalUpdate(Engine* const engine) const noexcept = 0;
 
  public:
   Action();
   virtual ~Action();
 
-  void OnStart(const Engine* const engine) const noexcept;
-  void OnUpdate(const Engine* const engine) const noexcept;
+  void OnStart(Engine* const engine) const noexcept;
+  void OnUpdate(Engine* const engine) const noexcept;
 };
 #endif  // ACTION_HPP_

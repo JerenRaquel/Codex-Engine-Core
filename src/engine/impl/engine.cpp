@@ -29,19 +29,6 @@ void Engine::MoveCamera() noexcept {
   this->camera_->UpdatePosition(direction);
 }
 
-void Engine::CalculateMousePosition() noexcept {
-  double xpos, ypos;
-  glfwGetCursorPos(this->renderer_->GetWindow(), &xpos, &ypos);
-
-  this->mousePosition_ = Vector<float>(xpos, ypos);
-  if (glfwGetMouseButton(this->GetRenderer()->GetWindow(),
-                         GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-    this->isMouseDown_ = true;
-  } else {
-    this->isMouseDown_ = false;
-  }
-}
-
 void Engine::CreatePrimativeMeshes() const noexcept {
   float coneVertices[] = {
       0.0f,  2.5f,  0.0f,  // top center
@@ -70,54 +57,6 @@ void Engine::CreatePrimativeMeshes() const noexcept {
   this->renderer_->AddMeshType("Quad", quadMesh);
 }
 
-Engine::Engine(const Vector<int>& windowSize, const std::string& name,
-               const std::vector<std::string>& args) {
-  this->windowSize_ = windowSize;
-  this->args_ = new std::vector<std::string>(args);
-  this->renderer_ =
-      new RenderEngine(windowSize, name, "BasicCrayon-Regular.ttf", "Crayon");
-  this->computeShaderCompiler_ = new ComputeShaderCompiler();
-  this->camera_ = new Camera(windowSize, 0.1f, 100.0f);
-  this->actions_ = new std::vector<Action*>();
-  this->computeShaders_ = new std::map<std::string, ComputeShader*>();
-  this->computeShaderBuffers_ =
-      new std::map<std::string, ComputeShaderBuffer*>();
-  // TEMP - start
-  this->renderData_ = new std::vector<RenderData*>();
-  this->buttons_ = new std::vector<Button*>();
-  // TEMP - end
-}
-
-Engine::~Engine() {
-  delete this->renderer_;
-  delete this->computeShaderCompiler_;
-  delete this->camera_;
-
-  for (Action* action : *this->actions_) {
-    delete action;
-  }
-  delete this->actions_;
-
-  delete this->computeShaders_;
-  for (auto& computeShaderBuffer : *this->computeShaderBuffers_) {
-    delete computeShaderBuffer.second;
-  }
-  delete this->computeShaderBuffers_;
-
-  // TEMP - start
-  for (auto renderData : *this->renderData_) {
-    delete renderData;
-  }
-  delete this->renderData_;
-
-  for (auto button : *this->buttons_) {
-    delete button;
-  }
-  delete this->buttons_;
-  // TEMP - end
-}
-
-// Utility
 void Engine::Start() {
   // Initilize renderer stuff
   this->renderer_->CompileShader("vertex.vs", "fragment.fs", "default");
@@ -125,13 +64,10 @@ void Engine::Start() {
   this->renderer_->CompileShader("text.vs", "text.fs", "Crayon");
   this->CreatePrimativeMeshes();
 
-  // TEMP - start
-  this->renderer_->SetRenderDataPointer(this->renderData_);
-  // TEMP - end
+  this->mainAction_->OnStart(this);
 
-  // Initilize actions
-  for (unsigned int i = 0; i < this->actions_->size(); i++) {
-    this->actions_->at(i)->OnStart(this);
+  if (this->currentScene_ != nullptr) {
+    this->currentScene_->Start(this);
   }
 
   // Main loop
@@ -139,32 +75,55 @@ void Engine::Start() {
     FrameMark;
     this->MoveCamera();
     glm::mat4x4* orthoViewMatrixCached = this->camera_->GetViewOrthoMatrix();
-    this->CalculateMousePosition();
+    this->inputSystem_->Update(this->renderer_->GetWindow());
 
-    // Update actions
-    for (unsigned int i = 0; i < this->actions_->size(); i++) {
-      this->actions_->at(i)->OnUpdate(this);
+    if (this->currentScene_ != nullptr) {
+      this->currentScene_->Update(this);
     }
 
-    // TEMP - start
-    for (unsigned int i = 0; i < this->buttons_->size(); i++) {
-      Button* button = this->buttons_->at(i);
-      this->renderer_->DrawText(button->GetName(), button->GetNamePosition(),
-                                1);
-      if (button->IsHovered(this->mousePosition_) && this->isMouseDown_) {
-        button->InvokeCallback();
-        this->isMouseDown_ = false;
-        break;
-      }
-    }
-    // TEMP - end
-
-    this->renderer_->Render(orthoViewMatrixCached);
+    this->renderer_->Render(orthoViewMatrixCached, this->currentScene_);
 
     // update other events like input handling
     glfwPollEvents();
   }
 }
+
+Engine::Engine(const Vector<int>& windowSize, const std::string& name,
+               const std::vector<std::string>& args, Action* mainAction) {
+  this->windowSize_ = windowSize;
+  this->args_ = new std::vector<std::string>(args);
+  this->renderer_ =
+      new RenderEngine(windowSize, name, "BasicCrayon-Regular.ttf", "Crayon");
+  this->computeShaderCompiler_ = new ComputeShaderCompiler();
+  this->camera_ = new Camera(windowSize, 0.1f, 100.0f);
+  this->computeShaders_ = new std::map<std::string, ComputeShader*>();
+  this->computeShaderBuffers_ =
+      new std::map<std::string, ComputeShaderBuffer*>();
+  this->inputSystem_ = new InputSystem();
+  this->mainAction_ = mainAction;
+  this->scenes_ = new std::map<std::string, Scene*>();
+
+  this->Start();
+}
+
+Engine::~Engine() {
+  delete this->renderer_;
+  delete this->computeShaderCompiler_;
+  delete this->camera_;
+  delete this->computeShaders_;
+
+  for (auto& computeShaderBuffer : *this->computeShaderBuffers_) {
+    delete computeShaderBuffer.second;
+  }
+  delete this->computeShaderBuffers_;
+
+  for (auto scene : *this->scenes_) {
+    delete scene.second;
+  }
+  delete this->scenes_;
+}
+
+// Utility
 
 void Engine::CompileComputeShader(const std::string& computeFile,
                                   const std::string& name) const {
@@ -190,19 +149,30 @@ ComputeShaderBuffer* const Engine::AssignNewComputeShaderBuffer(
   return buffer;
 }
 
-const Engine* const Engine::AddAction(Action* action) const noexcept {
-  this->actions_->push_back(action);
-  return this;
+Scene* const Engine::AddScene(const std::string& name, Scene* scene) {
+  if (this->scenes_->count(name) > 0) {
+    throw std::runtime_error("Scene already exists");
+  }
+  this->scenes_->insert(std::pair<std::string, Scene*>(name, scene));
+  if (this->currentScene_ == nullptr) {
+    this->currentScene_ = scene;
+    this->currentSceneName_ = name;
+  }
+  return scene;
 }
 
-const Engine* const Engine::AddButton(Button* button) const noexcept {
-  this->buttons_->push_back(button);
-  RenderData* renderData = new RenderData();
-  renderData->meshType = "Quad";
-  renderData->material = button->GetMaterial();
-  renderData->transform = button->GetTransform();
-  this->renderData_->push_back(renderData);
-  return this;
+Scene* const Engine::SetCurrentScene(const std::string& name) {
+  if (this->currentSceneName_ == name) {
+    return this->currentScene_;
+  }
+
+  if (this->scenes_->count(name) == 0) {
+    throw std::runtime_error("Scene does not exist");
+  }
+  this->currentScene_ = this->scenes_->at(name);
+  this->currentSceneName_ = name;
+  this->currentScene_->Start(this);
+  return this->currentScene_;
 }
 
 // Getters
@@ -214,10 +184,6 @@ Vector<int> Engine::GetWindowSize() const noexcept { return this->windowSize_; }
 
 std::vector<std::string>* const Engine::GetArgs() const noexcept {
   return this->args_;
-}
-
-Vector<float> Engine::GetMousePosition() const noexcept {
-  return this->mousePosition_;
 }
 
 ComputeShader* const Engine::GetComputeShader(const std::string& name) const {
@@ -234,4 +200,12 @@ ComputeShaderBuffer* const Engine::GetComputeShaderBuffer(
   }
 
   return this->computeShaderBuffers_->at(name);
+}
+
+InputSystem* const Engine::GetInputSystem() const noexcept {
+  return this->inputSystem_;
+}
+
+Scene* const Engine::GetCurrentScene() const noexcept {
+  return this->currentScene_;
 }

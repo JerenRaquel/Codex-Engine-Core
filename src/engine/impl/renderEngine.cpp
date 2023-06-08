@@ -37,21 +37,20 @@ void RenderEngine::InitOpenGL(const Vector<int>& size,
 }
 
 void RenderEngine::RenderMeshBatch(
-    const glm::mat4x4* const orthoViewMatrix) const noexcept {
+    const glm::mat4x4* const orthoViewMatrix,
+    std::vector<MeshRenderData*>* const meshRenderData) const noexcept {
   ZoneScopedN("RenderEngine::RenderMeshBatch");
-  //* Check if mesh pointer is valid
-  if (this->renderDataPointer_ == nullptr) return;
-
   //* Draw Calls
   Shader* shader = nullptr;
-  for (unsigned int i = 0; i < this->renderDataPointer_->size(); i++) {
-    RenderData* data = this->renderDataPointer_->at(i);
-    if (!data->material->ShouldRender()) continue;
+  for (unsigned int i = 0; i < meshRenderData->size(); i++) {
+    MeshRenderData* data = meshRenderData->at(i);
+    if (!data->shouldRender_) continue;
 
-    if (this->meshTypes_->count(data->meshType) == 0) continue;
+    std::string meshType = data->GetMeshType();
+    if (this->meshTypes_->count(meshType) == 0) continue;
 
     // Load Active Shader
-    const std::string shaderName = data->material->GetShaderName();
+    const std::string shaderName = data->GetMaterial()->GetShaderName();
     if (this->shaders_->count(shaderName) > 0) {
       shader = this->shaders_->at(shaderName);
     } else {
@@ -59,28 +58,26 @@ void RenderEngine::RenderMeshBatch(
     }
     shader->Use();
 
-    // Update Uniforms
-    ZoneScopedN("RenderEngine::RenderMeshBatch::UpdateMVP");
-    glm::mat4x4 mvp = *(orthoViewMatrix) * *(data->transform->GetModelMatrix());
-    shader->PassUniformMatrix("mvp", &mvp);
-    shader->PassUniform3f("color", data->material->GetColor());
-    shader->PassUniform1f("alpha", data->material->GetAlpha());
+    // Pass Uniforms
+    data->PassUniforms(shader, orthoViewMatrix);
 
-    this->meshTypes_->at(data->meshType)->Draw();
+    // Draw
+    this->meshTypes_->at(meshType)->Draw();
   }
 }
 
 void RenderEngine::RenderTextBatch(
-    const glm::mat4x4* const orthoMatrix) const noexcept {
+    const glm::mat4x4* const orthoMatrix,
+    std::vector<TextRenderData*>* const textRenderData) const noexcept {
   Shader* shader = this->shaders_->at(this->defaultTextShaderName_);
   shader->Use();
   shader->PassUniformMatrix("projection", this->textHandler_->GetOrthoMatrix());
 
-  while (!this->textMetaData_->empty()) {
-    TextMetaData data = this->textMetaData_->front();
-    this->textMetaData_->pop();
-    shader->PassUniform3f("textColor", data.color);
-    this->textHandler_->DrawText(data.text, data.position, data.scale);
+  for (unsigned int i = 0; i < textRenderData->size(); i++) {
+    TextRenderData* data = textRenderData->at(i);
+    shader->PassUniform3f("textColor", data->GetColor());
+    this->textHandler_->DrawText(data->GetText(), data->GetPosition(),
+                                 data->GetScale());
   }
 }
 
@@ -95,7 +92,6 @@ RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name,
   this->shaderNames_ = new std::vector<std::string>();
   this->shaderCompiler_ = new ShaderCompiler();
   this->textHandler_ = new TextHandler(defaultFontFile, size);
-  this->textMetaData_ = new std::queue<TextMetaData>();
   this->meshTypes_ = new std::map<std::string, Mesh*>();
 }
 
@@ -107,7 +103,6 @@ RenderEngine::~RenderEngine() {
   delete this->shaderNames_;
   delete this->shaderCompiler_;
   delete this->textHandler_;
-  delete this->textMetaData_;
   for (auto mesh : *(this->meshTypes_)) {
     delete mesh.second;
   }
@@ -116,32 +111,21 @@ RenderEngine::~RenderEngine() {
   glfwTerminate();
 }
 
-void RenderEngine::Render(const glm::mat4x4* const orthoViewMatrix) {
+void RenderEngine::Render(const glm::mat4x4* const orthoViewMatrix,
+                          const Scene* const scene) const noexcept {
   //* Clear Drawing Surface
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  //* Render UI
-  this->RenderTextBatch(orthoViewMatrix);
+  if (scene != nullptr) {
+    //* Render UI
+    this->RenderTextBatch(orthoViewMatrix, scene->GetTextRenderDataPointer());
 
-  //* Render Meshes
-  this->RenderMeshBatch(orthoViewMatrix);
+    //* Render Meshes
+    this->RenderMeshBatch(orthoViewMatrix, scene->GetMeshRenderDataPointer());
+  }
 
   //* Swap Buffers
   glfwSwapBuffers(this->window_);
-}
-
-void RenderEngine::DrawText(const std::string& text,
-                            const Vector<int>& position,
-                            const int& scale) const noexcept {
-  this->DrawText(text, position, Vector3<float>(1.0f, 1.0f, 1.0f), scale);
-}
-
-void RenderEngine::DrawText(const std::string& text,
-                            const Vector<int>& position,
-                            const Vector3<float>& color,
-                            const int& scale) const noexcept {
-  TextMetaData data = {text, position, color, scale};
-  this->textMetaData_->push(data);
 }
 
 void RenderEngine::CompileShader(const std::string& vertex,
@@ -165,12 +149,7 @@ void RenderEngine::AddMeshType(const std::string& name, Mesh* const mesh) {
   this->meshTypes_->insert(std::pair<std::string, Mesh*>(name, mesh));
 }
 
-// Setters
-void RenderEngine::SetRenderDataPointer(
-    std::vector<RenderData*>* const renderDataPointer) noexcept {
-  this->renderDataPointer_ = renderDataPointer;
-}
-
+// Getters
 Shader* const RenderEngine::GetShader(const std::string& name) {
   if (this->shaders_->count(name) > 0) {
     return this->shaders_->at(name);

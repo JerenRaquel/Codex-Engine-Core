@@ -68,7 +68,3 @@ const Vector3<float>& Material::GetColor() const noexcept {
 }
 
 const float& Material::GetAlpha() const noexcept { return this->alpha_; }
-
-const bool Material::ShouldRender() const noexcept {
-  return this->alpha_ > 0.0f;
-}

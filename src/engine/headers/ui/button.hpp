@@ -9,10 +9,11 @@
 #include "material.hpp"
 #include "transform.hpp"
 #include "textHandler.hpp"
+#include "engine.hpp"
 
 class Button {
  private:
-  void (*callback_)(void);
+  void (*callback_)(const Engine* const engine) = nullptr;
   std::string name_ = "";
   Vector<int> namePosition_;
 
@@ -20,18 +21,15 @@ class Button {
   Transform* transform_;
   Material* material_;
 
-  void SetupMeshData(const Vector<float>& position,
-                     const Vector<float>& scale) noexcept;
-
  public:
-  Button(const Vector<float>& position, void (*callback)(void),
-         const Vector<float>& scale);
-  Button(const Vector<float>& position, void (*callback)(void),
-         const std::string& text);
+  Button(const Vector<float>& position, const Vector<float>& scale,
+         void (*callback)(const Engine* const engine));
+  Button(const Vector<float>& position, const std::string& text,
+         void (*callback)(const Engine* const engine));
   ~Button();
 
   // Utility
-  void InvokeCallback() const noexcept;
+  void InvokeCallback(const Engine* const engine) const noexcept;
   bool IsHovered(const Vector<float>& mousePosition) noexcept;
 
   // Setters

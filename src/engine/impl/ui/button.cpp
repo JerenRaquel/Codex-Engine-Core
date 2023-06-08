@@ -1,18 +1,15 @@
 #include "ui/button.hpp"
 
-void Button::SetupMeshData(const Vector<float>& position,
-                           const Vector<float>& scale) noexcept {}
-
-Button::Button(const Vector<float>& position, void (*callback)(void),
-               const Vector<float>& scale) {
+Button::Button(const Vector<float>& position, const Vector<float>& scale,
+               void (*callback)(const Engine* const engine)) {
   this->callback_ = callback;
   this->material_ =
       new Material("button", Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f);
   this->transform_ = new Transform(position, scale);
 }
 
-Button::Button(const Vector<float>& position, void (*callback)(void),
-               const std::string& text) {
+Button::Button(const Vector<float>& position, const std::string& text,
+               void (*callback)(const Engine* const engine)) {
   this->name_ = text;
   this->callback_ = callback;
   this->material_ =
@@ -31,7 +28,9 @@ Button::~Button() {
 }
 
 // Utility
-void Button::InvokeCallback() const noexcept { this->callback_(); }
+void Button::InvokeCallback(const Engine* const engine) const noexcept {
+  this->callback_(engine);
+}
 
 bool Button::IsHovered(const Vector<float>& mousePosition) noexcept {
   Vector<float> scale = this->transform_->GetScale();
