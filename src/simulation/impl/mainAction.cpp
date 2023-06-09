@@ -3,15 +3,20 @@
 // Base Class
 void MainAction::InternalStart(Engine* const engine) const noexcept {
   engine->CompileComputeShader("CalulateDistances.comp", "CalulateDistances");
-  engine->AddScene("default", new Scene())
-      ->AddButton(
-          new Button(Vector<float>(800, 450), "Button",
-                     [](const Engine* const engine, const Button* const self) {
-                       self->SetTextColor(GenerateRandomColor());
-                     }))
-      ->AddTextRenderData(
-          new TextRenderData("hello world", Vector<int>(10.0f, 450.0f),
-                             Vector3<float>(1.0f, 1.0f, 1.0f), 5));
+  engine->AddScene("map", new Scene())
+      ->AddButton(new Button(
+          Vector<float>(150, 850), Vector<float>(120, 30),
+          [](Engine* const engine, const Button* const self) {
+            engine->SetCurrentScene("edit");
+          },
+          "Edit Drone", engine));
+  engine->AddScene("edit", new Scene())
+      ->AddButton(new Button(
+          Vector<float>(150, 850), Vector<float>(60, 30),
+          [](Engine* const engine, const Button* const self) {
+            engine->SetCurrentScene("map");
+          },
+          "Back", engine));
 }
 
 void MainAction::InternalUpdate(Engine* const engine) const noexcept {}

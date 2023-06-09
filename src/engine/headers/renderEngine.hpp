@@ -66,5 +66,7 @@ class RenderEngine {
   // Getters
   Shader* const GetShader(const std::string& name);
   GLFWwindow* const GetWindow() const noexcept;
+  const Vector<float> GetTextSize(const std::string& text,
+                                  const float& scale) const noexcept;
 };
 #endif  // RENDERENGINE_HPP_

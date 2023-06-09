@@ -14,8 +14,8 @@
 
 class Button {
  private:
-  void (*callback_)(const Engine* const engine,
-                    const Button* const self) = nullptr;
+  unsigned int ticks_ = 10;
+  void (*callback_)(Engine* const engine, const Button* const self) = nullptr;
 
   //* Mesh Data
   MeshRenderData* meshRenderData_ = nullptr;  // Freed in Scene Class
@@ -25,15 +25,14 @@ class Button {
 
  public:
   Button(const Vector<float>& position, const Vector<float>& scale,
-         void (*callback)(const Engine* const engine,
-                          const Button* const self));
-  Button(const Vector<float>& position, const std::string& text,
-         void (*callback)(const Engine* const engine,
-                          const Button* const self));
+         void (*callback)(Engine* const engine, const Button* const self));
+  Button(const Vector<float>& position, const Vector<float>& scale,
+         void (*callback)(Engine* const engine, const Button* const self),
+         const std::string& text, const Engine* const engine);
   ~Button();
 
   // Utility
-  void InvokeCallback(const Engine* const engine) const noexcept;
+  void InvokeCallback(Engine* const engine) noexcept;
   bool IsHovered(const Vector<float>& mousePosition) noexcept;
 
   // Setters

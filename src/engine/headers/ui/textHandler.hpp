@@ -16,9 +16,6 @@
 // Custom
 #include "util/vector.hpp"
 
-extern unsigned TextHandler_MaxWidth_;
-extern unsigned TextHandler_MaxHeight_;
-
 class TextHandler {
  private:
   const std::string fontPath_ = "assets/fonts/";
@@ -41,7 +38,9 @@ class TextHandler {
   ~TextHandler();
 
   void DrawText(const std::string& text, const Vector<int>& position,
-                const int& scale) noexcept;
+                const float& scale) noexcept;
   const glm::mat4x4* const GetOrthoMatrix() const noexcept;
+  const Vector<float> GetTextSize(const std::string& text,
+                                  const float& scale) const noexcept;
 };
 #endif  // TEXTHANDLER_HPP_

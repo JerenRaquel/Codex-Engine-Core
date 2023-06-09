@@ -162,3 +162,8 @@ Shader* const RenderEngine::GetShader(const std::string& name) {
 GLFWwindow* const RenderEngine::GetWindow() const noexcept {
   return this->window_;
 }
+
+const Vector<float> RenderEngine::GetTextSize(
+    const std::string& text, const float& scale) const noexcept {
+  return this->textHandler_->GetTextSize(text, scale);
+}

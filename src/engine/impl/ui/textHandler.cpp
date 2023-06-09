@@ -1,8 +1,5 @@
 #include "ui/textHandler.hpp"
 
-unsigned TextHandler_MaxWidth_ = 0;
-unsigned TextHandler_MaxHeight_ = 0;
-
 TextHandler::TextHandler(const std::string& fontFile,
                          const Vector<int>& windowSize) {
   // Setup FreeType
@@ -49,13 +46,6 @@ TextHandler::TextHandler(const std::string& fontFile,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    if (face->glyph->bitmap.width > TextHandler_MaxWidth_) {
-      TextHandler_MaxWidth_ = face->glyph->bitmap.width;
-    }
-    if (face->glyph->bitmap.rows > TextHandler_MaxHeight_) {
-      TextHandler_MaxHeight_ = face->glyph->bitmap.rows;
-    }
-
     Character character = {
         textureID,
         Vector<int>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
@@ -97,7 +87,7 @@ TextHandler::~TextHandler() {
 }
 
 void TextHandler::DrawText(const std::string& text, const Vector<int>& position,
-                           const int& scale) noexcept {
+                           const float& scale) noexcept {
   float x = position.x;
   float y = position.y;
 
@@ -128,4 +118,16 @@ void TextHandler::DrawText(const std::string& text, const Vector<int>& position,
 
 const glm::mat4x4* const TextHandler::GetOrthoMatrix() const noexcept {
   return this->orthoMatrix_;
+}
+
+const Vector<float> TextHandler::GetTextSize(
+    const std::string& text, const float& scale) const noexcept {
+  Vector<float> size(0.0f, 0.0f);
+  for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
+    Character ch = this->charactersAtlas_->at(*c);
+    size.x += (ch.advance >> 6) * scale;
+    size.y = std::max(size.y, static_cast<float>(ch.size.y));
+  }
+
+  return size;
 }

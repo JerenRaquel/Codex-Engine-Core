@@ -10,12 +10,14 @@
 
 class InputSystem {
  private:
+  Vector<int> windowSize_;
+
   // Mouse Data
   Vector<float> mousePosition_;
   bool isMouseDown_ = false;
 
  public:
-  InputSystem();
+  InputSystem(const Vector<int>& windowSize);
   ~InputSystem();
 
   // Utility

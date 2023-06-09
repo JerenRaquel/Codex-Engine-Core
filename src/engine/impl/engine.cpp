@@ -99,7 +99,7 @@ Engine::Engine(const Vector<int>& windowSize, const std::string& name,
   this->computeShaders_ = new std::map<std::string, ComputeShader*>();
   this->computeShaderBuffers_ =
       new std::map<std::string, ComputeShaderBuffer*>();
-  this->inputSystem_ = new InputSystem();
+  this->inputSystem_ = new InputSystem(windowSize);
   this->mainAction_ = mainAction;
   this->scenes_ = new std::map<std::string, Scene*>();
 

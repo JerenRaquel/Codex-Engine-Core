@@ -1,6 +1,7 @@
 #include "inputSystem.hpp"
 
-InputSystem::InputSystem() {}
+InputSystem::InputSystem(const Vector<int>& windowSize)
+    : windowSize_(windowSize) {}
 
 InputSystem::~InputSystem() {}
 
@@ -9,7 +10,7 @@ void InputSystem::Update(GLFWwindow* const window) noexcept {
   double xpos, ypos;
   glfwGetCursorPos(window, &xpos, &ypos);
 
-  this->mousePosition_ = Vector<float>(xpos, ypos);
+  this->mousePosition_ = Vector<float>(xpos, this->windowSize_.y - ypos);
   if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
     this->isMouseDown_ = true;
   } else {

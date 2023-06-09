@@ -1,34 +1,24 @@
 #include "ui/button.hpp"
 
 Button::Button(const Vector<float>& position, const Vector<float>& scale,
-               void (*callback)(const Engine* const engine,
-                                const Button* const self)) {
-  this->callback_ = callback;
-  this->material_ =
-      new Material("button", Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f);
-  this->transform_ = new Transform(position, scale);
+               void (*callback)(Engine* const engine, const Button* const self))
+    : Button(position, scale, callback, "", nullptr) {}
 
-  this->meshRenderData_ =
-      new MeshRenderData("Quad", this->material_, this->transform_);
-}
-
-Button::Button(const Vector<float>& position, const std::string& text,
-               void (*callback)(const Engine* const engine,
-                                const Button* const self)) {
+Button::Button(const Vector<float>& position, const Vector<float>& scale,
+               void (*callback)(Engine* const engine, const Button* const self),
+               const std::string& text, const Engine* const engine) {
   this->callback_ = callback;
   this->material_ =
       new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f);
-
-  float width = (text.length() * TextHandler_MaxWidth_) / 2.0f;
-  float height = (TextHandler_MaxHeight_ + 20) / 2.0f;
-  Vector<float> scale(width, height);
   this->transform_ = new Transform(position, scale);
-  Vector<float> namePos = position - scale;
-
   this->meshRenderData_ =
       new MeshRenderData("Quad", this->material_, this->transform_);
+
+  if (text == "") return;
+  Vector<float> textSize = engine->GetRenderer()->GetTextSize(text, 1.0f);
+  Vector<float> namePos = position - textSize / 2.0f;
   this->textRenderData_ =
-      new TextRenderData(text, Vector<int>(namePos.x + 40, namePos.y + 10),
+      new TextRenderData(text, Vector<int>(namePos.x, namePos.y),
                          Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f);
 }
 
@@ -38,11 +28,15 @@ Button::~Button() {
 }
 
 // Utility
-void Button::InvokeCallback(const Engine* const engine) const noexcept {
+void Button::InvokeCallback(Engine* const engine) noexcept {
+  if (this->ticks_ > 0) return;
+  this->ticks_ = 10;
   this->callback_(engine, this);
 }
 
 bool Button::IsHovered(const Vector<float>& mousePosition) noexcept {
+  if (this->ticks_ > 0) this->ticks_--;
+
   Vector<float> scale = this->transform_->GetScale();
   if (mousePosition.IsWithinRectDistance(this->transform_->GetPosition(),
                                          scale.x, scale.y)) {
