@@ -68,7 +68,7 @@ const Scene* const Scene::AddTextRenderData(
   return this;
 }
 
-const Scene* const Scene::AddButton(Button* button) const noexcept {
+const Scene* const Scene::AddButton(Button* const button) const noexcept {
   this->buttons_->push_back(button);
   if (button->GetTextRenderData() != nullptr) {
     this->textRenderDataPointer_->push_back(button->GetTextRenderData());

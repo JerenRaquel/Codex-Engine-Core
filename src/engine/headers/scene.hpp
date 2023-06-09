@@ -33,7 +33,7 @@ class Scene {
       MeshRenderData* meshRenderData) const noexcept;
   const Scene* const AddTextRenderData(
       TextRenderData* textRenderData) const noexcept;
-  const Scene* const AddButton(Button* button) const noexcept;
+  const Scene* const AddButton(Button* const button) const noexcept;
   const Scene* const AddAction(Action* action) const noexcept;
 
   // Getters

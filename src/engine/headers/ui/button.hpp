@@ -15,7 +15,9 @@
 class Button {
  private:
   unsigned int ticks_ = 10;
-  void (*callback_)(Engine* const engine, const Button* const self) = nullptr;
+  void (*callback_)(Engine* const engine, Button* const self) = nullptr;
+  void* metaData_ = nullptr;
+  void (*metaDataDestructor_)(void* const metaData) = nullptr;
 
   //* Mesh Data
   MeshRenderData* meshRenderData_ = nullptr;  // Freed in Scene Class
@@ -25,9 +27,9 @@ class Button {
 
  public:
   Button(const Vector<float>& position, const Vector<float>& scale,
-         void (*callback)(Engine* const engine, const Button* const self));
+         void (*callback)(Engine* const engine, Button* const self));
   Button(const Vector<float>& position, const Vector<float>& scale,
-         void (*callback)(Engine* const engine, const Button* const self),
+         void (*callback)(Engine* const engine, Button* const self),
          const std::string& text, const Engine* const engine);
   ~Button();
 
@@ -36,13 +38,16 @@ class Button {
   bool IsHovered(const Vector<float>& mousePosition) noexcept;
 
   // Setters
-  const Button* const SetAlpha(const float& alpha) noexcept;
-  const Button* const SetColor(const Vector3<float>& color) noexcept;
-  const Button* const SetColor(const float& r, const float& g,
-                               const float& b) noexcept;
-  const Button* const SetTextColor(const Vector3<float>& color) const noexcept;
-  const Button* const SetTextColor(const float& r, const float& g,
-                                   const float& b) const noexcept;
+  Button* const SetAlpha(const float& alpha) noexcept;
+  Button* const SetColor(const Vector3<float>& color) noexcept;
+  Button* const SetColor(const float& r, const float& g,
+                         const float& b) noexcept;
+  Button* const SetTextColor(const Vector3<float>& color) noexcept;
+  Button* const SetTextColor(const float& r, const float& g,
+                             const float& b) noexcept;
+  Button* const SetMetaData(
+      void* const metaData,
+      void (*metaDataDestructor)(void* const metaData)) noexcept;
 
   // Getters
   const std::string GetName() const noexcept;
@@ -51,5 +56,6 @@ class Button {
   Material* const GetMaterial() const noexcept;
   MeshRenderData* const GetMeshRenderData() const noexcept;
   TextRenderData* const GetTextRenderData() const noexcept;
+  void* const GetMetaData() const noexcept;
 };
 #endif  // BUTTON_HPP_
