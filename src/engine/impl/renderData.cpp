@@ -40,7 +40,8 @@ Transform* const MeshRenderData::GetTransform() const noexcept {
 //
 TextRenderData::TextRenderData(const std::string& text,
                                const Vector<int>& position,
-                               const Vector3<float>& color, const int scale) {
+                               const Vector3<float>& color,
+                               const float& scale) {
   this->text_ = text;
   this->position_ = position;
   this->color_ = color;
@@ -58,4 +59,4 @@ const Vector<int>& TextRenderData::GetPosition() const noexcept {
   return this->position_;
 }
 
-const int TextRenderData::GetScale() const noexcept { return this->scale_; }
+const float TextRenderData::GetScale() const noexcept { return this->scale_; }
