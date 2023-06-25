@@ -13,14 +13,14 @@ class Scene {
  private:
   //* Data - All Data Freed Here
   // Render Data
-  std::vector<MeshRenderData*>* meshRenderDataPointer_;
-  std::vector<TextRenderData*>* textRenderDataPointer_;
+  std::vector<MeshRenderData*>* meshRenderDataPointer_;  // All Freed Here
+  std::vector<TextRenderData*>* textRenderDataPointer_;  // All Freed Here
 
   // UI
-  std::vector<Button*>* buttons_;
+  std::vector<Button*>* buttons_;  // All Freed Here
 
   // Actions
-  std::vector<Action*>* actions_;
+  std::vector<Action*>* actions_;  // All Freed Here
 
  public:
   Scene();

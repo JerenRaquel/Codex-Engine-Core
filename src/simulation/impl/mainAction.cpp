@@ -14,11 +14,17 @@ void MainAction::InternalStart(Engine* const engine) const noexcept {
   const Scene* const editScene =
       engine->AddScene("edit", new Scene())
           ->AddButton(new Button(
-              Vector<float>(150, 850), Vector<float>(60, 30),
+              Vector<float>(75, 850), Vector<float>(60, 30),
               [](Engine* const engine, Button* const self) {
                 engine->SetCurrentScene("map");
               },
-              "Back", engine));
+              "Back", engine))
+          ->AddTextRenderData(
+              new TextRenderData("Cost: 0", Vector<int>(25, 775),
+                                 Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f))
+          ->AddTextRenderData(
+              new TextRenderData("Power Remaining: 0", Vector<int>(25, 745),
+                                 Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f));
 
   const int grid[] = {
       0, 1, 1, 1, 0,  //
