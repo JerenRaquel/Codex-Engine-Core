@@ -1,16 +1,18 @@
 #VSCode
 .vscode
 
-#Builds
-run.sh
-builds/*
-
 #Tools
 tools/
 
 # DLLs/Created Files
 src/objFiles
+src/libs/opengl
 *.dll
 *.exe
 *.a
 *.o
+
+# Other
+old_exes and dll files/
+run.sh
+build/assets/fonts

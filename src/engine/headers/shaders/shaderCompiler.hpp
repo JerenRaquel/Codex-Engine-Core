@@ -13,7 +13,7 @@
 
 class ShaderCompiler {
  private:
-  const std::string shaderPath_ = "../src/shaders/";
+  const std::string shaderPath_ = "assets/shaders/";
   std::string vertexShader_;
   std::string fragmentShader_;
 

@@ -1,15 +1,16 @@
 # Directories
 SRC_DIR := src
-BUILD_DIR := builds
+BUILD_DIR := build
 TOOLS_DIR := tools
 LIBRARIES_DIR := $(SRC_DIR)/libs
 ENGINE_DIR := $(SRC_DIR)/engine
 SIMULATION_DIR := $(SRC_DIR)/simulation
 OBJECT_DIR := $(SRC_DIR)/objFiles
 
-# Header Directories
+# Library Directories
 FREE_TYPE := $(LIBRARIES_DIR)/freetype
 GLM := $(LIBRARIES_DIR)/glm
+OPENGL := $(LIBRARIES_DIR)/opengl
 
 # Subdirectories
 ENGINE_HEADER_DIR := $(ENGINE_DIR)/headers
@@ -20,7 +21,7 @@ TRACY_DIR := $(TOOLS_DIR)/tracy
 
 # Libraries
 INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(ENGINE_HEADER_DIR) -I$(SIMULATION_HEADER_DIR)
-LINKER_LIBS := -lglfw3 -lopengl32 -lgdi32 -lglew32 $(INCLUDE_PATHS) $(FREE_TYPE)/libfreetype.a
+LINKER_LIBS := $(OPENGL)/libglfw3.a $(BUILD_DIR)/glew32.dll -lopengl32 -lgdi32 $(INCLUDE_PATHS) $(FREE_TYPE)/libfreetype.a
 TRACY_LIBS := -L$(TRACY_DIR)/tracy -lws2_32 -lwinmm -ldbghelp
 
 # Flags
@@ -62,18 +63,18 @@ $(OBJECT_DIR)/main.o: $(MAIN_FILE)
 	$(GXX) -c $(MAIN_FILE) -o $@ $(INCLUDE_PATHS) 
 
 # Engine Object Files
-$(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/%.cpp
-	$(GXX) $^ -c -o $@ $(INCLUDE_PATHS)
+$(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/%.cpp $(ENGINE_HEADER_DIR)/%.hpp
+	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
-$(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/**/%.cpp
-	$(GXX) $^ -c -o $@ $(INCLUDE_PATHS)
+$(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/**/%.cpp $(ENGINE_HEADER_DIR)/**/%.hpp
+	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
 # Simulation Object Files
-$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/%.cpp
-	$(GXX) $^ -c -o $@ $(INCLUDE_PATHS)
+$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/%.cpp $(SIMULATION_SOURCE_DIR)/%.hpp
+	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
-$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/**/%.cpp
-	$(GXX) $^ -c -o $@ $(INCLUDE_PATHS)
+$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/**/%.cpp $(SIMULATION_SOURCE_DIR)/**/%.hpp
+	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
-clean: $(EXE_NAME)
+clean:
 	rm $(EXE_NAME) $(OBJECT_FILES) $(OBJECT_DIR)/main.o

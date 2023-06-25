@@ -12,7 +12,7 @@
 
 class ComputeShaderCompiler {
  private:
-  const std::string shaderPath_ = "../src/shaders/compute/";
+  const std::string shaderPath_ = "assets/shaders/compute/";
   std::string computeShader_;
 
   void ValidateShader(GLuint shaderID) const noexcept;
