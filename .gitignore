@@ -8,7 +8,9 @@ builds/*
 #Tools
 tools/
 
-# DLLs
+# DLLs/Created Files
+src/objFiles
 *.dll
 *.exe
 *.a
+*.o

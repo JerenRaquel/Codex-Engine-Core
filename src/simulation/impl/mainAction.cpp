@@ -20,7 +20,7 @@ void MainAction::InternalStart(Engine* const engine) const noexcept {
               },
               "Back", engine))
           ->AddTextRenderData(
-              new TextRenderData("Cost: 0", Vector<int>(25, 775),
+              new TextRenderData("Cost: 10", Vector<int>(25, 775),
                                  Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f))
           ->AddTextRenderData(
               new TextRenderData("Power Remaining: 0", Vector<int>(25, 745),
