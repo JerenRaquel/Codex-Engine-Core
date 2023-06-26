@@ -4,13 +4,6 @@
 void MainAction::InternalStart(Engine* const engine) const noexcept {
   engine->CompileComputeShader("CalulateDistances.comp", "CalulateDistances");
 
-  Button* texturedButton =
-      new Button(Vector<float>(800, 450), Vector<float>(256, 128),
-                 [](Engine* const engine, Button* const self) {
-                   std::cout << "Hi" << std::endl;
-                 });
-  texturedButton->GetMaterial()->SetTexture(new Texture("face.png"));
-
   engine->AddScene("map", new Scene())
       ->AddButton(new Button(
           Vector<float>(150, 850), Vector<float>(120, 30),
@@ -18,7 +11,12 @@ void MainAction::InternalStart(Engine* const engine) const noexcept {
             engine->SetCurrentScene("edit");
           },
           "Edit Drone", engine))
-      ->AddButton(texturedButton);
+      ->AddButton(new Button(
+          Vector<float>(800, 450), Vector<float>(256, 128),
+          [](Engine* const engine, Button* const self) {
+            std::cout << "Hi" << std::endl;
+          },
+          new Texture("face.png")));
 
   const Scene* const editScene =
       engine->AddScene("edit", new Scene())

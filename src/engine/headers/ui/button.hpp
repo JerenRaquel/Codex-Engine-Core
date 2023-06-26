@@ -25,12 +25,19 @@ class Button {
   Transform* transform_;
   Material* material_;
 
+  void SetUp(const Vector<float>& position, const Vector<float>& scale,
+             Texture* texture, const std::string& text,
+             Vector<float>* textSize) noexcept;
+
  public:
   Button(const Vector<float>& position, const Vector<float>& scale,
          void (*callback)(Engine* const engine, Button* const self));
   Button(const Vector<float>& position, const Vector<float>& scale,
          void (*callback)(Engine* const engine, Button* const self),
          const std::string& text, const Engine* const engine);
+  Button(const Vector<float>& position, const Vector<float>& scale,
+         void (*callback)(Engine* const engine, Button* const self),
+         Texture* texture);
   ~Button();
 
   // Utility
