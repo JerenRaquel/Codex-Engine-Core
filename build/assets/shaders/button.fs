@@ -11,7 +11,9 @@ out vec4 fragColor;
 
 void main() {
     if (useTexture) {
-        fragColor = texture(tex, v_texcoord);
+        vec3 color = texture(tex, v_texcoord).xyz;
+        float a = texture(tex, v_texcoord).a;
+        fragColor = vec4(color, min(alpha, a));
     } else {
         fragColor = vec4(color, alpha);
     }
