@@ -47,6 +47,13 @@ void Material::UnbindTexture() noexcept {
   }
 }
 
+Material* Material::ToggleBackgroundColor() noexcept {
+  if (this->texture_ != nullptr) {
+    this->enableBackgroundColor_ = !this->enableBackgroundColor_;
+  }
+  return this;
+}
+
 // Setters
 Material* Material::SetShaderName(const std::string& shaderName) noexcept {
   this->shaderName_ = shaderName;
@@ -99,3 +106,7 @@ const Vector3<float>& Material::GetColor() const noexcept {
 }
 
 const float& Material::GetAlpha() const noexcept { return this->alpha_; }
+
+const bool& Material::GetBackgroundTextureState() const noexcept {
+  return this->enableBackgroundColor_;
+}

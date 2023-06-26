@@ -22,8 +22,11 @@ void MeshRenderData::PassUniforms(
   shader->PassUniform1f("alpha", this->material_->GetAlpha());
   if (this->material_->BindTexture()) {
     shader->PassUniformBool("useTexture", true);
+    shader->PassUniformBool("useBackgroundColor",
+                            this->material_->GetBackgroundTextureState());
   } else {
     shader->PassUniformBool("useTexture", false);
+    shader->PassUniformBool("useBackgroundColor", false);
   }
 }
 

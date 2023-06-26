@@ -14,6 +14,7 @@ class Material {
   Texture* texture_;
   Vector3<float> color_;
   float alpha_;
+  bool enableBackgroundColor_ = false;
 
  public:
   Material();
@@ -29,6 +30,7 @@ class Material {
   Material* RandomizeColor() noexcept;
   const bool BindTexture() noexcept;
   void UnbindTexture() noexcept;
+  Material* ToggleBackgroundColor() noexcept;
 
   // Setters
   Material* SetShaderName(const std::string& shaderName) noexcept;
@@ -44,5 +46,6 @@ class Material {
   const std::string& GetShaderName() const noexcept;
   const Vector3<float>& GetColor() const noexcept;
   const float& GetAlpha() const noexcept;
+  const bool& GetBackgroundTextureState() const noexcept;
 };
 #endif  // MATERIAL_HPP_
