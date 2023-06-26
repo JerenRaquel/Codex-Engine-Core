@@ -3,13 +3,15 @@
 
 // Std
 #include <string>
-// Custom
+// Engine
 #include "util/vector.hpp"
 #include "util/helpers.hpp"
+#include "texture.hpp"
 
 class Material {
  private:
   std::string shaderName_;
+  Texture* texture_;
   Vector3<float> color_;
   float alpha_;
 
@@ -19,10 +21,14 @@ class Material {
   Material(const std::string& shaderName, const Vector3<float>& color);
   Material(const std::string& shaderName, const Vector3<float>& color,
            const float& alpha);
+  Material(const std::string& shaderName, const Vector3<float>& color,
+           const float& alpha, Texture* texture);
   ~Material();
 
   // Utility
   Material* RandomizeColor() noexcept;
+  const bool BindTexture() noexcept;
+  void UnbindTexture() noexcept;
 
   // Setters
   Material* SetShaderName(const std::string& shaderName) noexcept;
@@ -32,6 +38,7 @@ class Material {
   Material* SetColor(const float& r, const float& g, const float& b,
                      const float& alpha) noexcept;
   Material* SetAlpha(const float& alpha) noexcept;
+  Material* SetTexture(Texture* texture) noexcept;
 
   // Getters
   const std::string& GetShaderName() const noexcept;

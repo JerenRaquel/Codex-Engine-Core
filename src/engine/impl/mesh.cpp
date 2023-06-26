@@ -15,9 +15,19 @@ void Mesh::CreateBuffer() {
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * this->indicesSize_,
                this->indices_, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
+  /*
+   * Each Stride : [x, y, z, u, v]
+   * Position : 3 (x, y, z)
+   * Texture : 2 (u, v)
+   */
+  // Position attribute
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
                         (GLvoid*)0);
   glEnableVertexAttribArray(0);
+  // TexCoord attribute
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
+                        (void*)(3 * sizeof(GLfloat)));
+  glEnableVertexAttribArray(1);
 }
 
 void Mesh::Bind() const noexcept {

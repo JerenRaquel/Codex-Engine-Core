@@ -8,6 +8,20 @@ Shader::Shader(ShaderCompiler* compiler, const std::string& vertexFile,
 
 Shader::~Shader() { glDeleteProgram(this->shaderID_); }
 
+// Utility
+void Shader::PassUniformBool(const char* name,
+                             const bool& state) const noexcept {
+  int ID = glGetUniformLocation(this->shaderID_, name);
+  if (ID == -1) return;
+  glUniform1i(ID, state ? 1 : 0);
+}
+
+void Shader::PassUniform1i(const char* name, const int& data) const noexcept {
+  int ID = glGetUniformLocation(this->shaderID_, name);
+  if (ID == -1) return;
+  glUniform1i(ID, data);
+}
+
 void Shader::PassUniform1f(const char* name, const float& data) const noexcept {
   int ID = glGetUniformLocation(this->shaderID_, name);
   if (ID == -1) return;

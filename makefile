@@ -11,6 +11,7 @@ OBJECT_DIR := $(SRC_DIR)/objFiles
 FREE_TYPE := $(LIBRARIES_DIR)/freetype
 GLM := $(LIBRARIES_DIR)/glm
 OPENGL := $(LIBRARIES_DIR)/opengl
+STB := $(LIBRARIES_DIR)/stb
 
 # Subdirectories
 ENGINE_HEADER_DIR := $(ENGINE_DIR)/headers
@@ -20,7 +21,7 @@ SIMULATION_SOURCE_DIR := $(SIMULATION_DIR)/impl
 TRACY_DIR := $(TOOLS_DIR)/tracy
 
 # Libraries
-INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(ENGINE_HEADER_DIR) -I$(SIMULATION_HEADER_DIR)
+INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(STB) -I$(ENGINE_HEADER_DIR) -I$(SIMULATION_HEADER_DIR)
 LINKER_LIBS := $(OPENGL)/libglfw3.a $(BUILD_DIR)/glew32.dll -lopengl32 -lgdi32 $(INCLUDE_PATHS) $(FREE_TYPE)/libfreetype.a
 TRACY_LIBS := -L$(TRACY_DIR)/tracy -lws2_32 -lwinmm -ldbghelp
 
@@ -45,7 +46,7 @@ SIMULATION_SOURCE_FILES := $(wildcard $(SIMULATION_SOURCE_DIR)/*.cpp) $(wildcard
 SOURCE_FILES = $(ENGINE_SOURCE_FILES) $(SIMULATION_SOURCE_FILES)
 # Object Files 
 OBJECT_FILES := $(addprefix $(OBJECT_DIR)/,$(addsuffix .o, $(basename $(notdir $(SOURCE_FILES)))))
-
+$(info $(SIMULATION_SOURCE_FILES))
 # Arguements
 EXE_NAME := $(BUILD_DIR)/Main.exe
 
@@ -70,10 +71,10 @@ $(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/**/%.cpp $(ENGINE_HEADER_DIR)/**/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
 # Simulation Object Files
-$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/%.cpp $(SIMULATION_SOURCE_DIR)/%.hpp
+$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/%.cpp $(SIMULATION_HEADER_DIR)/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
-$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/**/%.cpp $(SIMULATION_SOURCE_DIR)/**/%.hpp
+$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/**/%.cpp $(SIMULATION_HEADER_DIR)/**/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
 clean:

@@ -31,29 +31,29 @@ void Engine::MoveCamera() noexcept {
 
 void Engine::CreatePrimativeMeshes() const noexcept {
   float coneVertices[] = {
-      0.0f,  2.5f,  0.0f,  // top center
-      -2.5f, -2.5f, 0.0f,  // bottom left
-      2.5f,  -2.5f, 0.0f,  // bottom right
+      0.0f,  2.5f,  0.0f, 0.5f, 1.0f,  // top center
+      -2.5f, -2.5f, 0.0f, 0.0f, 0.0f,  // bottom left
+      2.5f,  -2.5f, 0.0f, 1.0f, 0.0f   // bottom right
   };
   unsigned int coneIndices[] = {
       0, 1, 2,  // first triangle
   };
 
-  Mesh* coneMesh = new Mesh(coneVertices, 9, coneIndices, 3);
+  Mesh* coneMesh = new Mesh(coneVertices, 15, coneIndices, 3);
   this->renderer_->AddMeshType("Cone", coneMesh);
 
   float quadVertices[] = {
-      -1.0f, 1.0f,  0.0f,  // top left
-      -1.0f, -1.0f, 0.0f,  // bottom left
-      1.0f,  -1.0f, 0.0f,  // bottom right
-      1.0f,  1.0f,  0.0f,  // top right
+      -1.0f, 1.0f,  0.0f, 0.0f, 1.0f,  // top left
+      -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,  // bottom left
+      1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,  // bottom right
+      1.0f,  1.0f,  0.0f, 1.0f, 1.0f   // top right
   };
   unsigned int quadIndices[] = {
       0, 1, 2,  // first triangle
       0, 2, 3,  // second triangle
   };
 
-  Mesh* quadMesh = new Mesh(quadVertices, 12, quadIndices, 6);
+  Mesh* quadMesh = new Mesh(quadVertices, 20, quadIndices, 6);
   this->renderer_->AddMeshType("Quad", quadMesh);
 }
 

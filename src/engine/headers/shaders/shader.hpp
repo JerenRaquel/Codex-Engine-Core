@@ -23,6 +23,9 @@ class Shader {
          const std::string& fragmentFile);
   ~Shader();
 
+  // Utility
+  void PassUniformBool(const char* name, const bool& state) const noexcept;
+  void PassUniform1i(const char* name, const int& data) const noexcept;
   void PassUniform1f(const char* name, const float& data) const noexcept;
   void PassUniform3f(const char* name,
                      const Vector3<float>& data) const noexcept;

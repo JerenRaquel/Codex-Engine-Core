@@ -20,6 +20,15 @@ void MeshRenderData::PassUniforms(
   shader->PassUniformMatrix("mvp", &mvp);
   shader->PassUniform3f("color", this->material_->GetColor());
   shader->PassUniform1f("alpha", this->material_->GetAlpha());
+  if (this->material_->BindTexture()) {
+    shader->PassUniformBool("useTexture", true);
+  } else {
+    shader->PassUniformBool("useTexture", false);
+  }
+}
+
+void MeshRenderData::UnbindTexture() const noexcept {
+  this->material_->UnbindTexture();
 }
 
 // Getters

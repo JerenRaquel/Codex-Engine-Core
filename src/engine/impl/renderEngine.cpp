@@ -63,6 +63,7 @@ void RenderEngine::RenderMeshBatch(
 
     // Draw
     this->meshTypes_->at(meshType)->Draw();
+    data->UnbindTexture();
   }
 }
 

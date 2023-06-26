@@ -27,6 +27,7 @@ class MeshRenderData {
   // Utility
   void PassUniforms(const Shader* const shader,
                     const glm::mat4x4* const orthoViewMatrix) const noexcept;
+  void UnbindTexture() const noexcept;
 
   // Getters
   const std::string& GetMeshType() const noexcept;

@@ -18,3 +18,9 @@ Vector3<float> GenerateRandomColor() noexcept {
   float b = static_cast<float>(std::rand() % 255) / 255.0f;
   return Vector3<float>(r, g, b);
 }
+
+bool stringEndsWith(const std::string& str,
+                    const std::string& suffix) noexcept {
+  return str.size() >= suffix.size() &&
+         str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+}

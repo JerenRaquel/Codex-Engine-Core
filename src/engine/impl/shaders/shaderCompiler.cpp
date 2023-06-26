@@ -82,7 +82,7 @@ void ShaderCompiler::CompileShader(GLuint& shaderProgram) {
   glLinkProgram(shaderProgram);
   // check for linking errors
   int success = 0;
-  char* infoLog = nullptr;
+  char infoLog[512];
   glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
