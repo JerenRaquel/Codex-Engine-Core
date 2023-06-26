@@ -12,7 +12,7 @@ void MainAction::InternalStart(Engine* const engine) const noexcept {
           },
           "Edit Drone", engine))
       ->AddButton(new Button(
-          Vector<float>(800, 450), Vector<float>(256, 128),
+          Vector<float>(800, 450), Vector<float>(128, 128),
           [](Engine* const engine, Button* const self) {
             std::cout << "Hi" << std::endl;
           },

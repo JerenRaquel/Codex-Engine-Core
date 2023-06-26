@@ -48,7 +48,6 @@ class Engine {
   Scene* currentScene_;
   std::string currentSceneName_;
 
-  void MoveCamera() noexcept;
   void CreatePrimativeMeshes() const noexcept;
   void Start();
 

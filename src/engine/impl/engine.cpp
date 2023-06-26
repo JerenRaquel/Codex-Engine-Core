@@ -2,33 +2,6 @@
 
 #include "../../../tools/tracy/tracy/Tracy.hpp"
 
-void Engine::MoveCamera() noexcept {
-  if (glfwGetKey(this->renderer_->GetWindow(), GLFW_KEY_R) == GLFW_PRESS) {
-    this->camera_->ResetPosition();
-    return;
-  }
-
-  Vector<float> direction;
-  if (glfwGetKey(this->renderer_->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-    direction.y = -1.0f;
-  } else if (glfwGetKey(this->renderer_->GetWindow(), GLFW_KEY_S) ==
-             GLFW_PRESS) {
-    direction.y = 1.0f;
-  }
-
-  if (glfwGetKey(this->renderer_->GetWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-    direction.x = 1.0f;
-  } else if (glfwGetKey(this->renderer_->GetWindow(), GLFW_KEY_D) ==
-             GLFW_PRESS) {
-    direction.x = -1.0f;
-  }
-  if (direction.x != 0.0f && direction.y != 0.0f) {
-    direction.x *= 0.70710678118f;  // sqrt(2)/2
-    direction.y *= 0.70710678118f;
-  }
-  this->camera_->UpdatePosition(direction);
-}
-
 void Engine::CreatePrimativeMeshes() const noexcept {
   float coneVertices[] = {
       0.0f,  2.5f,  0.0f, 0.5f, 1.0f,  // top center
@@ -64,6 +37,19 @@ void Engine::Start() {
   this->renderer_->CompileShader("text.vs", "text.fs", "Crayon");
   this->CreatePrimativeMeshes();
 
+  // Initalize Input Events
+  this->inputSystem_->AssignOnDirectionUpdate(
+      {reinterpret_cast<void*>(this),
+       [](void* engine, const Vector<float>& direction) {
+         Engine* enginePtr = reinterpret_cast<Engine*>(engine);
+         enginePtr->camera_->UpdatePosition(direction);
+       }});
+  this->inputSystem_->AssignOnKeyPress(
+      GLFW_KEY_R, {reinterpret_cast<void*>(this), [](void* engine) {
+                     Engine* enginePtr = reinterpret_cast<Engine*>(engine);
+                     enginePtr->camera_->ResetPosition();
+                   }});
+
   this->mainAction_->OnStart(this);
 
   if (this->currentScene_ != nullptr) {
@@ -73,9 +59,8 @@ void Engine::Start() {
   // Main loop
   while (!glfwWindowShouldClose(this->renderer_->GetWindow())) {
     FrameMark;
-    this->MoveCamera();
-    glm::mat4x4* orthoViewMatrixCached = this->camera_->GetViewOrthoMatrix();
     this->inputSystem_->Update(this->renderer_->GetWindow());
+    glm::mat4x4* orthoViewMatrixCached = this->camera_->GetViewOrthoMatrix();
 
     if (this->currentScene_ != nullptr) {
       this->currentScene_->Update(this);
