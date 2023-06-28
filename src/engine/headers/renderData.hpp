@@ -52,6 +52,9 @@ class TextRenderData {
   bool shouldRender_ = true;
   Vector3<float> color_;
 
+  TextRenderData(const std::string& text, const Vector<int>& position);
+  TextRenderData(const std::string& text, const Vector<int>& position,
+                 const Vector3<float>& color);
   TextRenderData(const std::string& text, const Vector<int>& position,
                  const Vector3<float>& color, const float& scale);
   ~TextRenderData();

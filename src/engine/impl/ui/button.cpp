@@ -4,8 +4,7 @@ Button::Button(const Vector<float>& position, const Vector<float>& scale,
                void (*callback)(Engine* const engine, Button* const self)) {
   this->callback_ = callback;
   this->transform_ = new Transform(position, scale);
-  this->material_ =
-      new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f);
+  this->material_ = new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f));
   this->meshRenderData_ =
       new MeshRenderData("Quad", this->material_, this->transform_);
 }
@@ -15,16 +14,14 @@ Button::Button(const Vector<float>& position, const Vector<float>& scale,
                const std::string& text, const Engine* const engine) {
   this->callback_ = callback;
   this->transform_ = new Transform(position, scale);
-  this->material_ =
-      new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f);
+  this->material_ = new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f));
   this->meshRenderData_ =
       new MeshRenderData("Quad", this->material_, this->transform_);
 
   Vector<float> textSize = engine->GetRenderer()->GetTextSize(text, 1.0f);
   Vector<float> namePos = position - textSize / 2.0f;
   this->textRenderData_ =
-      new TextRenderData(text, Vector<int>(namePos.x, namePos.y),
-                         Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f);
+      new TextRenderData(text, Vector<int>(namePos.x, namePos.y));
 }
 
 Button::Button(const Vector<float>& position, const Vector<float>& scale,

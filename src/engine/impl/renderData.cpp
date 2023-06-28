@@ -49,6 +49,15 @@ Transform* const MeshRenderData::GetTransform() const noexcept {
 // TextRenderData
 //
 TextRenderData::TextRenderData(const std::string& text,
+                               const Vector<int>& position)
+    : TextRenderData(text, position, Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f) {}
+
+TextRenderData::TextRenderData(const std::string& text,
+                               const Vector<int>& position,
+                               const Vector3<float>& color)
+    : TextRenderData(text, position, color, 1.0f) {}
+
+TextRenderData::TextRenderData(const std::string& text,
                                const Vector<int>& position,
                                const Vector3<float>& color,
                                const float& scale) {

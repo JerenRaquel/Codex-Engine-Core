@@ -30,11 +30,9 @@ void MainAction::InternalStart(Engine* const engine) const noexcept {
               },
               "Back", engine))
           ->AddTextRenderData(
-              new TextRenderData("Cost: 10", Vector<int>(25, 775),
-                                 Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f))
+              new TextRenderData("Cost: 10", Vector<int>(25, 775)))
           ->AddTextRenderData(
-              new TextRenderData("Power Remaining: 0", Vector<int>(25, 745),
-                                 Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f));
+              new TextRenderData("Power Remaining: 0", Vector<int>(25, 745)));
 
   const int grid[] = {
       0, 1, 1, 1, 0,  //
