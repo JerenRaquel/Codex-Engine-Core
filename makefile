@@ -21,7 +21,7 @@ SIMULATION_SOURCE_DIR := $(SIMULATION_DIR)/impl
 TRACY_DIR := $(TOOLS_DIR)/tracy
 
 # Libraries
-INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(STB) -I$(ENGINE_HEADER_DIR) -I$(SIMULATION_HEADER_DIR)
+INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(STB) -I$(ENGINE_HEADER_DIR) -I$(SIMULATION_HEADER_DIR) -I$(TRACY_DIR)/tracy
 LINKER_LIBS := $(OPENGL)/libglfw3.a $(BUILD_DIR)/glew32.dll -lopengl32 -lgdi32 $(INCLUDE_PATHS) $(FREE_TYPE)/libfreetype.a
 TRACY_LIBS := -L$(TRACY_DIR)/tracy -lws2_32 -lwinmm -ldbghelp
 
@@ -46,19 +46,28 @@ SIMULATION_SOURCE_FILES := $(wildcard $(SIMULATION_SOURCE_DIR)/*.cpp) $(wildcard
 SOURCE_FILES = $(ENGINE_SOURCE_FILES) $(SIMULATION_SOURCE_FILES)
 # Object Files 
 OBJECT_FILES := $(addprefix $(OBJECT_DIR)/,$(addsuffix .o, $(basename $(notdir $(SOURCE_FILES)))))
-# Arguements
+# Executable Name
 EXE_NAME := $(BUILD_DIR)/Main.exe
 
-# Calls
+#* =======================================================
+#* 										Commands
+#* =======================================================
 all: $(OBJECT_FILES) $(OBJECT_DIR)/main.o
 	$(GXX) $(OBJECT_FILES) $(OBJECT_DIR)/main.o -o $(EXE_NAME) $(LINKER_LIBS)
 	
-#TODO: Need to redo this
+#TODO: Make it faster
 debug: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES) $(TRACY_DIR)/tracy/Tracy.hpp $(TRACY_DIR)/TracyClient.cpp
-	$(GXX_DEBUG) $(TRACY_FLAGS) -c $(MAIN_FILE) -o CompiledFile.o
-	$(GXX_DEBUG) $(TRACY_FLAGS) $(SOURCE_FILES) CompiledFile.o $(TRACY_DIR)/TracyClient.cpp -o $(EXE_NAME) $(LINKER_LIBS) $(TRACY_LIBS)
-	rm CompiledFile.o
+	$(GXX_DEBUG) $(TRACY_FLAGS) -c $(MAIN_FILE) -o debugMain.o $(INCLUDE_PATHS) 
+	$(GXX_DEBUG) $(TRACY_FLAGS) -c $(TRACY_DIR)/TracyClient.cpp -o tracy.o $(INCLUDE_PATHS) $(TRACY_LIBS)
+	$(GXX_DEBUG) $(TRACY_FLAGS) $(SOURCE_FILES) tracy.o debugMain.o -o $(EXE_NAME) $(INCLUDE_PATHS) $(LINKER_LIBS) $(TRACY_LIBS)
+	rm tracy.o debugMain.o
 
+clean:
+	rm $(EXE_NAME) $(OBJECT_FILES) $(OBJECT_DIR)/main.o
+
+#* =======================================================
+#* 										Object Files
+#* =======================================================
 # Target Object File
 $(OBJECT_DIR)/main.o: $(MAIN_FILE)
 	$(GXX) -c $(MAIN_FILE) -o $@ $(INCLUDE_PATHS) 
@@ -77,5 +86,3 @@ $(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/%.cpp $(SIMULATION_HEADER_DIR)/%.hpp
 $(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/**/%.cpp $(SIMULATION_HEADER_DIR)/**/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
-clean:
-	rm $(EXE_NAME) $(OBJECT_FILES) $(OBJECT_DIR)/main.o
