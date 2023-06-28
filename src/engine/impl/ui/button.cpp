@@ -1,48 +1,41 @@
 #include "ui/button.hpp"
 
-void Button::SetUp(const Vector<float>& position, const Vector<float>& scale,
-                   Texture* texture, const std::string& text,
-                   Vector<float>* textSize) noexcept {
-  this->transform_ = new Transform(position, scale);
-
-  if (texture != nullptr) {
-    this->material_ =
-        new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f, texture);
-  } else {
-    this->material_ =
-        new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f);
-  }
-
-  this->meshRenderData_ =
-      new MeshRenderData("Quad", this->material_, this->transform_);
-
-  if (text != "") {
-    Vector<float> namePos = position - *textSize / 2.0f;
-    this->textRenderData_ =
-        new TextRenderData(text, Vector<int>(namePos.x, namePos.y),
-                           Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f);
-  }
-}
-
 Button::Button(const Vector<float>& position, const Vector<float>& scale,
                void (*callback)(Engine* const engine, Button* const self)) {
   this->callback_ = callback;
-  this->SetUp(position, scale, nullptr, "", nullptr);
+  this->transform_ = new Transform(position, scale);
+  this->material_ =
+      new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f);
+  this->meshRenderData_ =
+      new MeshRenderData("Quad", this->material_, this->transform_);
 }
 
 Button::Button(const Vector<float>& position, const Vector<float>& scale,
                void (*callback)(Engine* const engine, Button* const self),
                const std::string& text, const Engine* const engine) {
   this->callback_ = callback;
+  this->transform_ = new Transform(position, scale);
+  this->material_ =
+      new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f);
+  this->meshRenderData_ =
+      new MeshRenderData("Quad", this->material_, this->transform_);
+
   Vector<float> textSize = engine->GetRenderer()->GetTextSize(text, 1.0f);
-  this->SetUp(position, scale, nullptr, text, &textSize);
+  Vector<float> namePos = position - textSize / 2.0f;
+  this->textRenderData_ =
+      new TextRenderData(text, Vector<int>(namePos.x, namePos.y),
+                         Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f);
 }
 
 Button::Button(const Vector<float>& position, const Vector<float>& scale,
                void (*callback)(Engine* const engine, Button* const self),
                Texture* texture) {
   this->callback_ = callback;
-  this->SetUp(position, scale, texture, "", nullptr);
+  this->transform_ = new Transform(position, scale);
+  this->material_ =
+      new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f, texture);
+  this->meshRenderData_ =
+      new MeshRenderData("Quad", this->material_, this->transform_);
 }
 
 Button::~Button() {
