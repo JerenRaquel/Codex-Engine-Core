@@ -42,7 +42,7 @@ void Engine::Start() {
       {reinterpret_cast<void*>(this),
        [](void* engine, const Vector<float>& direction) {
          Engine* enginePtr = reinterpret_cast<Engine*>(engine);
-         enginePtr->camera_->UpdatePosition(direction);
+         enginePtr->camera_->UpdatePosition(direction * -1);
        }});
   this->inputSystem_->AssignOnKeyPress(
       GLFW_KEY_R, {reinterpret_cast<void*>(this), [](void* engine) {

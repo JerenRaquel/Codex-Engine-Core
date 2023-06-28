@@ -21,15 +21,15 @@ void InputSystem::Update(GLFWwindow* const window) noexcept {
   // Direction Event
   Vector<float> direction;
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    direction.y = -1.0f;
-  } else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
     direction.y = 1.0f;
+  } else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    direction.y = -1.0f;
   }
 
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-    direction.x = 1.0f;
-  } else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
     direction.x = -1.0f;
+  } else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    direction.x = 1.0f;
   }
   if (direction.x != 0.0f && direction.y != 0.0f) {
     direction.x *= 0.70710678118f;  // sqrt(2)/2
