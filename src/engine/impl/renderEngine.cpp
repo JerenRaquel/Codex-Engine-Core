@@ -1,6 +1,6 @@
 #include "../headers/renderEngine.hpp"
 
-#include "../../../tools/tracy/tracy/Tracy.hpp"
+#include "Tracy.hpp"
 
 void RenderEngine::InitOpenGL(const Vector<int>& size,
                               const std::string& name) {
@@ -37,7 +37,7 @@ void RenderEngine::InitOpenGL(const Vector<int>& size,
 }
 
 void RenderEngine::RenderMeshBatch(
-    const glm::mat4x4* const orthoViewMatrix,
+    Camera* const camera,
     std::vector<MeshRenderData*>* const meshRenderData) const noexcept {
   ZoneScopedN("RenderEngine::RenderMeshBatch");
   //* Draw Calls
@@ -59,7 +59,7 @@ void RenderEngine::RenderMeshBatch(
     shader->Use();
 
     // Pass Uniforms
-    data->PassUniforms(shader, orthoViewMatrix);
+    data->PassUniforms(shader, camera);
 
     // Draw
     this->meshTypes_->at(meshType)->Draw();
@@ -68,7 +68,6 @@ void RenderEngine::RenderMeshBatch(
 }
 
 void RenderEngine::RenderTextBatch(
-    const glm::mat4x4* const orthoMatrix,
     std::vector<TextRenderData*>* const textRenderData) const noexcept {
   Shader* shader = this->shaders_->at(this->defaultTextShaderName_);
   shader->Use();
@@ -112,17 +111,17 @@ RenderEngine::~RenderEngine() {
   glfwTerminate();
 }
 
-void RenderEngine::Render(const glm::mat4x4* const orthoViewMatrix,
+void RenderEngine::Render(Camera* const camera,
                           const Scene* const scene) const noexcept {
   //* Clear Drawing Surface
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   if (scene != nullptr) {
     //* Render UI
-    this->RenderTextBatch(orthoViewMatrix, scene->GetTextRenderDataPointer());
+    this->RenderTextBatch(scene->GetTextRenderDataPointer());
 
     //* Render Meshes
-    this->RenderMeshBatch(orthoViewMatrix, scene->GetMeshRenderDataPointer());
+    this->RenderMeshBatch(camera, scene->GetMeshRenderDataPointer());
   }
 
   //* Swap Buffers

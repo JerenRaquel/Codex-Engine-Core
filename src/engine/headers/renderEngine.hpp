@@ -46,10 +46,9 @@ class RenderEngine {
   //* Methods
   void InitOpenGL(const Vector<int>& size, const std::string& name);
   void RenderMeshBatch(
-      const glm::mat4x4* const orthoViewMatrix,
+      Camera* const camera,
       std::vector<MeshRenderData*>* const meshRenderData) const noexcept;
   void RenderTextBatch(
-      const glm::mat4x4* const orthoMatrix,
       std::vector<TextRenderData*>* const textRenderData) const noexcept;
 
  public:
@@ -57,8 +56,7 @@ class RenderEngine {
                const std::string& defaultFontFile,
                const std::string& textShaderName);
   ~RenderEngine();
-  void Render(const glm::mat4x4* const orthoViewMatrix,
-              const Scene* const scene) const noexcept;
+  void Render(Camera* const camera, const Scene* const scene) const noexcept;
   void CompileShader(const std::string& vertex, const std::string& fragment,
                      const std::string& name);
   void AddMeshType(const std::string& name, Mesh* const mesh);

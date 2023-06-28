@@ -10,6 +10,7 @@
 #include "transform.hpp"
 #include "util/vector.hpp"
 #include "shaders/shader.hpp"
+#include "camera.hpp"
 
 class MeshRenderData {
  private:
@@ -29,7 +30,7 @@ class MeshRenderData {
 
   // Utility
   void PassUniforms(const Shader* const shader,
-                    const glm::mat4x4* const orthoViewMatrix) const noexcept;
+                    Camera* const camera) const noexcept;
   void UnbindTexture() const noexcept;
 
   // Getters

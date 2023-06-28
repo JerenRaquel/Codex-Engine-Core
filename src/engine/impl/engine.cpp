@@ -1,6 +1,6 @@
 #include "engine.hpp"
 
-#include "../../../tools/tracy/tracy/Tracy.hpp"
+#include "Tracy.hpp"
 
 void Engine::CreatePrimativeMeshes() const noexcept {
   float coneVertices[] = {
@@ -60,13 +60,12 @@ void Engine::Start() {
   while (!glfwWindowShouldClose(this->renderer_->GetWindow())) {
     FrameMark;
     this->inputSystem_->Update(this->renderer_->GetWindow());
-    glm::mat4x4* orthoViewMatrixCached = this->camera_->GetViewOrthoMatrix();
 
     if (this->currentScene_ != nullptr) {
       this->currentScene_->Update(this);
     }
 
-    this->renderer_->Render(orthoViewMatrixCached, this->currentScene_);
+    this->renderer_->Render(this->camera_, this->currentScene_);
 
     // update other events like input handling
     glfwPollEvents();
@@ -156,6 +155,7 @@ Scene* const Engine::SetCurrentScene(const std::string& name) {
   }
   this->currentScene_ = this->scenes_->at(name);
   this->currentSceneName_ = name;
+  this->camera_->ResetPosition();
   this->currentScene_->Start(this);
   return this->currentScene_;
 }
