@@ -46,7 +46,6 @@ SIMULATION_SOURCE_FILES := $(wildcard $(SIMULATION_SOURCE_DIR)/*.cpp) $(wildcard
 SOURCE_FILES = $(ENGINE_SOURCE_FILES) $(SIMULATION_SOURCE_FILES)
 # Object Files 
 OBJECT_FILES := $(addprefix $(OBJECT_DIR)/,$(addsuffix .o, $(basename $(notdir $(SOURCE_FILES)))))
-$(info $(SIMULATION_SOURCE_FILES))
 # Arguements
 EXE_NAME := $(BUILD_DIR)/Main.exe
 
@@ -54,6 +53,7 @@ EXE_NAME := $(BUILD_DIR)/Main.exe
 all: $(OBJECT_FILES) $(OBJECT_DIR)/main.o
 	$(GXX) $(OBJECT_FILES) $(OBJECT_DIR)/main.o -o $(EXE_NAME) $(LINKER_LIBS)
 	
+#TODO: Need to redo this
 debug: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES) $(TRACY_DIR)/tracy/Tracy.hpp $(TRACY_DIR)/TracyClient.cpp
 	$(GXX_DEBUG) $(TRACY_FLAGS) -c $(MAIN_FILE) -o CompiledFile.o
 	$(GXX_DEBUG) $(TRACY_FLAGS) $(SOURCE_FILES) CompiledFile.o $(TRACY_DIR)/TracyClient.cpp -o $(EXE_NAME) $(LINKER_LIBS) $(TRACY_LIBS)

@@ -16,7 +16,10 @@ void MainAction::InternalStart(Engine* const engine) const noexcept {
           [](Engine* const engine, Button* const self) {
             std::cout << "Hi" << std::endl;
           },
-          new Texture("face.png")));
+          new Texture("face.png")))
+      ->AddMeshRenderData(new MeshRenderData(
+          "Cone", (new Material())->RandomizeColor(),
+          new Transform(Vector<float>(800, 450), Vector<float>(10, 10))));
 
   const Scene* const editScene =
       engine->AddScene("edit", new Scene())

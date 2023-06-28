@@ -20,6 +20,9 @@ class MeshRenderData {
  public:
   bool shouldRender_ = true;
 
+  /*
+    Types: ["Cone", "Quad"]
+   */
   MeshRenderData(const std::string& meshType, Material* material,
                  Transform* transform);
   ~MeshRenderData();

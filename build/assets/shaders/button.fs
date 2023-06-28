@@ -14,10 +14,14 @@ void main() {
     if (useTexture) {
         vec3 textColor = texture(tex, v_texcoord).xyz;
         float a = min(alpha,texture(tex, v_texcoord).a);
-
-        if (useBackgroundColor && texture(tex, v_texcoord).a == 0.0) {
-            textColor = color;
-            a = alpha;
+        
+        if (texture(tex, v_texcoord).a == 0.0) {
+            if (useBackgroundColor) {
+                textColor = color;
+                a = alpha;
+            } else {
+                discard;
+            }
         }
 
         fragColor = vec4(textColor,  a);
