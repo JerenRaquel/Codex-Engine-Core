@@ -12,6 +12,7 @@ FREE_TYPE := $(LIBRARIES_DIR)/freetype
 GLM := $(LIBRARIES_DIR)/glm
 OPENGL := $(LIBRARIES_DIR)/opengl
 STB := $(LIBRARIES_DIR)/stb
+UUID_V4 := $(LIBRARIES_DIR)/uuid_v4
 
 # Subdirectories
 ENGINE_HEADER_DIR := $(ENGINE_DIR)/headers
@@ -21,13 +22,13 @@ SIMULATION_SOURCE_DIR := $(SIMULATION_DIR)/impl
 TRACY_DIR := $(TOOLS_DIR)/tracy
 
 # Libraries
-INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(STB) -I$(ENGINE_HEADER_DIR) -I$(SIMULATION_HEADER_DIR) -I$(TRACY_DIR)/tracy
+INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(STB) -I$(ENGINE_HEADER_DIR) -I$(SIMULATION_HEADER_DIR) -I$(TRACY_DIR)/tracy -I$(UUID_V4)
 LINKER_LIBS := $(OPENGL)/libglfw3.a $(BUILD_DIR)/glew32.dll -lopengl32 -lgdi32 $(INCLUDE_PATHS) $(FREE_TYPE)/libfreetype.a
 TRACY_LIBS := -L$(TRACY_DIR)/tracy -lws2_32 -lwinmm -ldbghelp
 
 # Flags
 GXX_WERROR_FLAGS := -Wall -Werror
-GXX_FLAGS := -pthread -std=c++2a -O2
+GXX_FLAGS := -pthread -std=c++2a -O2 -mavx
 TRACY_FLAGS := -D_WIN32_WINNT=0x0602 -DWINVER=0x0602 -DTRACY_ENABLE
 
 # Commands

@@ -3,6 +3,7 @@
 
 // Std
 #include <cmath>
+#include <string>
 // Engine
 #include "util/vector.hpp"
 

@@ -40,11 +40,15 @@ Transform* const Transform::RotateTowards(const Vector<float>& direction,
   return this;
 }
 
-Transform* const Transform::Translate(const Vector<float>& direction,
-                                      const float& magnitude) noexcept {
-  this->position_ += direction * magnitude;
+Transform* const Transform::Translate(const Vector<float>& offset) noexcept {
+  this->position_ += offset;
   this->isModelMatrixDirty_ = true;
   return this;
+}
+
+Transform* const Transform::Translate(const Vector<float>& direction,
+                                      const float& magnitude) noexcept {
+  return this->Translate(direction * magnitude);
 }
 
 // Setters

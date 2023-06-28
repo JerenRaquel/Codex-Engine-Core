@@ -1,6 +1,9 @@
 #ifndef RENDERDATA_HPP_
 #define RENDERDATA_HPP_
 
+class MeshRenderData;
+class TextRenderData;
+
 // Std
 #include <string>
 // Lib

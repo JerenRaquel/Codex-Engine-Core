@@ -37,29 +37,19 @@ void Engine::Start() {
   this->renderer_->CompileShader("text.vs", "text.fs", "Crayon");
   this->CreatePrimativeMeshes();
 
-  // Initalize Input Events
-  this->inputSystem_->AssignOnDirectionUpdate(
-      {reinterpret_cast<void*>(this),
-       [](void* engine, const Vector<float>& direction) {
-         Engine* enginePtr = reinterpret_cast<Engine*>(engine);
-         enginePtr->camera_->UpdatePosition(direction * -1);
-       }});
-  this->inputSystem_->AssignOnKeyPress(
-      GLFW_KEY_R, {reinterpret_cast<void*>(this), [](void* engine) {
-                     Engine* enginePtr = reinterpret_cast<Engine*>(engine);
-                     enginePtr->camera_->ResetPosition();
-                   }});
-
   this->mainAction_->OnStart(this);
 
-  if (this->currentScene_ != nullptr) {
+  if (this->currentScene_ != nullptr && this->currentSceneName_ != "") {
+    std::cout << "Scene Valid::" << this->currentSceneName_ << std::endl;
     this->currentScene_->Start(this);
+  } else {
+    std::cout << "Scene Invalid::" << this->currentSceneName_ << std::endl;
   }
 
   // Main loop
   while (!glfwWindowShouldClose(this->renderer_->GetWindow())) {
     FrameMark;
-    this->inputSystem_->Update(this->renderer_->GetWindow());
+    this->inputSystem_->Update();
 
     if (this->currentScene_ != nullptr) {
       this->currentScene_->Update(this);
@@ -76,16 +66,17 @@ Engine::Engine(const Vector<int>& windowSize, const std::string& name,
                const std::vector<std::string>& args, Action* mainAction) {
   this->windowSize_ = windowSize;
   this->args_ = new std::vector<std::string>(args);
+  this->uuidGenerator_ = new UUIDv4::UUIDGenerator<std::mt19937_64>();
+  this->scenes_ = new std::map<std::string, Scene*>();
   this->renderer_ =
       new RenderEngine(windowSize, name, "BasicCrayon-Regular.ttf", "Crayon");
   this->computeShaderCompiler_ = new ComputeShaderCompiler();
-  this->camera_ = new Camera(windowSize, 0.1f, 100.0f);
+  this->inputSystem_ = new InputSystem(this);
+  this->camera_ = new Camera(windowSize, 0.1f, 100.0f, this->inputSystem_);
   this->computeShaders_ = new std::map<std::string, ComputeShader*>();
   this->computeShaderBuffers_ =
       new std::map<std::string, ComputeShaderBuffer*>();
-  this->inputSystem_ = new InputSystem(windowSize);
   this->mainAction_ = mainAction;
-  this->scenes_ = new std::map<std::string, Scene*>();
 
   this->Start();
 }
@@ -105,6 +96,7 @@ Engine::~Engine() {
     delete scene.second;
   }
   delete this->scenes_;
+  delete this->uuidGenerator_;
 }
 
 // Utility
@@ -134,11 +126,15 @@ ComputeShaderBuffer* const Engine::AssignNewComputeShaderBuffer(
 }
 
 Scene* const Engine::AddScene(const std::string& name, Scene* scene) {
+  if (name == "") {
+    throw std::runtime_error("Scene name cannot be empty");
+  }
   if (this->scenes_->count(name) > 0) {
     throw std::runtime_error("Scene already exists");
   }
+
   this->scenes_->insert(std::pair<std::string, Scene*>(name, scene));
-  if (this->currentScene_ == nullptr) {
+  if (this->currentScene_ == nullptr || this->currentSceneName_ == "") {
     this->currentScene_ = scene;
     this->currentSceneName_ = name;
   }
@@ -153,11 +149,20 @@ Scene* const Engine::SetCurrentScene(const std::string& name) {
   if (this->scenes_->count(name) == 0) {
     throw std::runtime_error("Scene does not exist");
   }
+
+  if (this->currentScene_ != nullptr) {
+    this->currentScene_->Finish(this);
+  }
   this->currentScene_ = this->scenes_->at(name);
   this->currentSceneName_ = name;
   this->camera_->ResetPosition();
   this->currentScene_->Start(this);
   return this->currentScene_;
+}
+
+std::string Engine::GenerateUUID() const noexcept {
+  UUIDv4::UUID uuid = this->uuidGenerator_->getUUID();
+  return uuid.bytes();
 }
 
 // Getters

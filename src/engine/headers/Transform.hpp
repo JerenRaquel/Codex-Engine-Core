@@ -29,6 +29,7 @@ class Transform {
   Transform* const RotateTowards(const Vector<float>& direction) noexcept;
   Transform* const RotateTowards(const Vector<float>& direction,
                                  const float& bais) noexcept;
+  Transform* const Translate(const Vector<float>& offset) noexcept;
   Transform* const Translate(const Vector<float>& direction,
                              const float& magnitude) noexcept;
 

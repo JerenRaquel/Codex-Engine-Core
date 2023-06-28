@@ -7,6 +7,8 @@
 // Std
 #include <vector>
 #include <map>
+#include <string>
+#include <stdexcept>
 // Engine
 #include "util/vector.hpp"
 #include "renderEngine.hpp"
@@ -23,24 +25,26 @@ class InputSystem {
   };
 
  private:
-  Vector<int> windowSize_;
-  std::vector<DirectionCallback> directionUpdateEvents_;
-  std::map<int, std::vector<KeyCallback>> keyPressEvents_;
+  Engine* engine_;
+  std::map<std::string, DirectionCallback> directionUpdateEvents_;
+  std::map<int, std::map<std::string, KeyCallback>> keyPressEvents_;
 
   // Mouse Data
   Vector<float> mousePosition_;
   bool isMouseDown_ = false;
 
  public:
-  InputSystem(const Vector<int>& windowSize);
+  InputSystem(Engine* const engine);
   ~InputSystem();
 
   // Utility
-  void Update(GLFWwindow* const window) noexcept;
+  void Update() noexcept;
 
   // Events
-  void AssignOnDirectionUpdate(DirectionCallback callback) noexcept;
-  void AssignOnKeyPress(int key, KeyCallback callback) noexcept;
+  std::string AssignOnDirectionUpdate(DirectionCallback callback) noexcept;
+  std::string AssignOnKeyPress(int key, KeyCallback callback) noexcept;
+  void UnassignOnDirectionUpdate(std::string uuid) noexcept;
+  void UnassignOnKeyPress(int key, std::string uuid) noexcept;
 
   // Getters
   Vector<float> GetMousePosition() const noexcept;

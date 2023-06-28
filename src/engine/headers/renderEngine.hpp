@@ -48,6 +48,9 @@ class RenderEngine {
   void RenderMeshBatch(
       Camera* const camera,
       std::vector<MeshRenderData*>* const meshRenderData) const noexcept;
+  void RenderMeshUIBatch(
+      Camera* const camera,
+      std::vector<MeshRenderData*>* const meshRenderData) const noexcept;
   void RenderTextBatch(
       std::vector<TextRenderData*>* const textRenderData) const noexcept;
 

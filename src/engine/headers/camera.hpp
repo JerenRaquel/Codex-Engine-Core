@@ -1,11 +1,14 @@
 #ifndef CAMERA_HPP_
 #define CAMERA_HPP_
 
+// Std
+#include <string>
 // Libs
 #include "mat4x4.hpp"
 #include "gtc/matrix_transform.hpp"
-// Custom
+// Engine
 #include "util/vector.hpp"
+#include "engine.hpp"
 
 class Camera {
  private:
@@ -20,9 +23,13 @@ class Camera {
   bool isOrthoDirty_ = true;
   bool isViewDirty_ = true;
   bool isOrthoViewDirty_ = true;
+  InputSystem* inputSystem_ = nullptr;
+  std::string onDirectionUpdateUUID_;
+  std::string onKeyPressUUID_;
 
  public:
-  Camera(Vector<int> windowSize, float near, float far);
+  Camera(Vector<int> windowSize, float near, float far,
+         InputSystem* inputSystem);
   ~Camera();
 
   // Utility
@@ -30,6 +37,7 @@ class Camera {
   void ResetPosition() noexcept;
   // Setters
   void SetPosition(const Vector<float>& position) noexcept;
+  void SetPosition(const float& x, const float& y, const float& z) noexcept;
   // Getters
   glm::mat4x4* GetOrthoMatrix() noexcept;
   glm::mat4x4* GetViewMatrix() noexcept;

@@ -1,16 +1,18 @@
 #include "inputSystem.hpp"
 
-InputSystem::InputSystem(const Vector<int>& windowSize)
-    : windowSize_(windowSize) {}
+InputSystem::InputSystem(Engine* const engine) : engine_(engine) {}
 
 InputSystem::~InputSystem() {}
 
 // Utility
-void InputSystem::Update(GLFWwindow* const window) noexcept {
+void InputSystem::Update() noexcept {
+  GLFWwindow* window = this->engine_->GetRenderer()->GetWindow();
+  Vector<int> windowSize = this->engine_->GetWindowSize();
+
   double xpos, ypos;
   glfwGetCursorPos(window, &xpos, &ypos);
 
-  this->mousePosition_ = Vector<float>(xpos, this->windowSize_.y - ypos);
+  this->mousePosition_ = Vector<float>(xpos, windowSize.y - ypos);
   if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
     this->isMouseDown_ = true;
   } else {
@@ -36,30 +38,57 @@ void InputSystem::Update(GLFWwindow* const window) noexcept {
     direction.y *= 0.70710678118f;
   }
   for (auto& directionCallback : this->directionUpdateEvents_) {
-    directionCallback.func(directionCallback.object, direction);
+    directionCallback.second.func(directionCallback.second.object, direction);
   }
 
   // Key Press Events
   for (auto& event : this->keyPressEvents_) {
     if (glfwGetKey(window, event.first) == GLFW_PRESS) {
       for (auto& keyCallback : event.second) {
-        keyCallback.func(keyCallback.object);
+        keyCallback.second.func(keyCallback.second.object);
       }
     }
   }
 }
 
 // Events
-void InputSystem::AssignOnDirectionUpdate(DirectionCallback callback) noexcept {
-  this->directionUpdateEvents_.push_back(callback);
+std::string InputSystem::AssignOnDirectionUpdate(
+    DirectionCallback callback) noexcept {
+  std::string uuid = this->engine_->GenerateUUID();
+  this->directionUpdateEvents_.insert(
+      std::pair<std::string, DirectionCallback>(uuid, callback));
+  return uuid;
 }
 
-void InputSystem::AssignOnKeyPress(int key, KeyCallback callback) noexcept {
+std::string InputSystem::AssignOnKeyPress(int key,
+                                          KeyCallback callback) noexcept {
   if (this->keyPressEvents_.count(key) == 0) {
-    this->keyPressEvents_.insert(std::pair<int, std::vector<KeyCallback>>(
-        key, std::vector<KeyCallback>()));
+    this->keyPressEvents_.insert(
+        std::pair<int, std::map<std::string, KeyCallback>>(
+            key, std::map<std::string, KeyCallback>()));
   }
-  this->keyPressEvents_.at(key).push_back(callback);
+
+  std::string uuid = this->engine_->GenerateUUID();
+  this->keyPressEvents_.at(key).insert(
+      std::pair<std::string, KeyCallback>(uuid, callback));
+  return uuid;
+}
+
+void InputSystem::UnassignOnDirectionUpdate(std::string uuid) noexcept {
+  if (this->directionUpdateEvents_.count(uuid) == 0) {
+    return;
+  }
+  this->directionUpdateEvents_.erase(uuid);
+}
+
+void InputSystem::UnassignOnKeyPress(int key, std::string uuid) noexcept {
+  if (this->keyPressEvents_.count(key) == 0) {
+    return;
+  }
+  if (this->keyPressEvents_.at(key).count(uuid) == 0) {
+    return;
+  }
+  this->keyPressEvents_.at(key).erase(uuid);
 }
 
 // Getters

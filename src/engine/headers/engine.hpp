@@ -3,16 +3,18 @@
 
 class RenderEngine;
 class Camera;
+class InputSystem;
 class Engine;
 class Action;
-class InputSystem;
 class Scene;
+class TextHandler;
 
 // Std
 #include <string>
 #include <vector>
 #include <map>
-// Custom
+#include <random>
+// Engine
 #include "util/helpers.hpp"
 #include "util/vector.hpp"
 #include "renderEngine.hpp"
@@ -26,6 +28,7 @@ class Scene;
 #include "scene.hpp"
 #include "inputSystem.hpp"
 // Libs
+#include "uuid_v4.h"
 #include "mat4x4.hpp"
 
 class Engine {
@@ -37,6 +40,7 @@ class Engine {
   Camera* camera_;
   InputSystem* inputSystem_;
   Action* mainAction_;
+  UUIDv4::UUIDGenerator<std::mt19937_64>* uuidGenerator_;
 
   // Compute shaders
   ComputeShaderCompiler* computeShaderCompiler_;
@@ -64,6 +68,7 @@ class Engine {
       const unsigned int& height) const;
   Scene* const AddScene(const std::string& name, Scene* scene);
   Scene* const SetCurrentScene(const std::string& name);
+  std::string GenerateUUID() const noexcept;
 
   // Getters
   RenderEngine* const GetRenderer() const noexcept;
