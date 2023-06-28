@@ -13,10 +13,10 @@ MeshRenderData::MeshRenderData(const std::string& meshType, Material* material,
 MeshRenderData::~MeshRenderData() {}
 
 // Utility
-void MeshRenderData::PassUniforms(const Shader* const shader,
-                                  Camera* const camera) const noexcept {
-  glm::mat4x4 mvp =
-      *(camera->GetViewOrthoMatrix()) * *(this->transform_->GetModelMatrix());
+void MeshRenderData::PassUniforms(
+    const Shader* const shader,
+    const glm::mat4x4& cameraMatrix) const noexcept {
+  glm::mat4x4 mvp = cameraMatrix * *(this->transform_->GetModelMatrix());
   shader->PassUniformMatrix("mvp", &mvp);
   shader->PassUniform3f("color", this->material_->GetColor());
   shader->PassUniform1f("alpha", this->material_->GetAlpha());

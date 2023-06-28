@@ -7,9 +7,12 @@ Camera::Camera(Vector<int> windowSize, float near, float far,
   this->far_ = far;
   this->position_ = Vector3<float>(0.0f, 0.0f, -1.0f);
   this->orthoMatrix_ = new glm::mat4x4();
+  this->originalViewMatrix_ = new glm::mat4x4();
   this->viewMatrix_ = new glm::mat4x4();
   this->orthoViewMatrix_ = new glm::mat4x4();
   this->inputSystem_ = inputSystem;
+
+  *(this->originalViewMatrix_) = *(this->GetViewMatrix());
 
   this->onDirectionUpdateUUID_ = this->inputSystem_->AssignOnDirectionUpdate(
       {reinterpret_cast<void*>(this),
@@ -26,6 +29,7 @@ Camera::Camera(Vector<int> windowSize, float near, float far,
 
 Camera::~Camera() {
   delete this->orthoMatrix_;
+  delete this->originalViewMatrix_;
   delete this->viewMatrix_;
   delete this->orthoViewMatrix_;
   this->inputSystem_->UnassignOnDirectionUpdate(this->onDirectionUpdateUUID_);
@@ -76,6 +80,10 @@ glm::mat4x4* Camera::GetViewMatrix() noexcept {
   }
 
   return this->viewMatrix_;
+}
+
+glm::mat4x4* Camera::GetOriginalViewMatrix() noexcept {
+  return this->originalViewMatrix_;
 }
 
 glm::mat4x4* Camera::GetViewOrthoMatrix() noexcept {

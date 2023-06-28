@@ -14,6 +14,7 @@ class Camera {
  private:
   Vector<int> windowSize_;
   glm::mat4x4* orthoMatrix_ = nullptr;
+  glm::mat4x4* originalViewMatrix_ = nullptr;
   glm::mat4x4* viewMatrix_ = nullptr;
   glm::mat4x4* orthoViewMatrix_ = nullptr;
   Vector3<float> position_;
@@ -41,6 +42,7 @@ class Camera {
   // Getters
   glm::mat4x4* GetOrthoMatrix() noexcept;
   glm::mat4x4* GetViewMatrix() noexcept;
+  glm::mat4x4* GetOriginalViewMatrix() noexcept;
   glm::mat4x4* GetViewOrthoMatrix() noexcept;
 };
 #endif  // CAMERA_HPP_

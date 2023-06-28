@@ -9,6 +9,7 @@ class MainAction : public Action {
   // Base Class
   void InternalStart(Engine* const engine) const noexcept override;
   void InternalUpdate(Engine* const engine) const noexcept override;
+  void InternalFinish(Engine* const engine) const noexcept override;
 
  public:
   MainAction();

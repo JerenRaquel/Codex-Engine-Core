@@ -33,7 +33,7 @@ class MeshRenderData {
 
   // Utility
   void PassUniforms(const Shader* const shader,
-                    Camera* const camera) const noexcept;
+                    const glm::mat4x4& cameraMatrix) const noexcept;
   void UnbindTexture() const noexcept;
 
   // Getters

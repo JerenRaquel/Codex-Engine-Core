@@ -41,17 +41,6 @@ void Scene::Start(Engine* const engine) noexcept {
   for (unsigned int i = 0; i < this->actions_->size(); i++) {
     this->actions_->at(i)->OnStart(engine);
   }
-
-  this->meshUIOnDirectionUpdateUUID_ =
-      engine->GetInputSystem()->AssignOnDirectionUpdate(
-          {reinterpret_cast<void*>(this),
-           [](void* object, const Vector<float>& direction) {
-             Scene* self = reinterpret_cast<Scene*>(object);
-
-             for (auto meshUIRenderData : *(self->meshUIRenderDataPointer_)) {
-               meshUIRenderData->GetTransform()->Translate(direction);
-             }
-           }});
 }
 
 void Scene::Update(Engine* const engine) const noexcept {
@@ -73,8 +62,10 @@ void Scene::Update(Engine* const engine) const noexcept {
 }
 
 void Scene::Finish(Engine* const engine) noexcept {
-  engine->GetInputSystem()->UnassignOnDirectionUpdate(
-      this->meshUIOnDirectionUpdateUUID_);
+  // Finish actions
+  for (unsigned int i = 0; i < this->actions_->size(); i++) {
+    this->actions_->at(i)->OnFinish(engine);
+  }
 }
 
 const Scene* const Scene::AddMeshRenderData(

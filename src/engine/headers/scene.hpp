@@ -23,8 +23,6 @@ class Scene {
   // Actions
   std::vector<Action*>* actions_;  // All Freed Here
 
-  std::string meshUIOnDirectionUpdateUUID_;
-
  public:
   Scene();
   ~Scene();

@@ -46,10 +46,7 @@ class RenderEngine {
   //* Methods
   void InitOpenGL(const Vector<int>& size, const std::string& name);
   void RenderMeshBatch(
-      Camera* const camera,
-      std::vector<MeshRenderData*>* const meshRenderData) const noexcept;
-  void RenderMeshUIBatch(
-      Camera* const camera,
+      const glm::mat4x4& cameraMatrix,
       std::vector<MeshRenderData*>* const meshRenderData) const noexcept;
   void RenderTextBatch(
       std::vector<TextRenderData*>* const textRenderData) const noexcept;

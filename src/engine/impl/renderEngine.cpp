@@ -37,7 +37,7 @@ void RenderEngine::InitOpenGL(const Vector<int>& size,
 }
 
 void RenderEngine::RenderMeshBatch(
-    Camera* const camera,
+    const glm::mat4x4& cameraMatrix,
     std::vector<MeshRenderData*>* const meshRenderData) const noexcept {
   ZoneScopedN("RenderEngine::RenderMeshBatch");
   //* Draw Calls
@@ -59,38 +59,7 @@ void RenderEngine::RenderMeshBatch(
     shader->Use();
 
     // Pass Uniforms
-    data->PassUniforms(shader, camera);
-
-    // Draw
-    this->meshTypes_->at(meshType)->Draw();
-    data->UnbindTexture();
-  }
-}
-
-void RenderEngine::RenderMeshUIBatch(
-    Camera* const camera,
-    std::vector<MeshRenderData*>* const meshRenderData) const noexcept {
-  ZoneScopedN("RenderEngine::RenderMeshUIBatch");
-  //* Draw Calls
-  Shader* shader = nullptr;
-  for (unsigned int i = 0; i < meshRenderData->size(); i++) {
-    MeshRenderData* data = meshRenderData->at(i);
-    if (!data->shouldRender_) continue;
-
-    std::string meshType = data->GetMeshType();
-    if (this->meshTypes_->count(meshType) == 0) continue;
-
-    // Load Active Shader
-    const std::string shaderName = data->GetMaterial()->GetShaderName();
-    if (this->shaders_->count(shaderName) > 0) {
-      shader = this->shaders_->at(shaderName);
-    } else {
-      shader = this->shaders_->at("default");
-    }
-    shader->Use();
-
-    // Pass Uniforms
-    data->PassUniforms(shader, camera);
+    data->PassUniforms(shader, cameraMatrix);
 
     // Draw
     this->meshTypes_->at(meshType)->Draw();
@@ -152,10 +121,13 @@ void RenderEngine::Render(Camera* const camera,
     this->RenderTextBatch(scene->GetTextRenderDataPointer());
 
     //* Render Meshes
-    this->RenderMeshUIBatch(camera, scene->GetMeshUIRenderDataPointer());
+    glm::mat4x4 cameraMatrix =
+        *(camera->GetOrthoMatrix()) * *(camera->GetOriginalViewMatrix());
+    this->RenderMeshBatch(cameraMatrix, scene->GetMeshUIRenderDataPointer());
 
     //* Render Meshes
-    this->RenderMeshBatch(camera, scene->GetMeshRenderDataPointer());
+    this->RenderMeshBatch(*(camera->GetViewOrthoMatrix()),
+                          scene->GetMeshRenderDataPointer());
   }
 
   //* Swap Buffers

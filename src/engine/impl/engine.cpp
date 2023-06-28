@@ -40,7 +40,6 @@ void Engine::Start() {
   this->mainAction_->OnStart(this);
 
   if (this->currentScene_ != nullptr && this->currentSceneName_ != "") {
-    std::cout << "Scene Valid::" << this->currentSceneName_ << std::endl;
     this->currentScene_->Start(this);
   } else {
     std::cout << "Scene Invalid::" << this->currentSceneName_ << std::endl;

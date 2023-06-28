@@ -65,6 +65,8 @@ void MainAction::InternalStart(Engine* const engine) const noexcept {
 
 void MainAction::InternalUpdate(Engine* const engine) const noexcept {}
 
+void MainAction::InternalFinish(Engine* const engine) const noexcept {}
+
 MainAction::MainAction() : Action() {}
 
 MainAction::~MainAction() {}
