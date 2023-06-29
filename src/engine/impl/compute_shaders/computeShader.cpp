@@ -43,7 +43,7 @@ void ComputeShader::PassUniform2f(const char* name, const float& value1,
 }
 
 void ComputeShader::PassUniform2f(const char* name,
-                                  const Vector<float>& data) const noexcept {
+                                  const Vector2<float>& data) const noexcept {
   GLuint ID = glGetUniformLocation(this->shaderID_, name);
   glUniform2f(ID, data.x, data.y);
 }

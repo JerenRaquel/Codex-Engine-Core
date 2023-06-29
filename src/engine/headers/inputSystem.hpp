@@ -10,14 +10,14 @@
 #include <string>
 #include <stdexcept>
 // Engine
-#include "util/vector.hpp"
+#include "util/vector3.hpp"
 #include "renderEngine.hpp"
 
 class InputSystem {
  public:
   struct DirectionCallback {
     void* object;
-    void (*func)(void* object, const Vector<float>& direction);
+    void (*func)(void* object, const Vector2<float>& direction);
   };
   struct KeyCallback {
     void* object;
@@ -30,7 +30,7 @@ class InputSystem {
   std::map<int, std::map<std::string, KeyCallback>> keyPressEvents_;
 
   // Mouse Data
-  Vector<float> mousePosition_;
+  Vector2<float> mousePosition_;
   bool isMouseDown_ = false;
 
  public:
@@ -47,7 +47,7 @@ class InputSystem {
   void UnassignOnKeyPress(int key, std::string uuid) noexcept;
 
   // Getters
-  Vector<float> GetMousePosition() const noexcept;
+  Vector2<float> GetMousePosition() const noexcept;
   bool IsMouseDown() const noexcept;
 };
 #endif  // INPUTSYSTEM_HPP_

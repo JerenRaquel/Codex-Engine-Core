@@ -3,6 +3,7 @@
 
 // Engine
 #include "action.hpp"
+#include "util/vector2.hpp"
 
 class MainAction : public Action {
  private:

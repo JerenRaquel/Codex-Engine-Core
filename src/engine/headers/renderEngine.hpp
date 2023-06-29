@@ -14,7 +14,7 @@
 // Lib
 #include "mat4x4.hpp"
 // Custom
-#include "util/vector.hpp"
+#include "util/vector3.hpp"
 #include "mesh.hpp"
 #include "shaders/shader.hpp"
 #include "shaders/shaderCompiler.hpp"
@@ -44,7 +44,7 @@ class RenderEngine {
   std::string defaultTextShaderName_;
 
   //* Methods
-  void InitOpenGL(const Vector<int>& size, const std::string& name);
+  void InitOpenGL(const Vector2<int>& size, const std::string& name);
   void RenderMeshBatch(
       const glm::mat4x4& cameraMatrix,
       std::vector<MeshRenderData*>* const meshRenderData) const noexcept;
@@ -52,7 +52,7 @@ class RenderEngine {
       std::vector<TextRenderData*>* const textRenderData) const noexcept;
 
  public:
-  RenderEngine(const Vector<int>& size, const std::string& name,
+  RenderEngine(const Vector2<int>& size, const std::string& name,
                const std::string& defaultFontFile,
                const std::string& textShaderName);
   ~RenderEngine();
@@ -64,7 +64,7 @@ class RenderEngine {
   // Getters
   Shader* const GetShader(const std::string& name);
   GLFWwindow* const GetWindow() const noexcept;
-  const Vector<float> GetTextSize(const std::string& text,
-                                  const float& scale) const noexcept;
+  const Vector2<float> GetTextSize(const std::string& text,
+                                   const float& scale) const noexcept;
 };
 #endif  // RENDERENGINE_HPP_

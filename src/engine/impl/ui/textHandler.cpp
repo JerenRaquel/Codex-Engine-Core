@@ -1,7 +1,7 @@
 #include "ui/textHandler.hpp"
 
 TextHandler::TextHandler(const std::string& fontFile,
-                         const Vector<int>& windowSize) {
+                         const Vector2<int>& windowSize) {
   // Setup FreeType
   FT_Library ft = FT_Library();
 
@@ -48,8 +48,8 @@ TextHandler::TextHandler(const std::string& fontFile,
 
     Character character = {
         textureID,
-        Vector<int>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-        Vector<int>(face->glyph->bitmap_left, face->glyph->bitmap_top),
+        Vector2<int>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+        Vector2<int>(face->glyph->bitmap_left, face->glyph->bitmap_top),
         face->glyph->advance.x};
     this->charactersAtlas_->insert(std::pair<GLchar, Character>(c, character));
   }
@@ -86,7 +86,7 @@ TextHandler::~TextHandler() {
   glDeleteVertexArrays(1, &this->VAO_);
 }
 
-void TextHandler::DrawText(const std::string& text, const Vector<int>& position,
+void TextHandler::DrawText(const std::string& text, const Vector2<int>& position,
                            const float& scale) noexcept {
   float x = position.x;
   float y = position.y;
@@ -120,9 +120,9 @@ const glm::mat4x4* const TextHandler::GetOrthoMatrix() const noexcept {
   return this->orthoMatrix_;
 }
 
-const Vector<float> TextHandler::GetTextSize(
+const Vector2<float> TextHandler::GetTextSize(
     const std::string& text, const float& scale) const noexcept {
-  Vector<float> size(0.0f, 0.0f);
+  Vector2<float> size(0.0f, 0.0f);
   for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
     Character ch = this->charactersAtlas_->at(*c);
     size.x += (ch.advance >> 6) * scale;

@@ -7,12 +7,12 @@ InputSystem::~InputSystem() {}
 // Utility
 void InputSystem::Update() noexcept {
   GLFWwindow* window = this->engine_->GetRenderer()->GetWindow();
-  Vector<int> windowSize = this->engine_->GetWindowSize();
+  Vector2<int> windowSize = this->engine_->GetWindowSize();
 
   double xpos, ypos;
   glfwGetCursorPos(window, &xpos, &ypos);
 
-  this->mousePosition_ = Vector<float>(xpos, windowSize.y - ypos);
+  this->mousePosition_ = Vector2<float>(xpos, windowSize.y - ypos);
   if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
     this->isMouseDown_ = true;
   } else {
@@ -21,7 +21,7 @@ void InputSystem::Update() noexcept {
 
   //* Events
   // Direction Event
-  Vector<float> direction;
+  Vector2<float> direction;
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
     direction.y = 1.0f;
   } else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
@@ -92,7 +92,7 @@ void InputSystem::UnassignOnKeyPress(int key, std::string uuid) noexcept {
 }
 
 // Getters
-Vector<float> InputSystem::GetMousePosition() const noexcept {
+Vector2<float> InputSystem::GetMousePosition() const noexcept {
   return this->mousePosition_;
 }
 

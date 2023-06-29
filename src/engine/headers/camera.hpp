@@ -7,12 +7,12 @@
 #include "mat4x4.hpp"
 #include "gtc/matrix_transform.hpp"
 // Engine
-#include "util/vector.hpp"
+#include "util/vector3.hpp"
 #include "engine.hpp"
 
 class Camera {
  private:
-  Vector<int> windowSize_;
+  Vector2<int> windowSize_;
   glm::mat4x4* orthoMatrix_ = nullptr;
   glm::mat4x4* originalViewMatrix_ = nullptr;
   glm::mat4x4* viewMatrix_ = nullptr;
@@ -29,15 +29,15 @@ class Camera {
   std::string onKeyPressUUID_;
 
  public:
-  Camera(Vector<int> windowSize, float near, float far,
+  Camera(Vector2<int> windowSize, float near, float far,
          InputSystem* inputSystem);
   ~Camera();
 
   // Utility
-  void UpdatePosition(const Vector<float>& direction) noexcept;
+  void UpdatePosition(const Vector2<float>& direction) noexcept;
   void ResetPosition() noexcept;
   // Setters
-  void SetPosition(const Vector<float>& position) noexcept;
+  void SetPosition(const Vector2<float>& position) noexcept;
   void SetPosition(const float& x, const float& y, const float& z) noexcept;
   // Getters
   glm::mat4x4* GetOrthoMatrix() noexcept;

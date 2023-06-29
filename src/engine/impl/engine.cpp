@@ -61,7 +61,7 @@ void Engine::Start() {
   }
 }
 
-Engine::Engine(const Vector<int>& windowSize, const std::string& name,
+Engine::Engine(const Vector2<int>& windowSize, const std::string& name,
                const std::vector<std::string>& args, Action* mainAction) {
   this->windowSize_ = windowSize;
   this->args_ = new std::vector<std::string>(args);
@@ -169,7 +169,9 @@ RenderEngine* const Engine::GetRenderer() const noexcept {
   return this->renderer_;
 }
 
-Vector<int> Engine::GetWindowSize() const noexcept { return this->windowSize_; }
+Vector2<int> Engine::GetWindowSize() const noexcept {
+  return this->windowSize_;
+}
 
 std::vector<std::string>* const Engine::GetArgs() const noexcept {
   return this->args_;

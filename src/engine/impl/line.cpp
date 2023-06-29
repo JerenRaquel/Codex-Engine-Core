@@ -1,7 +1,7 @@
 #include "../headers/line.hpp"
 
-int Line::Orientation(const Vector<float>& a, const Vector<float>& b,
-                      const Vector<float>& c) const noexcept {
+int Line::Orientation(const Vector2<float>& a, const Vector2<float>& b,
+                      const Vector2<float>& c) const noexcept {
   int val = (b.y - a.y) * (c.x - b.x) - (b.x - a.x) * (c.y - b.y);
   if (val == 0) {
     return 0;
@@ -12,8 +12,8 @@ int Line::Orientation(const Vector<float>& a, const Vector<float>& b,
   }
 }
 
-bool Line::OnSegment(const Vector<float>& a, const Vector<float>& b,
-                     const Vector<float>& c) const noexcept {
+bool Line::OnSegment(const Vector2<float>& a, const Vector2<float>& b,
+                     const Vector2<float>& c) const noexcept {
   float bigX = a.x;
   float bigY = a.y;
   float smallX = b.x;
@@ -30,7 +30,7 @@ bool Line::OnSegment(const Vector<float>& a, const Vector<float>& b,
   return c.x <= bigX && c.x >= smallX && c.y <= bigY && c.y >= smallY;
 }
 
-Line::Line(const Vector<float>& start, const Vector<float>& end)
+Line::Line(const Vector2<float>& start, const Vector2<float>& end)
     : start_(start), end_(end) {}
 
 Line::~Line() {}
@@ -55,9 +55,9 @@ bool Line::IsIntersecting(const Line& other) const noexcept {
   return false;
 }
 
-const Vector<float>& Line::GetStart() const noexcept { return this->start_; }
+const Vector2<float>& Line::GetStart() const noexcept { return this->start_; }
 
-const Vector<float>& Line::GetEnd() const noexcept { return this->end_; }
+const Vector2<float>& Line::GetEnd() const noexcept { return this->end_; }
 
 Line Line::operator=(const Line& other) noexcept {
   this->start_ = other.start_;
@@ -71,5 +71,5 @@ Line Line::operator*(const glm::mat4x4* const modelMatrix) const noexcept {
   start = *modelMatrix * start;
   end = *modelMatrix * end;
 
-  return Line(Vector<float>(start.x, start.y), Vector<float>(end.x, end.y));
+  return Line(Vector2<float>(start.x, start.y), Vector2<float>(end.x, end.y));
 }

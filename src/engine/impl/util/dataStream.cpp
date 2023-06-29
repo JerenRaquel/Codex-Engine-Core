@@ -110,4 +110,4 @@ unsigned int DataStream<T>::Count() const noexcept {
 //
 // Instantiate the template
 //
-template class DataStream<Vector<float>>;
+template class DataStream<Vector2<float>>;

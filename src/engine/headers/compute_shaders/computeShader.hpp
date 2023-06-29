@@ -7,7 +7,7 @@
 // Std
 #include <string>
 // Custom
-#include "util/vector.hpp"
+#include "util/vector3.hpp"
 #include "computeShaderCompiler.hpp"
 #include "computeShaderBuffer.hpp"
 
@@ -31,6 +31,6 @@ class ComputeShader {
   void PassUniform2f(const char* name, const float& value1,
                      const float& value2) const noexcept;
   void PassUniform2f(const char* name,
-                     const Vector<float>& data) const noexcept;
+                     const Vector2<float>& data) const noexcept;
 };
 #endif  // COMPUTESHADER_HPP_

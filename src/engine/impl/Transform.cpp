@@ -1,6 +1,6 @@
 #include "transform.hpp"
 
-Transform::Transform(const Vector<float>& position, const Vector<float>& scale,
+Transform::Transform(const Vector2<float>& position, const Vector2<float>& scale,
                      const float& rotation) {
   this->position_ = position;
   this->scale_ = scale;
@@ -23,11 +23,11 @@ Transform* const Transform::Rotate(const float& angle) noexcept {
 }
 
 Transform* const Transform::RotateTowards(
-    const Vector<float>& direction) noexcept {
+    const Vector2<float>& direction) noexcept {
   return this->RotateTowards(direction, 1.0f);
 }
 
-Transform* const Transform::RotateTowards(const Vector<float>& direction,
+Transform* const Transform::RotateTowards(const Vector2<float>& direction,
                                           const float& bais) noexcept {
   float turningAngle = direction.ToDegreeAngle() - this->rotation_;
   if (turningAngle > 180.0f) {
@@ -40,26 +40,26 @@ Transform* const Transform::RotateTowards(const Vector<float>& direction,
   return this;
 }
 
-Transform* const Transform::Translate(const Vector<float>& offset) noexcept {
+Transform* const Transform::Translate(const Vector2<float>& offset) noexcept {
   this->position_ += offset;
   this->isModelMatrixDirty_ = true;
   return this;
 }
 
-Transform* const Transform::Translate(const Vector<float>& direction,
+Transform* const Transform::Translate(const Vector2<float>& direction,
                                       const float& magnitude) noexcept {
   return this->Translate(direction * magnitude);
 }
 
 // Setters
-Transform* const Transform::SetScale(const Vector<float>& scale) noexcept {
+Transform* const Transform::SetScale(const Vector2<float>& scale) noexcept {
   this->scale_ = scale;
   this->isModelMatrixDirty_ = true;
   return this;
 }
 
 Transform* const Transform::SetPosition(
-    const Vector<float>& position) noexcept {
+    const Vector2<float>& position) noexcept {
   return this->SetPosition(position.x, position.y);
 }
 
@@ -100,15 +100,15 @@ glm::mat4x4* Transform::GetModelMatrix() noexcept {
   return this->modelMatrix_;
 }
 
-Vector<float> Transform::GetDirectionVector() const noexcept {
-  return Vector<float>(glm::cos(glm::radians(-this->rotation_ + 90.0f)),
+Vector2<float> Transform::GetDirectionVector() const noexcept {
+  return Vector2<float>(glm::cos(glm::radians(-this->rotation_ + 90.0f)),
                        glm::sin(glm::radians(-this->rotation_ + 90.0f)));
 }
 
 const float Transform::GetRotation() const noexcept { return this->rotation_; }
 
-Vector<float> Transform::GetScale() const noexcept { return this->scale_; }
+Vector2<float> Transform::GetScale() const noexcept { return this->scale_; }
 
-Vector<float> Transform::GetPosition() const noexcept {
+Vector2<float> Transform::GetPosition() const noexcept {
   return this->position_;
 }

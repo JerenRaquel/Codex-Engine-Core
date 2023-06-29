@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
   }
 
   // Start engine
-  Engine* engine = new Engine(Vector<int>(1600, 900), "Drone Simulation", args,
+  Engine* engine = new Engine(Vector2<int>(1600, 900), "Drone Simulation", args,
                               new MainAction());
   delete engine;
 

@@ -4,7 +4,7 @@
 // Std
 #include <string>
 // Engine
-#include "util/vector.hpp"
+#include "util/vector3.hpp"
 #include "util/helpers.hpp"
 #include "texture.hpp"
 

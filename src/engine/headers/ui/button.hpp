@@ -4,7 +4,7 @@
 // Std
 #include <string>
 // Engine
-#include "util/vector.hpp"
+#include "util/vector3.hpp"
 #include "mesh.hpp"
 #include "material.hpp"
 #include "transform.hpp"
@@ -26,19 +26,19 @@ class Button {
   Material* material_;
 
  public:
-  Button(const Vector<float>& position, const Vector<float>& scale,
+  Button(const Vector2<float>& position, const Vector2<float>& scale,
          void (*callback)(Engine* const engine, Button* const self));
-  Button(const Vector<float>& position, const Vector<float>& scale,
+  Button(const Vector2<float>& position, const Vector2<float>& scale,
          void (*callback)(Engine* const engine, Button* const self),
          const std::string& text, const Engine* const engine);
-  Button(const Vector<float>& position, const Vector<float>& scale,
+  Button(const Vector2<float>& position, const Vector2<float>& scale,
          void (*callback)(Engine* const engine, Button* const self),
          Texture* texture);
   ~Button();
 
   // Utility
   void InvokeCallback(Engine* const engine) noexcept;
-  bool IsHovered(const Vector<float>& mousePosition) noexcept;
+  bool IsHovered(const Vector2<float>& mousePosition) noexcept;
 
   // Setters
   Button* const SetAlpha(const float& alpha) noexcept;
@@ -54,7 +54,7 @@ class Button {
 
   // Getters
   const std::string GetName() const noexcept;
-  const Vector<int> GetNamePosition() const noexcept;
+  const Vector2<int> GetNamePosition() const noexcept;
   Transform* const GetTransform() const noexcept;
   Material* const GetMaterial() const noexcept;
   MeshRenderData* const GetMeshRenderData() const noexcept;

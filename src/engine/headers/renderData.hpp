@@ -11,7 +11,7 @@ class TextRenderData;
 // Engine
 #include "material.hpp"
 #include "transform.hpp"
-#include "util/vector.hpp"
+#include "util/vector3.hpp"
 #include "shaders/shader.hpp"
 #include "camera.hpp"
 
@@ -45,23 +45,23 @@ class MeshRenderData {
 class TextRenderData {
  private:
   std::string text_;
-  Vector<int> position_;
+  Vector2<int> position_;
   float scale_;
 
  public:
   bool shouldRender_ = true;
   Vector3<float> color_;
 
-  TextRenderData(const std::string& text, const Vector<int>& position);
-  TextRenderData(const std::string& text, const Vector<int>& position,
+  TextRenderData(const std::string& text, const Vector2<int>& position);
+  TextRenderData(const std::string& text, const Vector2<int>& position,
                  const Vector3<float>& color);
-  TextRenderData(const std::string& text, const Vector<int>& position,
+  TextRenderData(const std::string& text, const Vector2<int>& position,
                  const Vector3<float>& color, const float& scale);
   ~TextRenderData();
 
   // Getters
   const std::string& GetText() const noexcept;
-  const Vector<int>& GetPosition() const noexcept;
+  const Vector2<int>& GetPosition() const noexcept;
   const float GetScale() const noexcept;
 };
 #endif  // RENDERDATA_HPP_

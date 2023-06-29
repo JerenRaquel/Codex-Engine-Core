@@ -2,7 +2,7 @@
 
 #include "Tracy.hpp"
 
-void RenderEngine::InitOpenGL(const Vector<int>& size,
+void RenderEngine::InitOpenGL(const Vector2<int>& size,
                               const std::string& name) {
   // Initalize GLFW
   if (!glfwInit()) {
@@ -81,7 +81,7 @@ void RenderEngine::RenderTextBatch(
   }
 }
 
-RenderEngine::RenderEngine(const Vector<int>& size, const std::string& name,
+RenderEngine::RenderEngine(const Vector2<int>& size, const std::string& name,
                            const std::string& defaultFontFile,
                            const std::string& textShaderName)
     : defaultTextShaderName_(textShaderName) {
@@ -169,7 +169,7 @@ GLFWwindow* const RenderEngine::GetWindow() const noexcept {
   return this->window_;
 }
 
-const Vector<float> RenderEngine::GetTextSize(
+const Vector2<float> RenderEngine::GetTextSize(
     const std::string& text, const float& scale) const noexcept {
   return this->textHandler_->GetTextSize(text, scale);
 }

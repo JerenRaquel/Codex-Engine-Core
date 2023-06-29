@@ -1,6 +1,6 @@
 #include "ui/button.hpp"
 
-Button::Button(const Vector<float>& position, const Vector<float>& scale,
+Button::Button(const Vector2<float>& position, const Vector2<float>& scale,
                void (*callback)(Engine* const engine, Button* const self)) {
   this->callback_ = callback;
   this->transform_ = new Transform(position, scale);
@@ -9,7 +9,7 @@ Button::Button(const Vector<float>& position, const Vector<float>& scale,
       new MeshRenderData("Quad", this->material_, this->transform_);
 }
 
-Button::Button(const Vector<float>& position, const Vector<float>& scale,
+Button::Button(const Vector2<float>& position, const Vector2<float>& scale,
                void (*callback)(Engine* const engine, Button* const self),
                const std::string& text, const Engine* const engine) {
   this->callback_ = callback;
@@ -18,13 +18,13 @@ Button::Button(const Vector<float>& position, const Vector<float>& scale,
   this->meshRenderData_ =
       new MeshRenderData("Quad", this->material_, this->transform_);
 
-  Vector<float> textSize = engine->GetRenderer()->GetTextSize(text, 1.0f);
-  Vector<float> namePos = position - textSize / 2.0f;
+  Vector2<float> textSize = engine->GetRenderer()->GetTextSize(text, 1.0f);
+  Vector2<float> namePos = position - textSize / 2.0f;
   this->textRenderData_ =
-      new TextRenderData(text, Vector<int>(namePos.x, namePos.y));
+      new TextRenderData(text, Vector2<int>(namePos.x, namePos.y));
 }
 
-Button::Button(const Vector<float>& position, const Vector<float>& scale,
+Button::Button(const Vector2<float>& position, const Vector2<float>& scale,
                void (*callback)(Engine* const engine, Button* const self),
                Texture* texture) {
   this->callback_ = callback;
@@ -54,10 +54,10 @@ void Button::InvokeCallback(Engine* const engine) noexcept {
   this->callback_(engine, this);
 }
 
-bool Button::IsHovered(const Vector<float>& mousePosition) noexcept {
+bool Button::IsHovered(const Vector2<float>& mousePosition) noexcept {
   if (this->ticks_ > 0) this->ticks_--;
 
-  Vector<float> scale = this->transform_->GetScale();
+  Vector2<float> scale = this->transform_->GetScale();
   if (mousePosition.IsWithinRectDistance(this->transform_->GetPosition(),
                                          scale.x, scale.y)) {
     this->SetAlpha(0.5f);
@@ -109,8 +109,8 @@ const std::string Button::GetName() const noexcept {
   return this->textRenderData_->GetText();
 }
 
-const Vector<int> Button::GetNamePosition() const noexcept {
-  if (this->textRenderData_ == nullptr) return Vector<int>(0, 0);
+const Vector2<int> Button::GetNamePosition() const noexcept {
+  if (this->textRenderData_ == nullptr) return Vector2<int>(0, 0);
   return this->textRenderData_->GetPosition();
 }
 

@@ -16,7 +16,7 @@ class TextHandler;
 #include <random>
 // Engine
 #include "util/helpers.hpp"
-#include "util/vector.hpp"
+#include "util/vector3.hpp"
 #include "renderEngine.hpp"
 #include "camera.hpp"
 #include "compute_shaders/computeShaderCompiler.hpp"
@@ -35,7 +35,7 @@ class Engine {
  private:
   // Engine Data
   std::vector<std::string>* args_;
-  Vector<int> windowSize_;
+  Vector2<int> windowSize_;
   RenderEngine* renderer_;
   Camera* camera_;
   InputSystem* inputSystem_;
@@ -56,7 +56,7 @@ class Engine {
   void Start();
 
  public:
-  Engine(const Vector<int>& windowSize, const std::string& name,
+  Engine(const Vector2<int>& windowSize, const std::string& name,
          const std::vector<std::string>& args, Action* mainAction);
   ~Engine();
 
@@ -72,7 +72,7 @@ class Engine {
 
   // Getters
   RenderEngine* const GetRenderer() const noexcept;
-  Vector<int> GetWindowSize() const noexcept;
+  Vector2<int> GetWindowSize() const noexcept;
   std::vector<std::string>* const GetArgs() const noexcept;
   ComputeShader* const GetComputeShader(const std::string& name) const;
   ComputeShaderBuffer* const GetComputeShaderBuffer(

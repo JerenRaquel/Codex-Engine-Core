@@ -11,10 +11,10 @@ OutlineCollider::OutlineCollider(
 
   this->lines_ = new std::vector<Line*>();
   unsigned int pointCount = verticesSize / 3;
-  Vector<float> points[pointCount];
+  Vector2<float> points[pointCount];
   for (unsigned int i = 0; i < pointCount; i++) {
     // TEMP: z is ignored
-    points[i] = Vector<float>(vertices[i * 3], vertices[i * 3 + 1]);
+    points[i] = Vector2<float>(vertices[i * 3], vertices[i * 3 + 1]);
   }
 
   for (unsigned int i = 0; i < verticesOrder.size() - 1; i++) {
