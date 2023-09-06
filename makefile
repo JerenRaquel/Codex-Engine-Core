@@ -40,10 +40,12 @@ GXX_DEBUG := g++ -g $(GXX_FLAGS)
 #* Files
 MAIN_FILE := $(SRC_DIR)/main.cpp
 # Header Files
+IMGUI_HEADER_FILES := $(wildcard $(IMGUI)/*.h)
 ENGINE_HEADER_FILES := $(wildcard $(ENGINE_HEADER_DIR)/*.hpp) $(wildcard $(ENGINE_HEADER_DIR)/**/*.hpp)
 SIMULATION_HEADER_FILES := $(wildcard $(SIMULATION_HEADER_DIR)/*.hpp) $(wildcard $(SIMULATION_HEADER_DIR)/**/*.hpp)
 HEADER_FILES = $(ENGINE_HEADER_FILES) $(SIMULATION_HEADER_FILES)
 # Source Files
+IMGUI_SOURCE_FILES := $(wildcard $(IMGUI)/*.cpp)
 ENGINE_SOURCE_FILES := $(wildcard $(ENGINE_SOURCE_DIR)/*.cpp) $(wildcard $(ENGINE_SOURCE_DIR)/**/*.cpp)
 SIMULATION_SOURCE_FILES := $(wildcard $(SIMULATION_SOURCE_DIR)/*.cpp) $(wildcard $(SIMULATION_SOURCE_DIR)/**/*.cpp)
 SOURCE_FILES = $(ENGINE_SOURCE_FILES) $(SIMULATION_SOURCE_FILES)
@@ -55,8 +57,8 @@ EXE_NAME := $(BUILD_DIR)/Main.exe
 #* =======================================================
 #* 										Commands
 #* =======================================================
-all: $(OBJECT_FILES) $(OBJECT_DIR)/main.o
-	$(GXX) $(OBJECT_FILES) $(OBJECT_DIR)/main.o -o $(EXE_NAME) $(LINKER_LIBS)
+all: $(OBJECT_FILES) $(OBJECT_DIR)/main.o $(IMGUI_SOURCE_FILES) $(IMGUI_HEADER_FILES)
+	$(GXX) $(IMGUI_SOURCE_FILES) $(OBJECT_FILES) $(OBJECT_DIR)/main.o -o $(EXE_NAME) $(LINKER_LIBS)
 	
 #TODO: Make it faster
 debug: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES) $(TRACY_DIR)/tracy/Tracy.hpp $(TRACY_DIR)/TracyClient.cpp

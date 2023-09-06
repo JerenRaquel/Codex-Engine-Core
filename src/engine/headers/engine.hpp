@@ -15,9 +15,9 @@ class TextHandler;
 #include <map>
 #include <random>
 // Engine
+#include "renderEngine.hpp"  // Includes GLFW
 #include "util/helpers.hpp"
 #include "util/vector3.hpp"
-#include "renderEngine.hpp"
 #include "camera.hpp"
 #include "compute_shaders/computeShaderCompiler.hpp"
 #include "compute_shaders/computeShader.hpp"

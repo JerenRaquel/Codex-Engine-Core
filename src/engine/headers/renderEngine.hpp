@@ -1,9 +1,8 @@
 #ifndef RENDERENGINE_HPP_
 #define RENDERENGINE_HPP_
 
-// OpenGL
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+// PreInclude
+#include "ui/guiManager.hpp"  // Includes GLFW
 // Std
 #include <iostream>
 #include <string>
@@ -29,6 +28,9 @@ class RenderEngine {
  private:
   //* OpenGL
   GLFWwindow* window_;
+
+  //* GUI
+  GuiManager* guiManager_;
 
   //* Mesh Data
   // Freed Here as well as content

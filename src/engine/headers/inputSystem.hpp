@@ -1,17 +1,14 @@
 #ifndef INPUTSYSTEM_HPP_
 #define INPUTSYSTEM_HPP_
 
-// OpenGL
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 // Std
 #include <vector>
 #include <map>
 #include <string>
 #include <stdexcept>
 // Engine
+#include "renderEngine.hpp"  // Includes GLFW
 #include "util/vector3.hpp"
-#include "renderEngine.hpp"
 
 class InputSystem {
  public:

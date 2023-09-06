@@ -34,6 +34,9 @@ void RenderEngine::InitOpenGL(const Vector2<int>& size,
   glDepthFunc(GL_LESS);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
+
+  // Initialize GUI
+  this->guiManager_ = new GuiManager(this->window_);
 }
 
 void RenderEngine::RenderMeshBatch(
@@ -107,7 +110,7 @@ RenderEngine::~RenderEngine() {
     delete mesh.second;
   }
   delete this->meshTypes_;
-
+  delete this->guiManager_;
   glfwTerminate();
 }
 
@@ -115,6 +118,8 @@ void RenderEngine::Render(Camera* const camera,
                           const Scene* const scene) const noexcept {
   //* Clear Drawing Surface
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  this->guiManager_->NewFrame();
 
   if (scene != nullptr) {
     //* Render UI
@@ -129,6 +134,9 @@ void RenderEngine::Render(Camera* const camera,
     this->RenderMeshBatch(*(camera->GetViewOrthoMatrix()),
                           scene->GetMeshRenderDataPointer());
   }
+
+  this->guiManager_->Display();
+  this->guiManager_->Render();
 
   //* Swap Buffers
   glfwSwapBuffers(this->window_);
