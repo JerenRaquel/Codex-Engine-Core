@@ -10,6 +10,7 @@ OBJECT_DIR := $(SRC_DIR)/objFiles
 # Library Directories
 FREE_TYPE := $(LIBRARIES_DIR)/freetype
 GLM := $(LIBRARIES_DIR)/glm
+IMGUI := $(LIBRARIES_DIR)/imgui
 OPENGL := $(LIBRARIES_DIR)/opengl
 STB := $(LIBRARIES_DIR)/stb
 UUID_V4 := $(LIBRARIES_DIR)/uuid_v4
@@ -22,7 +23,8 @@ SIMULATION_SOURCE_DIR := $(SIMULATION_DIR)/impl
 TRACY_DIR := $(TOOLS_DIR)/tracy
 
 # Libraries
-INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(STB) -I$(ENGINE_HEADER_DIR) -I$(SIMULATION_HEADER_DIR) -I$(TRACY_DIR)/tracy -I$(UUID_V4)
+LIB_INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(STB) -I$(UUID_V4) -I$(IMGUI)
+INCLUDE_PATHS := $(LIB_INCLUDE_PATHS) -I$(ENGINE_HEADER_DIR) -I$(SIMULATION_HEADER_DIR) -I$(TRACY_DIR)/tracy 
 LINKER_LIBS := $(OPENGL)/libglfw3.a $(BUILD_DIR)/glew32.dll -lopengl32 -lgdi32 $(INCLUDE_PATHS) $(FREE_TYPE)/libfreetype.a
 TRACY_LIBS := -L$(TRACY_DIR)/tracy -lws2_32 -lwinmm -ldbghelp
 
