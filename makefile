@@ -50,7 +50,8 @@ ENGINE_SOURCE_FILES := $(wildcard $(ENGINE_SOURCE_DIR)/*.cpp) $(wildcard $(ENGIN
 SIMULATION_SOURCE_FILES := $(wildcard $(SIMULATION_SOURCE_DIR)/*.cpp) $(wildcard $(SIMULATION_SOURCE_DIR)/**/*.cpp)
 SOURCE_FILES = $(ENGINE_SOURCE_FILES) $(SIMULATION_SOURCE_FILES)
 # Object Files 
-OBJECT_FILES := $(addprefix $(OBJECT_DIR)/,$(addsuffix .o, $(basename $(notdir $(SOURCE_FILES)))))
+IMGUI_OBJECT_FILES := $(addprefix $(OBJECT_DIR)/imgui/,$(addsuffix .o,$(basename $(notdir $(IMGUI_SOURCE_FILES)))))
+OBJECT_FILES := $(IMGUI_OBJECT_FILES) $(addprefix $(OBJECT_DIR)/,$(addsuffix .o, $(basename $(notdir $(SOURCE_FILES)))))
 # Executable Name
 EXE_NAME := $(BUILD_DIR)/Main.exe
 
@@ -58,7 +59,7 @@ EXE_NAME := $(BUILD_DIR)/Main.exe
 #* 										Commands
 #* =======================================================
 all: $(OBJECT_FILES) $(OBJECT_DIR)/main.o $(IMGUI_SOURCE_FILES) $(IMGUI_HEADER_FILES)
-	$(GXX) $(IMGUI_SOURCE_FILES) $(OBJECT_FILES) $(OBJECT_DIR)/main.o -o $(EXE_NAME) $(LINKER_LIBS)
+	$(GXX) $(OBJECT_FILES) $(OBJECT_DIR)/main.o -o $(EXE_NAME) $(LINKER_LIBS)
 	
 #TODO: Make it faster
 debug: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES) $(TRACY_DIR)/tracy/Tracy.hpp $(TRACY_DIR)/TracyClient.cpp
@@ -76,6 +77,10 @@ clean:
 # Target Object File
 $(OBJECT_DIR)/main.o: $(MAIN_FILE)
 	$(GXX) -c $(MAIN_FILE) -o $@ $(INCLUDE_PATHS) 
+
+# ImGui Object Files
+$(OBJECT_DIR)/imgui/%.o: $(IMGUI_HEADER_FILES) $(IMGUI_SOURCE_FILES)
+	$(GXX) $(addprefix $(IMGUI)/,$(addsuffix .cpp,$(basename $(notdir $@)))) -c -o $@ $(INCLUDE_PATHS)
 
 # Engine Object Files
 $(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/%.cpp $(ENGINE_HEADER_DIR)/%.hpp
