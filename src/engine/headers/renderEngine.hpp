@@ -66,6 +66,7 @@ class RenderEngine {
   // Getters
   Shader* const GetShader(const std::string& name);
   GLFWwindow* const GetWindow() const noexcept;
+  GuiManager* const GetGuiManager() const noexcept;
   const Vector2<float> GetTextSize(const std::string& text,
                                    const float& scale) const noexcept;
 };

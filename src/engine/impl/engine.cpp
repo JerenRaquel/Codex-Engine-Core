@@ -169,6 +169,10 @@ RenderEngine* const Engine::GetRenderer() const noexcept {
   return this->renderer_;
 }
 
+GuiManager* const Engine::GetGuiManager() const noexcept {
+  return this->renderer_->GetGuiManager();
+}
+
 Vector2<int> Engine::GetWindowSize() const noexcept {
   return this->windowSize_;
 }

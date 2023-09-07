@@ -1,6 +1,7 @@
 #ifndef ENGINE_HPP_
 #define ENGINE_HPP_
 
+class GuiManager;
 class RenderEngine;
 class Camera;
 class InputSystem;
@@ -72,6 +73,7 @@ class Engine {
 
   // Getters
   RenderEngine* const GetRenderer() const noexcept;
+  GuiManager* const GetGuiManager() const noexcept;
   Vector2<int> GetWindowSize() const noexcept;
   std::vector<std::string>* const GetArgs() const noexcept;
   ComputeShader* const GetComputeShader(const std::string& name) const;

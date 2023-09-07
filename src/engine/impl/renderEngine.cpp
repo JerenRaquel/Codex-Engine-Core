@@ -177,6 +177,10 @@ GLFWwindow* const RenderEngine::GetWindow() const noexcept {
   return this->window_;
 }
 
+GuiManager* const RenderEngine::GetGuiManager() const noexcept {
+  return this->guiManager_;
+}
+
 const Vector2<float> RenderEngine::GetTextSize(
     const std::string& text, const float& scale) const noexcept {
   return this->textHandler_->GetTextSize(text, scale);

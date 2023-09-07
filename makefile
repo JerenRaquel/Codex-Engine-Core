@@ -59,6 +59,7 @@ EXE_NAME := $(BUILD_DIR)/Main.exe
 #* 										Commands
 #* =======================================================
 all: $(OBJECT_FILES) $(OBJECT_DIR)/main.o $(IMGUI_SOURCE_FILES) $(IMGUI_HEADER_FILES)
+	rm $(BUILD_DIR)/imgui.ini
 	$(GXX) $(OBJECT_FILES) $(OBJECT_DIR)/main.o -o $(EXE_NAME) $(LINKER_LIBS)
 	
 #TODO: Make it faster

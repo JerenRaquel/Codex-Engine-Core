@@ -4,6 +4,9 @@
 void MainAction::InternalStart(Engine* const engine) const noexcept {
   engine->CompileComputeShader("CalulateDistances.comp", "CalulateDistances");
 
+  engine->GetGuiManager()->AddWindow(new GuiWindow(
+      "Test Window", []() { ImGui::Text("This is some useful text."); }));
+
   engine->AddScene("map", new Scene())
       ->AddButton(new Button(
           Vector2<float>(150, 850), Vector2<float>(120, 30),
