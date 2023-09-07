@@ -1,4 +1,4 @@
-#include "../headers/ui/guiManager.hpp"
+#include "ui/imgui/guiManager.hpp"
 
 GuiManager::GuiManager(GLFWwindow* window) {
   IMGUI_CHECKVERSION();

@@ -39,19 +39,37 @@ GXX_DEBUG := g++ -g $(GXX_FLAGS)
 
 #* Files
 MAIN_FILE := $(SRC_DIR)/main.cpp
+
 # Header Files
 IMGUI_HEADER_FILES := $(wildcard $(IMGUI)/*.h)
-ENGINE_HEADER_FILES := $(wildcard $(ENGINE_HEADER_DIR)/*.hpp) $(wildcard $(ENGINE_HEADER_DIR)/**/*.hpp)
-SIMULATION_HEADER_FILES := $(wildcard $(SIMULATION_HEADER_DIR)/*.hpp) $(wildcard $(SIMULATION_HEADER_DIR)/**/*.hpp)
+
+ENGINE_HEADER_FILES := $(wildcard $(ENGINE_HEADER_DIR)/*.hpp)
+ENGINE_HEADER_FILES += $(wildcard $(ENGINE_HEADER_DIR)/**/*.hpp)
+ENGINE_HEADER_FILES += $(wildcard $(ENGINE_HEADER_DIR)/**/**/*.hpp)
+
+SIMULATION_HEADER_FILES := $(wildcard $(SIMULATION_HEADER_DIR)/*.hpp) 
+SIMULATION_HEADER_FILES += $(wildcard $(SIMULATION_HEADER_DIR)/**/*.hpp)
+SIMULATION_HEADER_FILES += $(wildcard $(SIMULATION_HEADER_DIR)/**/**/*.hpp)
+
 HEADER_FILES = $(ENGINE_HEADER_FILES) $(SIMULATION_HEADER_FILES)
+
 # Source Files
 IMGUI_SOURCE_FILES := $(wildcard $(IMGUI)/*.cpp)
-ENGINE_SOURCE_FILES := $(wildcard $(ENGINE_SOURCE_DIR)/*.cpp) $(wildcard $(ENGINE_SOURCE_DIR)/**/*.cpp)
-SIMULATION_SOURCE_FILES := $(wildcard $(SIMULATION_SOURCE_DIR)/*.cpp) $(wildcard $(SIMULATION_SOURCE_DIR)/**/*.cpp)
+
+ENGINE_SOURCE_FILES := $(wildcard $(ENGINE_SOURCE_DIR)/*.cpp)
+ENGINE_SOURCE_FILES +=  $(wildcard $(ENGINE_SOURCE_DIR)/**/*.cpp)
+ENGINE_SOURCE_FILES +=  $(wildcard $(ENGINE_SOURCE_DIR)/**/**/*.cpp)
+
+SIMULATION_SOURCE_FILES := $(wildcard $(SIMULATION_SOURCE_DIR)/*.cpp)
+SIMULATION_SOURCE_FILES += $(wildcard $(SIMULATION_SOURCE_DIR)/**/*.cpp)
+SIMULATION_SOURCE_FILES += $(wildcard $(SIMULATION_SOURCE_DIR)/**/**/*.cpp)
+
 SOURCE_FILES = $(ENGINE_SOURCE_FILES) $(SIMULATION_SOURCE_FILES)
+
 # Object Files 
 IMGUI_OBJECT_FILES := $(addprefix $(OBJECT_DIR)/imgui/,$(addsuffix .o,$(basename $(notdir $(IMGUI_SOURCE_FILES)))))
 OBJECT_FILES := $(IMGUI_OBJECT_FILES) $(addprefix $(OBJECT_DIR)/,$(addsuffix .o, $(basename $(notdir $(SOURCE_FILES)))))
+
 # Executable Name
 EXE_NAME := $(BUILD_DIR)/Main.exe
 
@@ -59,7 +77,7 @@ EXE_NAME := $(BUILD_DIR)/Main.exe
 #* 										Commands
 #* =======================================================
 all: $(OBJECT_FILES) $(OBJECT_DIR)/main.o $(IMGUI_SOURCE_FILES) $(IMGUI_HEADER_FILES)
-	rm $(BUILD_DIR)/imgui.ini
+	rm -f $(BUILD_DIR)/imgui.ini
 	$(GXX) $(OBJECT_FILES) $(OBJECT_DIR)/main.o -o $(EXE_NAME) $(LINKER_LIBS)
 	
 #TODO: Make it faster
@@ -70,7 +88,7 @@ debug: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES) $(TRACY_DIR)/tracy/Tracy.hpp
 	rm tracy.o debugMain.o
 
 clean:
-	rm $(EXE_NAME) $(OBJECT_FILES) $(OBJECT_DIR)/main.o
+	rm -f $(EXE_NAME) $(OBJECT_FILES) $(OBJECT_DIR)/main.o
 
 #* =======================================================
 #* 										Object Files
@@ -90,10 +108,16 @@ $(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/%.cpp $(ENGINE_HEADER_DIR)/%.hpp
 $(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/**/%.cpp $(ENGINE_HEADER_DIR)/**/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
+$(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/**/**/%.cpp $(ENGINE_HEADER_DIR)/**/**/%.hpp
+	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
+
 # Simulation Object Files
 $(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/%.cpp $(SIMULATION_HEADER_DIR)/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
 $(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/**/%.cpp $(SIMULATION_HEADER_DIR)/**/%.hpp
+	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
+
+$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/**/**/%.cpp $(SIMULATION_HEADER_DIR)/**/**/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 

@@ -1,4 +1,4 @@
-#include "ui/guiWindow.hpp"
+#include "ui/imgui/guiWindow.hpp"
 
 GuiWindow::GuiWindow(std::string name, void (*callback)(void))
     : name_(name), callback_(callback) {}
@@ -6,9 +6,6 @@ GuiWindow::GuiWindow(std::string name, void (*callback)(void))
 GuiWindow::~GuiWindow() {}
 
 void GuiWindow::Display() noexcept {
-  // ImGui::Begin("Hello, world!");
-  // ImGui::Text("This is some useful text.");
-  // ImGui::End();
   ImGui::Begin(this->name_.c_str());
   this->callback_();
   ImGui::End();

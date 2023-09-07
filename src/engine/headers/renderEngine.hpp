@@ -2,7 +2,7 @@
 #define RENDERENGINE_HPP_
 
 // PreInclude
-#include "ui/guiManager.hpp"  // Includes GLFW
+#include "ui/imgui/guiManager.hpp"  // Includes GLFW
 // Std
 #include <iostream>
 #include <string>
