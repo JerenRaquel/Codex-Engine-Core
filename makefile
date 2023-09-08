@@ -88,7 +88,7 @@ debug: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES) $(TRACY_DIR)/tracy/Tracy.hpp
 	rm tracy.o debugMain.o
 
 clean:
-	rm -f $(EXE_NAME) $(OBJECT_FILES) $(OBJECT_DIR)/main.o
+	rm -f $(EXE_NAME) imgui.ini $(OBJECT_FILES) $(OBJECT_DIR)/main.o
 
 #* =======================================================
 #* 										Object Files
