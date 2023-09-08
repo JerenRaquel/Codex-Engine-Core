@@ -1,12 +1,13 @@
 #VSCode
-.vscode
+.vscode/*-workspace
+.vscode/settings.json
+.vscode/tasks.json
 
 #Tools
 tools/
 
 # DLLs/Created Files
-src/objFiles
-src/libs/opengl
+src/libs/opengl/*
 *.dll
 *.exe
 *.a
@@ -15,5 +16,6 @@ src/libs/opengl
 # Other
 old_exes and dll files/
 run.sh
-build/assets/fonts
+build/assets/fonts/*
+build/assets/images/*
 imgui.ini

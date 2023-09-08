@@ -64,11 +64,18 @@ SIMULATION_SOURCE_FILES := $(wildcard $(SIMULATION_SOURCE_DIR)/*.cpp)
 SIMULATION_SOURCE_FILES += $(wildcard $(SIMULATION_SOURCE_DIR)/**/*.cpp)
 SIMULATION_SOURCE_FILES += $(wildcard $(SIMULATION_SOURCE_DIR)/**/**/*.cpp)
 
-SOURCE_FILES = $(ENGINE_SOURCE_FILES) $(SIMULATION_SOURCE_FILES)
+SOURCE_FILES := $(ENGINE_SOURCE_FILES)
+SOURCE_FILES += $(SIMULATION_SOURCE_FILES)
 
 # Object Files 
 IMGUI_OBJECT_FILES := $(addprefix $(OBJECT_DIR)/imgui/,$(addsuffix .o,$(basename $(notdir $(IMGUI_SOURCE_FILES)))))
-OBJECT_FILES := $(IMGUI_OBJECT_FILES) $(addprefix $(OBJECT_DIR)/,$(addsuffix .o, $(basename $(notdir $(SOURCE_FILES)))))
+ENGINE_OBJECT_FILES := $(addprefix $(OBJECT_DIR)/engine/,$(addsuffix .o, $(basename $(notdir $(ENGINE_SOURCE_FILES)))))
+SIMULATION_OBJECT_FILES := $(addprefix $(OBJECT_DIR)/,$(addsuffix .o, $(basename $(notdir $(SIMULATION_SOURCE_FILES)))))
+
+OBJECT_FILES := $(SIMULATION_OBJECT_FILES)
+OBJECT_FILES += $(OBJECT_DIR)/main.o
+
+STATIC_LIBRARIES := $(ENGINE_DIR)/engine.a $(ENGINE_DIR)/imgui.a
 
 # Executable Name
 EXE_NAME := $(BUILD_DIR)/Main.exe
@@ -76,9 +83,9 @@ EXE_NAME := $(BUILD_DIR)/Main.exe
 #* =======================================================
 #* 										Commands
 #* =======================================================
-all: $(OBJECT_FILES) $(OBJECT_DIR)/main.o $(IMGUI_SOURCE_FILES) $(IMGUI_HEADER_FILES)
+all: $(OBJECT_FILES) $(STATIC_LIBRARIES)
 	rm -f $(BUILD_DIR)/imgui.ini
-	$(GXX) $(OBJECT_FILES) $(OBJECT_DIR)/main.o -o $(EXE_NAME) $(LINKER_LIBS)
+	$(GXX) $(OBJECT_FILES) -o $(EXE_NAME) $(STATIC_LIBRARIES) $(LINKER_LIBS) 
 	
 #TODO: Make it faster
 debug: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES) $(TRACY_DIR)/tracy/Tracy.hpp $(TRACY_DIR)/TracyClient.cpp
@@ -87,8 +94,23 @@ debug: $(MAIN_FILE) $(HEADER_FILES) $(SOURCE_FILES) $(TRACY_DIR)/tracy/Tracy.hpp
 	$(GXX_DEBUG) $(TRACY_FLAGS) $(SOURCE_FILES) tracy.o debugMain.o -o $(EXE_NAME) $(INCLUDE_PATHS) $(LINKER_LIBS) $(TRACY_LIBS)
 	rm tracy.o debugMain.o
 
-clean:
-	rm -f $(EXE_NAME) imgui.ini $(OBJECT_FILES) $(OBJECT_DIR)/main.o
+#* =======================================================
+#* 										Clean Commands
+#* =======================================================
+clean: cleanEngine
+	rm -f $(EXE_NAME) imgui.ini $(OBJECT_FILES) $(STATIC_LIBRARIES)
+
+cleanEngine:
+	rm -f $(ENGINE_OBJECT_FILES) $(ENGINE_DIR)/engine.a
+
+#* =======================================================
+#* 										Library Creation
+#* =======================================================
+$(ENGINE_DIR)/engine.a: $(ENGINE_OBJECT_FILES) $(ENGINE_HEADER_FILES)
+	ar rcvs $@ $(ENGINE_OBJECT_FILES)
+
+$(ENGINE_DIR)/imgui.a: $(IMGUI_OBJECT_FILES) $(IMGUI_HEADER_FILES)
+	ar rcvs $@ $(IMGUI_OBJECT_FILES)
 
 #* =======================================================
 #* 										Object Files
@@ -102,13 +124,13 @@ $(OBJECT_DIR)/imgui/%.o: $(IMGUI_HEADER_FILES) $(IMGUI_SOURCE_FILES)
 	$(GXX) $(addprefix $(IMGUI)/,$(addsuffix .cpp,$(basename $(notdir $@)))) -c -o $@ $(INCLUDE_PATHS)
 
 # Engine Object Files
-$(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/%.cpp $(ENGINE_HEADER_DIR)/%.hpp
+$(OBJECT_DIR)/engine/%.o: $(ENGINE_SOURCE_DIR)/%.cpp $(ENGINE_HEADER_DIR)/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
-$(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/**/%.cpp $(ENGINE_HEADER_DIR)/**/%.hpp
+$(OBJECT_DIR)/engine/%.o: $(ENGINE_SOURCE_DIR)/**/%.cpp $(ENGINE_HEADER_DIR)/**/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
-$(OBJECT_DIR)/%.o: $(ENGINE_SOURCE_DIR)/**/**/%.cpp $(ENGINE_HEADER_DIR)/**/**/%.hpp
+$(OBJECT_DIR)/engine/%.o: $(ENGINE_SOURCE_DIR)/**/**/%.cpp $(ENGINE_HEADER_DIR)/**/**/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
 # Simulation Object Files
