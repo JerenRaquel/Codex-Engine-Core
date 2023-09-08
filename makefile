@@ -4,8 +4,8 @@ BUILD_DIR := build
 TOOLS_DIR := tools
 LIBRARIES_DIR := $(SRC_DIR)/libs
 ENGINE_DIR := $(SRC_DIR)/engine
-SIMULATION_DIR := $(SRC_DIR)/simulation
-OBJECT_DIR := $(SRC_DIR)/objFiles
+SIMULATION_DIR := simulation
+OBJECT_DIR := objFiles
 
 # Library Directories
 FREE_TYPE := $(LIBRARIES_DIR)/freetype
@@ -70,7 +70,7 @@ SOURCE_FILES += $(SIMULATION_SOURCE_FILES)
 # Object Files 
 IMGUI_OBJECT_FILES := $(addprefix $(OBJECT_DIR)/imgui/,$(addsuffix .o,$(basename $(notdir $(IMGUI_SOURCE_FILES)))))
 ENGINE_OBJECT_FILES := $(addprefix $(OBJECT_DIR)/engine/,$(addsuffix .o, $(basename $(notdir $(ENGINE_SOURCE_FILES)))))
-SIMULATION_OBJECT_FILES := $(addprefix $(OBJECT_DIR)/,$(addsuffix .o, $(basename $(notdir $(SIMULATION_SOURCE_FILES)))))
+SIMULATION_OBJECT_FILES := $(addprefix $(OBJECT_DIR)/codebase/,$(addsuffix .o, $(basename $(notdir $(SIMULATION_SOURCE_FILES)))))
 
 OBJECT_FILES := $(SIMULATION_OBJECT_FILES)
 OBJECT_FILES += $(OBJECT_DIR)/main.o
@@ -134,12 +134,12 @@ $(OBJECT_DIR)/engine/%.o: $(ENGINE_SOURCE_DIR)/**/**/%.cpp $(ENGINE_HEADER_DIR)/
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
 # Simulation Object Files
-$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/%.cpp $(SIMULATION_HEADER_DIR)/%.hpp
+$(OBJECT_DIR)/codebase/%.o: $(SIMULATION_SOURCE_DIR)/%.cpp $(SIMULATION_HEADER_DIR)/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
-$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/**/%.cpp $(SIMULATION_HEADER_DIR)/**/%.hpp
+$(OBJECT_DIR)/codebase/%.o: $(SIMULATION_SOURCE_DIR)/**/%.cpp $(SIMULATION_HEADER_DIR)/**/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 
-$(OBJECT_DIR)/%.o: $(SIMULATION_SOURCE_DIR)/**/**/%.cpp $(SIMULATION_HEADER_DIR)/**/**/%.hpp
+$(OBJECT_DIR)/codebase/%.o: $(SIMULATION_SOURCE_DIR)/**/**/%.cpp $(SIMULATION_HEADER_DIR)/**/**/%.hpp
 	$(GXX) $< -c -o $@ $(INCLUDE_PATHS)
 

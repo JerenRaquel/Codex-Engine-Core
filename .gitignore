@@ -15,7 +15,6 @@ src/libs/opengl/*
 
 # Other
 old_exes and dll files/
-run.sh
 build/assets/fonts/*
 build/assets/images/*
 imgui.ini

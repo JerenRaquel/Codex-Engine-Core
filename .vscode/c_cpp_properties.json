@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${default}",
-                "${workspaceFolder}/src/simulation/headers",
+                "${workspaceFolder}/simulation/headers",
                 "${workspaceFolder}/src/engine/headers",
                 "${workspaceFolder}/src/libs/freetype",
                 "${workspaceFolder}/src/libs/glm",
