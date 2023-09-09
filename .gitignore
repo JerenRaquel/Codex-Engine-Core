@@ -10,9 +10,3 @@ src/libs/opengl/*
 *.exe
 *.a
 *.o
-
-# Other
-old_exes and dll files/
-build/assets/fonts/*
-build/assets/images/*
-imgui.ini
