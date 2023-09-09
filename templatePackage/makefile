@@ -30,7 +30,7 @@ UUID_V4 := $(LIBRARY_DIR)/uuid_v4
 #*													Linker Libraries
 #* ------------------------------------------------------------------
 LIB_INCLUDE_PATHS := -I$(FREE_TYPE) -I$(GLM) -I$(STB) -I$(UUID_V4) -I$(IMGUI)
-INCLUDE_PATHS := $(LIB_INCLUDE_PATHS) -I$(ENGINE_DIR) 
+INCLUDE_PATHS := $(LIB_INCLUDE_PATHS)  -I$(ENGINE_DIR)/headers -I$(SRC_DIR)/headers
 LINKER_LIBS := $(OPENGL)/libglfw3.a $(BUILD_DIR)/glew32.dll -lopengl32 -lgdi32 $(INCLUDE_PATHS) $(FREE_TYPE)/libfreetype.a
 
 
