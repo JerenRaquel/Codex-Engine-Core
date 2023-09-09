@@ -1,7 +1,5 @@
 #VSCode
-.vscode/*-workspace
-.vscode/settings.json
-.vscode/tasks.json
+.vscode
 
 #Tools
 tools/
