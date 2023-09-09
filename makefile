@@ -59,7 +59,9 @@ STATIC_LIBRARIES := $(STATIC_ENGINE) $(STATIC_IMGUI)
 #* =======================================================
 #* 										Commands
 #* =======================================================
-engine: $(STATIC_LIBRARIES)
+engine: $(STATIC_ENGINE)
+
+imgui: $(STATIC_IMGUI)
 	
 #* =======================================================
 #* 										Clean Commands

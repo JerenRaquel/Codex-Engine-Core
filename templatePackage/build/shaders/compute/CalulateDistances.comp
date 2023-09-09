@@ -1,0 +1,26 @@
+#version 450 core
+
+struct DistanceData {
+  vec2 position;
+  float distance;
+};
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout(binding = 0) coherent buffer ssbo {
+    DistanceData data[];
+} outData;
+
+uniform vec2 position;
+
+float sqrDistance(vec2 a, vec2 b) {
+    vec2 diff = a - b;
+    return dot(diff, diff);
+}
+
+void main() {
+  uint index = gl_GlobalInvocationID.x;
+  
+  vec2 pos = outData.data[index].position;
+  outData.data[index].distance = sqrDistance(pos, position);
+}
