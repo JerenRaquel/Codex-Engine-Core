@@ -5,7 +5,6 @@
 tools/
 
 # DLLs/Created Files
-src/libs/opengl/*
 *.dll
 *.exe
 *.a
