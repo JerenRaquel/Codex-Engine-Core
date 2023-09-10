@@ -40,6 +40,7 @@ class Camera {
   void SetPosition(const Vector2<float>& position) noexcept;
   void SetPosition(const float& x, const float& y, const float& z) noexcept;
   // Getters
+  Vector3<float> GetPosition() const noexcept;
   glm::mat4x4* GetOrthoMatrix() noexcept;
   glm::mat4x4* GetViewMatrix() noexcept;
   glm::mat4x4* GetOriginalViewMatrix() noexcept;

@@ -57,6 +57,8 @@ void Camera::SetPosition(const float& x, const float& y,
   this->SetPosition(Vector3<float>(x, y, z));
 }
 
+Vector3<float> Camera::GetPosition() const noexcept { return this->position_; }
+
 glm::mat4x4* Camera::GetOrthoMatrix() noexcept {
   if (this->isOrthoDirty_) {
     *(this->orthoMatrix_) = glm::ortho(
