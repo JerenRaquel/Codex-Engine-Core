@@ -43,6 +43,7 @@ class Material {
                      const float& alpha) noexcept;
   Material* SetAlpha(const float& alpha) noexcept;
   Material* SetTextureData(TextureData* textureData) noexcept;
+  Material* SetTextureDataIndex(const int& textureDataIndex) noexcept;
 
   // Getters
   const std::string& GetShaderName() const noexcept;

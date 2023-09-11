@@ -98,6 +98,11 @@ Material* Material::SetTextureData(TextureData* textureData) noexcept {
   return this;
 }
 
+Material* Material::SetTextureDataIndex(const int& textureDataIndex) noexcept {
+  this->textureDataIndex_ = textureDataIndex;
+  return this;
+}
+
 // Getters
 const std::string& Material::GetShaderName() const noexcept {
   return this->shaderName_;
