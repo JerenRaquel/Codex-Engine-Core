@@ -29,8 +29,8 @@ Button::Button(const Vector2<float>& position, const Vector2<float>& scale,
                Texture* texture) {
   this->callback_ = callback;
   this->transform_ = new Transform(position, scale);
-  this->material_ =
-      new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f), 1.0f, texture);
+  this->material_ = new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f),
+                                 1.0f, new TextureData(texture));
   this->meshRenderData_ =
       new MeshRenderData("Quad", this->material_, this->transform_);
 }
