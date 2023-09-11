@@ -4,28 +4,31 @@ Material::Material()
     : Material("default", Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f, nullptr) {}
 
 Material::Material(const std::string& shaderName)
-    : Material(shaderName, Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f, nullptr) {}
+    : Material(shaderName, Vector3<float>(1.0f, 1.0f, 1.0f), 1.0f, nullptr, 0) {
+}
 
 Material::Material(const std::string& shaderName, const Vector3<float>& color)
-    : Material(shaderName, color, 1.0f, nullptr) {}
+    : Material(shaderName, color, 1.0f, nullptr, 0) {}
 
 Material::Material(const std::string& shaderName, const Vector3<float>& color,
                    const float& alpha)
-    : Material(shaderName, color, alpha, nullptr) {}
+    : Material(shaderName, color, alpha, nullptr, 0) {}
 
 Material::Material(const std::string& shaderName, const Vector3<float>& color,
-                   const float& alpha, Texture* texture) {
+                   const float& alpha, TextureData* textureData)
+    : Material(shaderName, color, alpha, textureData, 0) {}
+
+Material::Material(const std::string& shaderName, const Vector3<float>& color,
+                   const float& alpha, TextureData* textureData,
+                   const int& textureDataIndex) {
   this->shaderName_ = shaderName;
-  this->texture_ = texture;
+  this->textureData_ = textureData;
+  this->textureDataIndex_ = textureDataIndex;
   this->color_ = color;
   this->alpha_ = alpha;
 }
 
-Material::~Material() {
-  if (this->texture_ != nullptr) {
-    delete this->texture_;
-  }
-}
+Material::~Material() { delete this->textureData_; }
 
 // Utility
 Material* Material::RandomizeColor() noexcept {
@@ -33,24 +36,23 @@ Material* Material::RandomizeColor() noexcept {
   return this;
 }
 
-const bool Material::BindTexture() noexcept {
-  if (this->texture_ != nullptr) {
-    this->texture_->Bind();
-    return true;
+Material* Material::BindTextureData(const Shader* const shader) noexcept {
+  if (this->textureData_ != nullptr) {
+    this->textureData_->Bind(shader, this->textureDataIndex_);
+    shader->PassUniformBool("useTexture", true);
+  } else {
+    shader->PassUniformBool("useTexture", false);
+    shader->PassUniformBool("useBackgroundColor", false);
   }
-  return false;
+
+  return this;
 }
 
-void Material::UnbindTexture() noexcept {
-  if (this->texture_ != nullptr) {
-    this->texture_->Unbind();
+Material* Material::UnbindTextureData() noexcept {
+  if (this->textureData_ != nullptr) {
+    this->textureData_->Unbind();
   }
-}
 
-Material* Material::ToggleBackgroundColor() noexcept {
-  if (this->texture_ != nullptr) {
-    this->enableBackgroundColor_ = !this->enableBackgroundColor_;
-  }
   return this;
 }
 
@@ -91,8 +93,8 @@ Material* Material::SetAlpha(const float& alpha) noexcept {
   return this;
 }
 
-Material* Material::SetTexture(Texture* texture) noexcept {
-  this->texture_ = texture;
+Material* Material::SetTextureData(TextureData* textureData) noexcept {
+  this->textureData_ = textureData;
   return this;
 }
 
@@ -106,7 +108,3 @@ const Vector3<float>& Material::GetColor() const noexcept {
 }
 
 const float& Material::GetAlpha() const noexcept { return this->alpha_; }
-
-const bool& Material::GetBackgroundTextureState() const noexcept {
-  return this->enableBackgroundColor_;
-}

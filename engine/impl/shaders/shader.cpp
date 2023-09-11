@@ -22,6 +22,13 @@ void Shader::PassUniform1i(const char* name, const int& data) const noexcept {
   glUniform1i(ID, data);
 }
 
+void Shader::PassUniform3i(const char* name,
+                           const Vector3<int>& data) const noexcept {
+  int ID = glGetUniformLocation(this->shaderID_, name);
+  if (ID == -1) return;
+  glUniform3i(ID, data.x, data.y, data.z);
+}
+
 void Shader::PassUniform1f(const char* name, const float& data) const noexcept {
   int ID = glGetUniformLocation(this->shaderID_, name);
   if (ID == -1) return;

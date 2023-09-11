@@ -21,15 +21,12 @@ void MeshRenderData::PassUniforms(
   shader->PassUniform3f("color", this->material_->GetColor());
   shader->PassUniform1f("alpha", this->material_->GetAlpha());
 
-  bool hasTexture = this->material_->BindTexture();
-  shader->PassUniformBool("useTexture", hasTexture);
-  shader->PassUniformBool(
-      "useBackgroundColor",
-      hasTexture ? this->material_->GetBackgroundTextureState() : false);
+  // Texture
+  this->material_->BindTextureData(shader);
 }
 
 void MeshRenderData::UnbindTexture() const noexcept {
-  this->material_->UnbindTexture();
+  this->material_->UnbindTextureData();
 }
 
 // Getters

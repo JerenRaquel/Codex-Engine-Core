@@ -6,15 +6,15 @@
 // Engine
 #include "util/vector3.hpp"
 #include "util/helpers.hpp"
-#include "texture.hpp"
+#include "textureData.hpp"
 
 class Material {
  private:
   std::string shaderName_;
-  Texture* texture_;
+  TextureData* textureData_;
+  int textureDataIndex_;
   Vector3<float> color_;
   float alpha_;
-  bool enableBackgroundColor_ = false;
 
  public:
   Material();
@@ -23,14 +23,16 @@ class Material {
   Material(const std::string& shaderName, const Vector3<float>& color,
            const float& alpha);
   Material(const std::string& shaderName, const Vector3<float>& color,
-           const float& alpha, Texture* texture);
+           const float& alpha, TextureData* textureData);
+  Material(const std::string& shaderName, const Vector3<float>& color,
+           const float& alpha, TextureData* textureData,
+           const int& textureDataIndex);
   ~Material();
 
   // Utility
   Material* RandomizeColor() noexcept;
-  const bool BindTexture() noexcept;
-  void UnbindTexture() noexcept;
-  Material* ToggleBackgroundColor() noexcept;
+  Material* BindTextureData(const Shader* const shader) noexcept;
+  Material* UnbindTextureData() noexcept;
 
   // Setters
   Material* SetShaderName(const std::string& shaderName) noexcept;
@@ -40,12 +42,11 @@ class Material {
   Material* SetColor(const float& r, const float& g, const float& b,
                      const float& alpha) noexcept;
   Material* SetAlpha(const float& alpha) noexcept;
-  Material* SetTexture(Texture* texture) noexcept;
+  Material* SetTextureData(TextureData* textureData) noexcept;
 
   // Getters
   const std::string& GetShaderName() const noexcept;
   const Vector3<float>& GetColor() const noexcept;
   const float& GetAlpha() const noexcept;
-  const bool& GetBackgroundTextureState() const noexcept;
 };
 #endif  // MATERIAL_HPP_
