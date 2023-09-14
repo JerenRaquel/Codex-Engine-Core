@@ -11,6 +11,7 @@ This is the core of many modular extentions to be used in various ways. The idea
 - Graphical Rendering System using GLFW/Glew
 - Custom mesh control and mesh instancing
 - Custom UI system and ImGui for additional gui needs
+- Texture Mapping and Texture Atlas support
 - Input/Event Systems [PLANNED]
 - Serialization/Deserialization [PLANNED]
 - Embedded scriptable languages (ie. JavaScript, Python, Lua, etc) [PLANNED]
