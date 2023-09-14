@@ -13,12 +13,14 @@ This is the core of many modular extentions to be used in various ways. The idea
 - Custom UI system and ImGui for additional gui needs
 - Texture mapping and texture atlas support
 - Compute shader support
-- Input/Event Systems [PLANNED]
-- Serialization/Deserialization [PLANNED]
-- Embedded scriptable languages (ie. JavaScript, Python, Lua, etc) [PLANNED]
+- Multiple scene support (Allows for quickswapping of levels/areas)
+- Input System
 
 ## Modules
 
 - AI/Machine Learning (integration with PyTorch or Tensorflow) [PLANNED]
 - Simulation [PLANNED]
 - Editor [PLANNED]
+- Audio System (ie. Global and proxity) [PLANNED]
+- Serialization/Deserialization (ie. Custom class serialization) [PLANNED]
+- Embedded scriptable languages (ie. JavaScript, Python, Lua, etc) [PLANNED]
