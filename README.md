@@ -24,3 +24,6 @@ This is the core of many modular extentions to be used in various ways. The idea
 - Audio System (ie. Global and proxity) [PLANNED]
 - Serialization/Deserialization (ie. Custom class serialization) [PLANNED]
 - Embedded scriptable languages (ie. JavaScript, Python, Lua, etc) [PLANNED]
+
+# Important!
+- Dynamic and static files for external libraries are not provided at the moment. (subject to change)
