@@ -40,7 +40,7 @@ class Engine {
   RenderEngine* renderer_;
   Camera* camera_;
   InputSystem* inputSystem_;
-  Action* mainAction_;
+  Action* globalAction_;
   UUIDv4::UUIDGenerator<std::mt19937_64>* uuidGenerator_;
 
   // Compute shaders

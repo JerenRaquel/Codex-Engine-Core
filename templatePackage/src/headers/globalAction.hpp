@@ -1,11 +1,11 @@
-#ifndef MAINACTION_HPP_
-#define MAINACTION_HPP_
+#ifndef GLOBALACTION_HPP_
+#define GLOBALACTION_HPP_
 
 // Engine
 #include "action.hpp"
 #include "util/vector2.hpp"
 
-class MainAction : public Action {
+class GlobalAction : public Action {
  private:
   // Base Class
   void InternalStart(Engine* const engine) noexcept override;
@@ -13,7 +13,7 @@ class MainAction : public Action {
   void InternalFinish(Engine* const engine) noexcept override;
 
  public:
-  MainAction();
-  ~MainAction();
+  GlobalAction();
+  ~GlobalAction();
 };
-#endif  // MAINACTION_HPP_
+#endif  // GLOBALACTION_HPP_

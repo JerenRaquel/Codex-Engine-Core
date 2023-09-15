@@ -7,7 +7,7 @@
 #include <vector>
 // Engine
 #include "engine.hpp"
-#include "mainAction.hpp"
+#include "globalAction.hpp"
 
 int main(int argc, char** argv) {
   // Pack args into vector
@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 
   // Start engine
   Engine* engine = new Engine(Vector2<int>(1600, 900), "Codex Engine", args,
-                              new MainAction());
+                              new GlobalAction());
   delete engine;
 
   return 0;

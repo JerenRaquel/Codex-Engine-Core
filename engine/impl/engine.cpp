@@ -35,7 +35,7 @@ void Engine::Start() {
   this->renderer_->CompileShader("text.vs", "text.fs", "Crayon");
   this->CreatePrimativeMeshes();
 
-  this->mainAction_->OnStart(this);
+  this->globalAction_->OnStart(this);
 
   if (this->currentScene_ != nullptr && this->currentSceneName_ != "") {
     this->currentScene_->Start(this);
@@ -47,6 +47,8 @@ void Engine::Start() {
   while (!glfwWindowShouldClose(this->renderer_->GetWindow())) {
     this->inputSystem_->Update();
 
+    this->globalAction_->OnUpdate(this);
+
     if (this->currentScene_ != nullptr) {
       this->currentScene_->Update(this);
     }
@@ -56,10 +58,12 @@ void Engine::Start() {
     // update other events like input handling
     glfwPollEvents();
   }
+
+  this->globalAction_->OnFinish(this);
 }
 
 Engine::Engine(const Vector2<int>& windowSize, const std::string& name,
-               const std::vector<std::string>& args, Action* mainAction) {
+               const std::vector<std::string>& args, Action* globalAction) {
   this->windowSize_ = windowSize;
   this->args_ = new std::vector<std::string>(args);
   this->uuidGenerator_ = new UUIDv4::UUIDGenerator<std::mt19937_64>();
@@ -72,7 +76,7 @@ Engine::Engine(const Vector2<int>& windowSize, const std::string& name,
   this->computeShaders_ = new std::map<std::string, ComputeShader*>();
   this->computeShaderBuffers_ =
       new std::map<std::string, ComputeShaderBuffer*>();
-  this->mainAction_ = mainAction;
+  this->globalAction_ = globalAction;
 
   this->Start();
 }
