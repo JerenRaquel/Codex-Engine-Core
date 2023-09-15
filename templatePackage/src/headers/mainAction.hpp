@@ -8,9 +8,9 @@
 class MainAction : public Action {
  private:
   // Base Class
-  void InternalStart(Engine* const engine) const noexcept override;
-  void InternalUpdate(Engine* const engine) const noexcept override;
-  void InternalFinish(Engine* const engine) const noexcept override;
+  void InternalStart(Engine* const engine) noexcept override;
+  void InternalUpdate(Engine* const engine) noexcept override;
+  void InternalFinish(Engine* const engine) noexcept override;
 
  public:
   MainAction();
