@@ -1,8 +1,10 @@
 #include "textureData.hpp"
 
-TextureData::TextureData(Texture* texture) : TextureData(texture, 1, 1) {}
+TextureData::TextureData(std::shared_ptr<Texture> texture)
+    : TextureData(texture, 1, 1) {}
 
-TextureData::TextureData(Texture* texture, const int cellWidthAmount,
+TextureData::TextureData(std::shared_ptr<Texture> texture,
+                         const int cellWidthAmount,
                          const int cellHeightAmount) {
   this->texture_ = texture;
   this->cellWidthAmount_ = cellWidthAmount;
@@ -10,7 +12,7 @@ TextureData::TextureData(Texture* texture, const int cellWidthAmount,
   this->maxTextureIndex_ = cellWidthAmount * cellHeightAmount;
 }
 
-TextureData::~TextureData() { delete this->texture_; }
+TextureData::~TextureData() {}
 
 // Utility
 const TextureData* TextureData::Bind(const Shader* const shader,
