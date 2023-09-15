@@ -32,9 +32,9 @@ class MeshRenderData {
   ~MeshRenderData();
 
   // Utility
-  void PassUniforms(const Shader* const shader,
-                    const glm::mat4x4& cameraMatrix) const noexcept;
-  void UnbindTexture() const noexcept;
+  void PassUniforms(const Shader* const shader, const glm::mat4x4& cameraMatrix,
+                    const RenderEngine* const renderer) const noexcept;
+  void UnbindTexture(const RenderEngine* const renderer) const noexcept;
 
   // Getters
   const std::string& GetMeshType() const noexcept;

@@ -59,11 +59,11 @@ void RenderEngine::RenderMeshBatch(
     shader->Use();
 
     // Pass Uniforms
-    data->PassUniforms(shader, cameraMatrix);
+    data->PassUniforms(shader, cameraMatrix, this);
 
     // Draw
     this->meshTypes_->at(meshType)->Draw();
-    data->UnbindTexture();
+    data->UnbindTexture(this);
   }
 }
 
@@ -93,6 +93,7 @@ RenderEngine::RenderEngine(const Vector2<int>& size, const std::string& name,
   this->shaderCompiler_ = new ShaderCompiler();
   this->textHandler_ = new TextHandler(defaultFontFile, size);
   this->meshTypes_ = new std::map<std::string, Mesh*>();
+  this->textures_ = new std::map<std::string, TextureData*>();
 }
 
 RenderEngine::~RenderEngine() {
@@ -107,6 +108,13 @@ RenderEngine::~RenderEngine() {
     delete mesh.second;
   }
   delete this->meshTypes_;
+
+  for (auto texture : *this->textures_) {
+    delete texture.second->texture;
+    delete texture.second;
+  }
+  delete this->textures_;
+
   delete this->guiManager_;
   glfwTerminate();
 }
@@ -160,12 +168,37 @@ void RenderEngine::AddMeshType(const std::string& name, Mesh* const mesh) {
   this->meshTypes_->insert(std::pair<std::string, Mesh*>(name, mesh));
 }
 
+void RenderEngine::AddTexture(const std::string& name,
+                              const std::string& path) {
+  this->AddTexture(name, path, 1, 1);
+}
+
+void RenderEngine::AddTexture(const std::string& name, const std::string& path,
+                              int cellWidth, int cellHeight) {
+  if (this->textures_->count(name) > 0) {
+    throw std::runtime_error("Texture already exists");
+  }
+  TextureData* textureData = new TextureData{new Texture(path), cellWidth,
+                                             cellHeight, cellWidth* cellHeight};
+  this->textures_->insert(
+      std::pair<std::string, TextureData*>(name, textureData));
+}
+
 // Getters
 Shader* const RenderEngine::GetShader(const std::string& name) {
   if (this->shaders_->count(name) > 0) {
     return this->shaders_->at(name);
   } else {
     throw std::runtime_error("ERROR: Shader with name " + name +
+                             " doesn't exist!");
+  }
+}
+
+TextureData* const RenderEngine::GetTextureData(const std::string& name) const {
+  if (this->textures_->count(name) > 0) {
+    return this->textures_->at(name);
+  } else {
+    throw std::runtime_error("ERROR: Texture Data with name " + name +
                              " doesn't exist!");
   }
 }

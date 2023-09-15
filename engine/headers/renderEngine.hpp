@@ -36,6 +36,9 @@ class RenderEngine {
   // Freed Here as well as content
   std::map<std::string, Mesh*>* meshTypes_ = nullptr;
 
+  //* Texture Data
+  std::map<std::string, TextureData*>* textures_;
+
   //* Shader Data
   ShaderCompiler* shaderCompiler_;
   std::map<std::string, Shader*>* shaders_;
@@ -62,9 +65,13 @@ class RenderEngine {
   void CompileShader(const std::string& vertex, const std::string& fragment,
                      const std::string& name);
   void AddMeshType(const std::string& name, Mesh* const mesh);
+  void AddTexture(const std::string& name, const std::string& path);
+  void AddTexture(const std::string& name, const std::string& path,
+                  int cellWidth, int cellHeight);
 
   // Getters
   Shader* const GetShader(const std::string& name);
+  TextureData* const GetTextureData(const std::string& name) const;
   GLFWwindow* const GetWindow() const noexcept;
   GuiManager* const GetGuiManager() const noexcept;
   const Vector2<float> GetTextSize(const std::string& text,

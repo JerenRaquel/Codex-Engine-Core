@@ -14,19 +14,27 @@ MeshRenderData::~MeshRenderData() {}
 
 // Utility
 void MeshRenderData::PassUniforms(
-    const Shader* const shader,
-    const glm::mat4x4& cameraMatrix) const noexcept {
+    const Shader* const shader, const glm::mat4x4& cameraMatrix,
+    const RenderEngine* const renderer) const noexcept {
   glm::mat4x4 mvp = cameraMatrix * *(this->transform_->GetModelMatrix());
   shader->PassUniformMatrix("mvp", &mvp);
   shader->PassUniform3f("color", this->material_->GetColor());
   shader->PassUniform1f("alpha", this->material_->GetAlpha());
 
   // Texture
-  this->material_->BindTextureData(shader);
+  std::string textureName = this->material_->GetTextureName();
+  if (textureName != "") {
+    TextureData* textureData = renderer->GetTextureData(textureName);
+    this->material_->BindTextureData(shader, textureData);
+  }
 }
 
-void MeshRenderData::UnbindTexture() const noexcept {
-  this->material_->UnbindTextureData();
+void MeshRenderData::UnbindTexture(
+    const RenderEngine* const renderer) const noexcept {
+  std::string textureName = this->material_->GetTextureName();
+  if (textureName != "") {
+    renderer->GetTextureData(textureName)->texture->Unbind();
+  }
 }
 
 // Getters

@@ -10,6 +10,15 @@
 // Engine
 #include "util/helpers.hpp"
 
+class Texture;
+
+struct TextureData {
+  Texture* texture;
+  int cellSizeX;
+  int cellSizeY;
+  int maxTextureIndex;
+};
+
 class Texture {
  private:
   const std::string imagePath_ = "assets/images/";
