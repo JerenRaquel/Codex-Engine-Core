@@ -1,10 +1,8 @@
 #include "textureData.hpp"
 
-TextureData::TextureData(std::shared_ptr<Texture> texture)
-    : TextureData(texture, 1, 1) {}
+TextureData::TextureData(Texture* texture) : TextureData(texture, 1, 1) {}
 
-TextureData::TextureData(std::shared_ptr<Texture> texture,
-                         const int cellWidthAmount,
+TextureData::TextureData(Texture* texture, const int cellWidthAmount,
                          const int cellHeightAmount) {
   this->texture_ = texture;
   this->cellWidthAmount_ = cellWidthAmount;
