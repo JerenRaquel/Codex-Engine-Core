@@ -17,8 +17,9 @@ int main(int argc, char** argv) {
   }
 
   // Start engine
-  Engine* engine = new Engine(Vector2<int>(1600, 900), "Codex Engine", args,
-                              new GlobalAction());
+  GlobalAction* action = new GlobalAction();
+  Engine* engine =
+      new Engine(Vector2<int>(1600, 900), "Codex Engine", args, action);
   delete engine;
 
   return 0;
