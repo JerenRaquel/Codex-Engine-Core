@@ -7,5 +7,5 @@ tools/
 # DLLs/Created Files
 *.dll
 *.exe
-*.a
+libglfw3.a
 *.o

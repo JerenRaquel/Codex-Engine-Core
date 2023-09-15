@@ -10,7 +10,7 @@ TextureData::TextureData(Texture* texture, const int cellWidthAmount,
   this->maxTextureIndex_ = cellWidthAmount * cellHeightAmount;
 }
 
-TextureData::~TextureData() {}
+TextureData::~TextureData() { delete this->texture_; }
 
 // Utility
 const TextureData* TextureData::Bind(const Shader* const shader,

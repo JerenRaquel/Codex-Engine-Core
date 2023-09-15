@@ -26,9 +26,9 @@ This is the core of many modular extentions to be used in various ways. The idea
 - Embedded scriptable languages (ie. JavaScript, Python, Lua, etc) [PLANNED]
 
 # Important!
+
 - Dynamic and static files for external libraries are not provided at the moment. (subject to change)
 - Library Files needed to provide to use
-  - Requires 'libfreetype.a' in Codex-Engine-Core/libs/freetype/.
   - Requires 'libglfw3.a' in Codex-Engine-Core/libs/opengl/.
   - Requires 'glew32.dll' in build/.
   - Requires 'BasicCrayon-Regular.ttf' in build/assets/font/. (Custom font file; Can be swapped with different font file.)
