@@ -26,7 +26,7 @@ Button::Button(const Vector2<float>& position, const Vector2<float>& scale,
 
 Button::Button(const Vector2<float>& position, const Vector2<float>& scale,
                void (*callback)(Engine* const engine, Button* const self),
-               Texture* texture) {
+               std::shared_ptr<Texture> texture) {
   this->callback_ = callback;
   this->transform_ = new Transform(position, scale);
   this->material_ = new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f),

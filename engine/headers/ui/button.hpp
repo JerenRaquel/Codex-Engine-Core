@@ -33,7 +33,7 @@ class Button {
          const std::string& text, const Engine* const engine);
   Button(const Vector2<float>& position, const Vector2<float>& scale,
          void (*callback)(Engine* const engine, Button* const self),
-         Texture* texture);
+         std::shared_ptr<Texture> texture);
   ~Button();
 
   // Utility
