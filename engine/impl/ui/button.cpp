@@ -26,11 +26,11 @@ Button::Button(const Vector2<float>& position, const Vector2<float>& scale,
 
 Button::Button(const Vector2<float>& position, const Vector2<float>& scale,
                void (*callback)(Engine* const engine, Button* const self),
-               Texture* texture) {
+               const std::string& textureName) {
   this->callback_ = callback;
   this->transform_ = new Transform(position, scale);
   this->material_ = new Material("button", Vector3<float>(0.5f, 0.5f, 0.5f),
-                                 1.0f, new TextureData(texture));
+                                 1.0f, textureName);
   this->meshRenderData_ =
       new MeshRenderData("Quad", this->material_, this->transform_);
 }
