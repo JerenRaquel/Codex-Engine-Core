@@ -13,6 +13,29 @@ Camera::Camera(Vector2<int> windowSize, float near, float far,
   this->inputSystem_ = inputSystem;
 
   *(this->originalViewMatrix_) = *(this->GetViewMatrix());
+}
+
+Camera::~Camera() {
+  delete this->orthoMatrix_;
+  delete this->originalViewMatrix_;
+  delete this->viewMatrix_;
+  delete this->orthoViewMatrix_;
+  this->DisableCameraControls();
+}
+
+void Camera::UpdatePosition(const Vector2<float>& direction) noexcept {
+  this->position_.x += direction.x * this->cameraSpeed_;
+  this->position_.y += direction.y * this->cameraSpeed_;
+
+  this->isViewDirty_ = true;
+}
+
+void Camera::ResetPosition() noexcept {
+  this->SetPosition(Vector3<float>(0.0f, 0.0f, -1.0f));
+}
+
+void Camera::EnableCameraControls() noexcept {
+  if (this->isCameraControlsEnabled_) return;
 
   this->onDirectionUpdateUUID_ = this->inputSystem_->AssignOnDirectionUpdate(
       {reinterpret_cast<void*>(this),
@@ -27,26 +50,14 @@ Camera::Camera(Vector2<int> windowSize, float near, float far,
                    }});
 }
 
-Camera::~Camera() {
-  delete this->orthoMatrix_;
-  delete this->originalViewMatrix_;
-  delete this->viewMatrix_;
-  delete this->orthoViewMatrix_;
+void Camera::DisableCameraControls() noexcept {
+  if (!this->isCameraControlsEnabled_) return;
+
   this->inputSystem_->UnassignOnDirectionUpdate(this->onDirectionUpdateUUID_);
   this->inputSystem_->UnassignOnKeyPress(GLFW_KEY_R, this->onKeyPressUUID_);
 }
 
-void Camera::UpdatePosition(const Vector2<float>& direction) noexcept {
-  this->position_.x += direction.x * this->cameraSpeed_;
-  this->position_.y += direction.y * this->cameraSpeed_;
-
-  this->isViewDirty_ = true;
-}
-
-void Camera::ResetPosition() noexcept {
-  this->SetPosition(Vector3<float>(0.0f, 0.0f, -1.0f));
-}
-
+// Setters
 void Camera::SetPosition(const Vector2<float>& position) noexcept {
   this->position_ = position;
   this->isViewDirty_ = true;

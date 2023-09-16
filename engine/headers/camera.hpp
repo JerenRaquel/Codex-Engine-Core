@@ -25,6 +25,7 @@ class Camera {
   bool isViewDirty_ = true;
   bool isOrthoViewDirty_ = true;
   InputSystem* inputSystem_ = nullptr;
+  bool isCameraControlsEnabled_ = false;
   std::string onDirectionUpdateUUID_;
   std::string onKeyPressUUID_;
 
@@ -36,6 +37,8 @@ class Camera {
   // Utility
   void UpdatePosition(const Vector2<float>& direction) noexcept;
   void ResetPosition() noexcept;
+  void EnableCameraControls() noexcept;
+  void DisableCameraControls() noexcept;
   // Setters
   void SetPosition(const Vector2<float>& position) noexcept;
   void SetPosition(const float& x, const float& y, const float& z) noexcept;
