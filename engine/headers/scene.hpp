@@ -2,18 +2,26 @@
 #define SCENE_HPP_
 
 class Button;
+class Engine;
 
 // Std
 #include <vector>
+#include <map>
+#include <stack>
 // Engine
 #include "renderData.hpp"
 #include "ui/button.hpp"
 
 class Scene {
  private:
-  //* Data - All Data Freed Here
+  //* Data - Most Data Freed Here
+  // Meta Data
+  Engine* engine_;                                      // Not Freed Here
+  std::stack<std::string>* meshRenderDataUsedIDStack_;  // All Freed Here
+
   // Render Data
-  std::vector<MeshRenderData*>* meshRenderDataPointer_;    // All Freed Here
+  std::map<std::string, MeshRenderData*>*
+      meshRenderDataPointer_;                              // All Freed Here
   std::vector<MeshRenderData*>* meshUIRenderDataPointer_;  // All Freed Here
   std::vector<TextRenderData*>* textRenderDataPointer_;    // All Freed Here
 
@@ -24,15 +32,16 @@ class Scene {
   std::vector<Action*>* actions_;  // All Freed Here
 
  public:
-  Scene();
+  Scene(Engine* const engine);
   ~Scene();
 
   // Utility
-  void Start(Engine* const engine) noexcept;
-  void Update(Engine* const engine) const noexcept;
-  void Finish(Engine* const engine) noexcept;
+  void Start() noexcept;
+  void Update() const noexcept;
+  void Finish() noexcept;
   const Scene* const AddMeshRenderData(
-      MeshRenderData* meshRenderData) const noexcept;
+      std::string& id, MeshRenderData* meshRenderData) const noexcept;
+  const Scene* const DestroyMeshRenderData(const std::string& id);
   const Scene* const AddMeshUIRenderData(
       MeshRenderData* meshRenderData) const noexcept;
   const Scene* const AddTextRenderData(
@@ -41,7 +50,8 @@ class Scene {
   const Scene* const AddAction(Action* action) noexcept;
 
   // Getters
-  std::vector<MeshRenderData*>* const GetMeshRenderDataPointer() const noexcept;
+  std::map<std::string, MeshRenderData*>* const GetMeshRenderDataPointer()
+      const noexcept;
   std::vector<MeshRenderData*>* const GetMeshUIRenderDataPointer()
       const noexcept;
   std::vector<TextRenderData*>* const GetTextRenderDataPointer() const noexcept;

@@ -38,7 +38,7 @@ void Engine::Start() {
   this->globalAction_->OnStart(this);
 
   if (this->currentScene_ != nullptr && this->currentSceneName_ != "") {
-    this->currentScene_->Start(this);
+    this->currentScene_->Start();
   } else {
     std::cout << "Scene Invalid::" << this->currentSceneName_ << std::endl;
   }
@@ -50,13 +50,17 @@ void Engine::Start() {
     this->globalAction_->OnUpdate(this);
 
     if (this->currentScene_ != nullptr) {
-      this->currentScene_->Update(this);
+      this->currentScene_->Update();
     }
 
     this->renderer_->Render(this->camera_, this->currentScene_);
 
     // update other events like input handling
     glfwPollEvents();
+  }
+
+  if (this->currentScene_ != nullptr) {
+    this->currentScene_->Finish();
   }
 
   this->globalAction_->OnFinish(this);
@@ -151,12 +155,12 @@ Scene* const Engine::SetCurrentScene(const std::string& name) {
   }
 
   if (this->currentScene_ != nullptr) {
-    this->currentScene_->Finish(this);
+    this->currentScene_->Finish();
   }
   this->currentScene_ = this->scenes_->at(name);
   this->currentSceneName_ = name;
   this->camera_->ResetPosition();
-  this->currentScene_->Start(this);
+  this->currentScene_->Start();
   return this->currentScene_;
 }
 
