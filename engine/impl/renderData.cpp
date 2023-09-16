@@ -74,6 +74,11 @@ TextRenderData::TextRenderData(const std::string& text,
 
 TextRenderData::~TextRenderData() {}
 
+// Setters
+void TextRenderData::SetText(const std::string& text) noexcept {
+  this->text_ = text;
+}
+
 // Getters
 const std::string& TextRenderData::GetText() const noexcept {
   return this->text_;

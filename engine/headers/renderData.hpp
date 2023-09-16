@@ -59,6 +59,9 @@ class TextRenderData {
                  const Vector3<float>& color, const float& scale);
   ~TextRenderData();
 
+  // Setters
+  void SetText(const std::string& text) noexcept;
+
   // Getters
   const std::string& GetText() const noexcept;
   const Vector2<int>& GetPosition() const noexcept;
