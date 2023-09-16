@@ -178,8 +178,8 @@ void RenderEngine::AddTexture(const std::string& name, const std::string& path,
   if (this->textures_->count(name) > 0) {
     throw std::runtime_error("Texture already exists");
   }
-  TextureData* textureData = new TextureData{new Texture(path), cellWidth,
-                                             cellHeight, cellWidth* cellHeight};
+  TextureData* textureData =
+      new TextureData(new Texture(path), cellWidth, cellHeight);
   this->textures_->insert(
       std::pair<std::string, TextureData*>(name, textureData));
 }

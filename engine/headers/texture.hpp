@@ -12,11 +12,19 @@
 
 class Texture;
 
-struct TextureData {
+class TextureData {
+ public:
   Texture* texture;
   int cellSizeX;
   int cellSizeY;
   int maxTextureIndex;
+
+  TextureData(Texture* texture, const int& cellSizeX, const int& cellSizeY)
+      : texture(texture),
+        cellSizeX(cellSizeX),
+        cellSizeY(cellSizeY),
+        maxTextureIndex(cellSizeX * cellSizeY) {}
+  ~TextureData() {}
 };
 
 class Texture {
