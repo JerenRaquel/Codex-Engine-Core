@@ -125,9 +125,13 @@ const Scene* const Scene::AddAction(Action* action) noexcept {
 }
 
 // Getters
-std::map<std::string, MeshRenderData*>* const Scene::GetMeshRenderDataPointer()
+std::vector<MeshRenderData*>* const Scene::GetMeshRenderDataPointer()
     const noexcept {
-  return this->meshRenderDataPointer_;
+  std::vector<MeshRenderData*>* buffer = new std::vector<MeshRenderData*>();
+  for (auto data : *this->meshRenderDataPointer_) {
+    buffer->push_back(data.second);
+  }
+  return buffer;
 }
 
 std::vector<MeshRenderData*>* const Scene::GetMeshUIRenderDataPointer()

@@ -136,8 +136,10 @@ void RenderEngine::Render(Camera* const camera,
     this->RenderMeshBatch(cameraMatrix, scene->GetMeshUIRenderDataPointer());
 
     //* Render Meshes
-    this->RenderMeshBatch(*(camera->GetViewOrthoMatrix()),
-                          scene->GetMeshRenderDataPointer());
+    std::vector<MeshRenderData*>* meshRenderData =
+        scene->GetMeshRenderDataPointer();
+    this->RenderMeshBatch(*(camera->GetViewOrthoMatrix()), meshRenderData);
+    delete meshRenderData;
   }
 
   this->guiManager_->Display();

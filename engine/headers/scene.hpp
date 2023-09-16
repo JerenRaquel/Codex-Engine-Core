@@ -50,8 +50,8 @@ class Scene {
   const Scene* const AddAction(Action* action) noexcept;
 
   // Getters
-  std::map<std::string, MeshRenderData*>* const GetMeshRenderDataPointer()
-      const noexcept;
+  std::vector<MeshRenderData*>* const GetMeshRenderDataPointer()
+      const noexcept;  // Freed by Caller
   std::vector<MeshRenderData*>* const GetMeshUIRenderDataPointer()
       const noexcept;
   std::vector<TextRenderData*>* const GetTextRenderDataPointer() const noexcept;
