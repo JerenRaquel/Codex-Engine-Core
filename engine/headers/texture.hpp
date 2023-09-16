@@ -19,6 +19,8 @@ class TextureData {
   int cellSizeY;
   int maxTextureIndex;
 
+  TextureData()
+      : texture(nullptr), cellSizeX(0), cellSizeY(0), maxTextureIndex(0) {}
   TextureData(Texture* texture, const int& cellSizeX, const int& cellSizeY)
       : texture(texture),
         cellSizeX(cellSizeX),
